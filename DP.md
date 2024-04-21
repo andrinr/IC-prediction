@@ -62,33 +62,22 @@ which actually lives in the wrong space. Namely in $\frac{1}{y}$ instead of $y$ 
 
 Our goal is to make numerical simulations differentiable. This means that we want to be able to compute gradients of the simulation output with respect to the input parameters, which we can then use for gradient-based optimization.
 
-We describe a discrete physical model:
+We describe a physical model:
 
-- $d \in \{1, 2, 3\}$ number of spatial dimensions
-- $\mathbf{x} \in \mathbb{R}^d$ spatial coordinates
-- $t \in \mathbb{R^+}$ time index
-- The state of the physical system $\mathbf{s}$ is a function of time and space. We discretize the state in time with a subscript $t$ and in space with a subscript $\mathbf{x}$.
+- The state of the physical system $\mathbf{x} \in \mathbb{R}^n$ is a vector of $n$ variables. We denote the state at time $t$ as $\mathbf{x}(t)$. Hence $x$ is a function of time.
 - $\theta \in \mathbb{R}^p$ the parameters of the physical model
 - $\mathcal{P}^*$ the continous physical model, for example a PDE. Usually first and second derivatives exist.
-- $\mathcal{P}$ the discretized approximation of $\mathcal{P}^*$ It updates the stateinto a new state at evolved time $\mathbf{s}(t + \Delta t) = \mathcal{P}(\mathbf{s}(t), \theta)$.
+- $\mathcal{P \in \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}^n}$ the discretized approximation of $\mathcal{P}^*$ It updates the state into a new state at evolved time $\mathbf{x}(t + \Delta t) = \mathcal{P}(\mathbf{x}(t), \theta)$, given the parameters $\theta$.
+- The function $\mathcal{P}$ can be written as a sequence of operations $\mathcal{P} = \mathcal{P}_1 \circ \mathcal{P}_2 \circ \ldots \circ \mathcal{P}_m$.
+- Finally we have an objective function $\mathcal{L} \in \mathbb{R}^n \rightarrow \mathbb{R}$ mapping from a state to a scalar loss value.
 
-We can decompose $\mathcal{P}$ into a sequence of operations $\mathcal{P} = \mathcal{P}_m \circ \mathcal{P}_{m-1} \circ \ldots \circ \mathcal{P}_1$ such that $\mathbf{s}( t + \Delta t) = \mathcal{P}_m \circ \mathcal{P}_{m-1} \circ \ldots \circ \mathcal{P}_1(\mathbf{s}(t))$
+The derivate of the map $\mathcal{P(\mathbf{x})}$ with respect to the state $\mathbf{x}$ is the Jacobian 
 
+$$ J = \frac{\partial \mathcal{P}}{\partial \mathbf{x}} \in \mathbb{R}^{n \times n}.$$
 
-## The Inverse Problem
+The derivative of the loss function with respect to the state is the gradient
 
-We are looking for an initial state $\mathbf{s}(t^0)$ that evolves into a target state $\mathbf{s}^*$ at time $t^*$. Hence we want to find $\mathbf{s}(t^0)$ such that $\mathbf{s}^* = \mathcal{P}(\mathbf{s}(t^0), \theta)$. We can formulate the objective as a minimization problem
-
-$$\min_{\mathbf{s}(t^0)} \mathcal{L}(\mathbf{s}(t^0), \mathbf{u}^*)$$
-
-where 
-
-$$\mathcal{L} = \| \mathbf{s}^* - \mathcal{P}(\mathbf{s}(t^0), \theta) \|^2.$$
-
-In order to leverage a gradient based optimization algorithm, we need to compute the gradient of the loss function with respect to the initial density
-
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{s}(t^0)} = \frac{\partial \mathcal{L}}{\partial \mathbf{s}^*} \frac{\partial \mathbf{s}^*}{\partial \mathbf{s}(t^0)}.$$
-- If we 
+$$ \nabla_{\mathbf{x}} \mathcal{L} = \frac{\partial \mathcal{L}}{\partial \mathbf{x}} \frac{\partial \mathcal{P}}{\partial \mathbf{x}} = \frac{\partial \mathcal{L}}{\partial \mathbf{x}}.$$
 
 ## The adjoint method
 
