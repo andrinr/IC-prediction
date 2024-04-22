@@ -1,6 +1,8 @@
-# Differentiable Physics for Inverse Problems
+# Differentiable Physics for Simulations
 
-Here I document a collection of thougts and insights I have gained from literature research in the field of differentiable physics for inverse Problems.
+## Overview
+
+Generally
 
 ## Optimization
 
@@ -47,6 +49,45 @@ $$ H = \sqrt{\text{diag}(J^TJ)} \approx \sqrt{\text{diag}(J^2)} \approx \text{di
 The update step is then given by
 
 $$ \Delta = \frac{J^T}{\text{diag}(J)} = \frac{1}{\sqrt{\text{diag}(J)}}.$$
+
+## Adjoint Method
+
+Let us consider a map 
+$$F : \mathbb{R}^n \rightarrow \mathbb{R}^n$$ 
+
+which is differentiable. The map can be written as a sequence of operations 
+
+$$F = f_m \circ f_{m-1} \circ \ldots \circ f_1.$$
+
+Let us denote the of of the map $f_i$ as $x_i$ and the output of the map $f_i$ as $x_{i+1}$, hence
+
+$$ f_i(x_i) = x_{i+1}.$$
+
+The derivative of the map $F$ (or any of its components) with respect to the input $x$ is the Jacobian
+
+$$ J = \frac{\partial F}{\partial x} \in \mathbb{R}^{n \times n}.$$
+
+Furthermore we have a loss function
+
+$$ \mathcal{L} : \mathbb{R}^n \rightarrow \mathbb{R}$$
+
+which is evaluated at the end of the sequence of operations. The derivative of the loss function with respect to the input is the gradient
+
+$$ \nabla_{x_0} (L \circ F(x_0))= \frac{\partial L(x_{m})}{\partial x_m} \frac{\partial f_m(x_{m-1})}{\partial x_{m-1}} \ldots \frac{\partial f_1(x_0)}{\partial x_0} = \frac{\partial L(x_{m})}{\partial x_0} J.$$
+
+In order to find the gradient, all intermediate results $x_0 \ldots x_m$ need to be evaluated in a forward pass. Along with the derivative all functions $f_i$ and the loss functions. Due to the nature of matrix multiplications, the evaluation of the gradient is most efficent, when we start at the end of the sequence and work our way back to the beginning, since $L(x_m)$ is a scalar and the gradient is a row vector. This means the memory requirements are $O(m \cdot n)$ and the computational complexity is $O(m \cdot n^2)$.
+
+Let us examine the truncated sequence of operations
+
+$$ F^{k:l}(x) = f_l \circ f_{l-1} \circ \ldots \circ f_{k+1} \circ f_k(x).$$
+
+Hence in the forward pass we can denote
+
+$$ x_k = F^{0:l}(x_0)$$
+
+and in the backwards pass
+
+$$ \frac{\partial L(x_k)}{\partial x_k} = \frac{\partial L(x_k)}{\partial x_k} \frac{\partial f_l(x_{l-1})}{\partial x_{l-1}} \ldots \frac{\partial f_{k+1}(x_k)}{\partial x_k}.$$
 
 
 ### Gradient Descent
