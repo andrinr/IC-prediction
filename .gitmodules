@@ -1,0 +1,3 @@
+[submodule "pkdgrav3"]
+	path = pkdgrav3
+	url = git@bitbucket.org:dpotter/pkdgrav3.git

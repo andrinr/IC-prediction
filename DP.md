@@ -2,7 +2,14 @@
 
 ## Overview
 
-Generally
+The two most common applications of DP are:
+- Error correction of numerical simulations: A differentiable version of the forward model, is levergaed to propagate the error of the forward model and train an in the loop corrector model.
+- Paremeter Estimation: A differentiable forward model is used to solve inverse problems, such as parameter estimation or initial condition estimatio.
+
+The construction of a differentiable version of the forward model, depends on weather its a implicit or explicit model. In the case of an implicit model, the adjoint method is used to compute the gradient of the loss function with respect to the input parameters. In the case of an explicit model, the gradient can be computed directly using automatic differentiation. 
+
+Generally when we use AD, the gradient is derived from the numerical integration schema, since for AD the model needs to be implemented as a program. Another option would be symbolic differentiation. If we choose the adjoint method, there is the option to differentiate and then integrate the model, or to integrate and then differentiate the model.
+
 
 ## Optimization
 
@@ -50,44 +57,29 @@ The update step is then given by
 
 $$ \Delta = \frac{J^T}{\text{diag}(J)} = \frac{1}{\sqrt{\text{diag}(J)}}.$$
 
+Note that 
+
 ## Adjoint Method
 
-Let us consider a map 
-$$F : \mathbb{R}^n \rightarrow \mathbb{R}^n$$ 
+Let's consider an ODE with $\mathbf{u}(t)$, the state of the system at time $t$, $\theta$ the parameters of the system and $u_0$ the initial state. The ODE is given by
 
-which is differentiable. The map can be written as a sequence of operations 
+$$ \frac{d\mathbf{u}}{dt} = f(\mathbf{u}, \theta).$$
 
-$$F = f_m \circ f_{m-1} \circ \ldots \circ f_1.$$
+and 
 
-Let us denote the of of the map $f_i$ as $x_i$ and the output of the map $f_i$ as $x_{i+1}$, hence
+$$ \mathbf{u}(t_0) = \mathbf{u}_0.$$
 
-$$ f_i(x_i) = x_{i+1}.$$
+Furthermore we are given an objective function $\mathcal{L}$, which is a scalar function of the state at the final time $t_f$ or potentially the parameters $\theta$. Thus the components are
 
-The derivative of the map $F$ (or any of its components) with respect to the input $x$ is the Jacobian
+- $\mathbf{u} \in \mathbb{R}^n$ the state of the system
+- $\theta \in \mathbb{R}^p$ collection of parameters
+- $f: \mathbb{R}^n \times \mathbb{R}^p \rightarrow \mathbb{R}^n$ the right hand side of the ODE, can be non-linear
 
-$$ J = \frac{\partial F}{\partial x} \in \mathbb{R}^{n \times n}.$$
+The loss function is given by
 
-Furthermore we have a loss function
+$$ \mathcal{L} = \int_{0}^{T} g(\mathbf{u}, \theta) dt$$
 
-$$ \mathcal{L} : \mathbb{R}^n \rightarrow \mathbb{R}$$
 
-which is evaluated at the end of the sequence of operations. The derivative of the loss function with respect to the input is the gradient
-
-$$ \nabla_{x_0} (L \circ F(x_0))= \frac{\partial L(x_{m})}{\partial x_m} \frac{\partial f_m(x_{m-1})}{\partial x_{m-1}} \ldots \frac{\partial f_1(x_0)}{\partial x_0} = \frac{\partial L(x_{m})}{\partial x_0} J.$$
-
-In order to find the gradient, all intermediate results $x_0 \ldots x_m$ need to be evaluated in a forward pass. Along with the derivative all functions $f_i$ and the loss functions. Due to the nature of matrix multiplications, the evaluation of the gradient is most efficent, when we start at the end of the sequence and work our way back to the beginning, since $L(x_m)$ is a scalar and the gradient is a row vector. This means the memory requirements are $O(m \cdot n)$ and the computational complexity is $O(m \cdot n^2)$.
-
-Let us examine the truncated sequence of operations
-
-$$ F^{k:l}(x) = f_l \circ f_{l-1} \circ \ldots \circ f_{k+1} \circ f_k(x).$$
-
-Hence in the forward pass we can denote
-
-$$ x_k = F^{0:l}(x_0)$$
-
-and in the backwards pass
-
-$$ \frac{\partial L(x_k)}{\partial x_k} = \frac{\partial L(x_k)}{\partial x_k} \frac{\partial f_l(x_{l-1})}{\partial x_{l-1}} \ldots \frac{\partial f_{k+1}(x_k)}{\partial x_k}.$$
 
 
 ### Gradient Descent
