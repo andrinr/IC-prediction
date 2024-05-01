@@ -1,20 +1,29 @@
 # Master Thesis
 
-The general idea is to create initial conditions 
+The proper generation of Initial Conditions (ICs) is a crucial part of N-Body simulations. 
+We are given an N-Body simulation $f$ which given an initial mass distrubution $x_0$ computes $f(x_0) = x_t$. We are interested in finding $f^{-1}$, however as the function $f$ is highly nonlinear, it is only possible to approximate $f^{-1}$. 
+The problem is related to inverse problems, which is relevant in engineering disciplines
 
 ## Ressources
 
+### IC
+
+- *Initial Conditions for large Comological Simulations* https://arxiv.org/pdf/0804.3536
+- *Transients from Initial Conditions: A Perturbative Analysis* https://arxiv.org/pdf/astro-ph/9711187
+
 ### Methodology
 
-- From EMBER to FIRE: predicting high resolution baryon fields from
-dark matter simulations with Deep Learning https://arxiv.org/pdf/2110.11970
+- GAN for distribution generation, advantage is that critic is better able ad judging results than straight forward loss functions from final states, only applied for 2D cases here. *From EMBER to FIRE: predicting high resolution baryon fields from
+dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
 
 
 ## Getting started
 
+### Installing pkdgrav
+
 Clone this repo then updat the submodules
 ```git submodule update --init --recursive```
-Install all the deps for PKDGrav (Ubuntu only, check here for other https://pkdgrav3.readthedocs.io/en/latest/install.html)
+Install all the deps for pkdgrav (Ubuntu only, check here for other https://pkdgrav3.readthedocs.io/en/latest/install.html)
 
 ```{bash}
 sudo apt update
@@ -37,3 +46,5 @@ Cd into pkdgrav subrepo and
 cmake -S . -B build
 cmake --build build
 ```
+
+### 
