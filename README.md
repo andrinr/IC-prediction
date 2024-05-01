@@ -1,24 +1,39 @@
-# msc-thesis
+# Master Thesis
 
-## Install PKDGrav
+The general idea is to create initial conditions 
 
-1. Download fftw
-``` wget https://www.fftw.org/fftw-3.3.10.tar.gz fftw-3.3.10.tar.g```
+## Ressources
 
-2. Extract it
-``` tar -zxvf  fftw-3.3.10.tar.gz```
+### Methodology
 
-2. CD into fftw dir and 
+- From EMBER to FIRE: predicting high resolution baryon fields from
+dark matter simulations with Deep Learning https://arxiv.org/pdf/2110.11970
 
-```./configure && make && make install```
 
-4. Repeat the same for
+## Getting started
 
-- GSL
-``` wget https://mirror.ibcp.fr/pub/gnu/gsl/gsl-latest.tar.gz```
+Clone this repo then updat the submodules
+```git submodule update --init --recursive```
+Install all the deps for PKDGrav (Ubuntu only, check here for other https://pkdgrav3.readthedocs.io/en/latest/install.html)
 
-- OpenMPI
-``` wget https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-5.0.3.tar.gz```
+```{bash}
+sudo apt update
+sudo apt install -y autoconf automake pkg-config cmake gcc g++ make gfortran git
+sudo apt install -y libfftw3-dev libfftw3-mpi-dev libgsl0-dev libboost-all-dev libhdf5-dev libmemkind-dev libhwloc-dev
+sudo apt install -y python3-dev cython3 python3-pip python3-numpy python3-ddt python3-nose python3-tomli
+```
 
-- Boost
-```wget https://boostorg.jfrog.io/artifactory/main/release/1.85.0/source/boost_1_85_0.tar.gz```
+Create a new python env
+
+```{bash}
+python -m venv .env
+source .env/
+pip install cython numpy ddt nose dill
+```
+
+Cd into pkdgrav subrepo and
+
+```
+cmake -S . -B build
+cmake --build build
+```
