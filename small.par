@@ -3,8 +3,8 @@ from accuracy import classic_theta_switch,classic_replicas_switch
 achOutName      = "example"
 
 # Initial Condition
-dBoxSize        = 2000          # Mpc/h
-nGrid           = 32           # Simulation has nGrid^3 particles
+dBoxSize        = 30            # Mpc/h
+nGrid           = 100           # Simulation has nGrid^3 particles
 b2LPT           = True          # second order IC
 iSeed           = 314159265     # Random seed
 dRedFrom        = 49            # Starting redshift
