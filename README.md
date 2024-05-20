@@ -10,7 +10,7 @@ There are certain properties, which are assumed to hold for correct IC's. Genera
 
 ## Questions
 
-- ...
+- Why does the power spectrum need to be scale invariant?
 
 ## Potential Applications
 
@@ -68,6 +68,7 @@ Create a new python env
 
 ```{bash}
 python -m venv .env
+pip install -r pkdgrav3/requirements.txt
 source .env/bin/activate
 pip install cython numpy ddt nose dill
 ```
