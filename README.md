@@ -63,6 +63,7 @@ sudo apt install -y autoconf automake pkg-config cmake gcc g++ make gfortran git
 sudo apt install -y libfftw3-dev libfftw3-mpi-dev libgsl0-dev libboost-all-dev libhdf5-dev libmemkind-dev libhwloc-dev
 sudo apt install -y python3-dev cython3 python3-pip python3-numpy python3-ddt python3-nose python3-tomli
 ```
+Optionally install CUDA on the machine, make sure to link it in PATH and LD_LIBRARY_PATH.
 
 Create a new python env
 
