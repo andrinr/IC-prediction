@@ -1,10 +1,11 @@
-for input_file in "./data/raw/01/*";
-do  
+directory="./data/raw/01/*"
+
+for file in $directory; do  
     # echo $filepath
     # get the filename without the path
-    file_name=${input_file##*/}
+    echo $file
 
-    echo $file_name
+    file_name=${file##*/}
 
-    # mpirun pkdgrav3/build/pkdgrav3 assign.py $filepath 128 "./data/grid/01/$filename"
+    mpirun pkdgrav3/build/pkdgrav3 assign.py $file 128 "./data/grid/01/$file_name"
 done
