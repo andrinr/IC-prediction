@@ -8,9 +8,16 @@ In nature $x_0$ is given by the spatial distribution of mass and to some extent 
 
 There are certain properties, which are assumed to hold for correct IC's. Generally we think the mass distribution is a Gaussian Noise. Usually the IC is constructed by sampling random white noise on a grid with fixed distances. Then a specific discrete convolution operator is applied to obtain a gaussian distribution. This process is oftentimes repeated with a more fine grained grid overlapping the corase first grid. Furthermore the power spectrum of the distribution should follow a certain distribution. As for the training of the model, we can experiment with encoding the IC constraints in the loss function, however this is optional. The most simple case is to simply leverage a voxel wise MSE error, Stadel has proposed to use the cross power spectrum between the truth and predictions.
 
-## Questions
+## Learnings / Unclarities
 
-- Why does the power spectrum need to be scale invariant?
+- Data has distribution which is difficult to work with, as vast very empty regions and small dense regions -> log normalization and Z-Score normalization seems to be the way to go.
+- The way we measure the error is important, MSE does not appear to work great. 
+- Training the model on predicting the difference between timesteps seems to work better. 
+- U-NET works, however cannot efficently train it on my local machine on res greater than 32^3
+
+
+- Train UNET on previous time prediction
+    - W
 
 ## Potential Applications
 
@@ -46,6 +53,7 @@ Grafic 1
 dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
 - Single image generation using denoising diffusion model. https://arxiv.org/pdf/2211.12445
 - Diffusion models tutorial: https://cvpr2022-tutorial-diffusion-models.github.io/
+- Neural PDE as described here https://arxiv.org/pdf/2110.10249
 
 - They do kindof what we do here: https://astro.ft.uam.es/gustavo/
 
