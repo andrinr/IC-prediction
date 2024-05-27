@@ -63,6 +63,9 @@ dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
 
 Clone this repo then updat the submodules
 ```git submodule update --init --recursive```
+and change to the dev branch of pkdgrav
+```git checkout develop```. If you want to update the submodule to the latest version do
+``` git submodule update --remote```.
 Install all the deps for pkdgrav (Ubuntu only, check here for other https://pkdgrav3.readthedocs.io/en/latest/install.html)
 
 ```{bash}
@@ -77,9 +80,8 @@ Create a new python env
 
 ```{bash}
 python -m venv .env
-pip install -r pkdgrav3/requirements.txt
 source .env/bin/activate
-pip install cython numpy ddt nose dill
+pip install -r pkdgrav3/requirements.txt
 ```
 
 Cd into pkdgrav subrepo and

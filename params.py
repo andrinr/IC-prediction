@@ -1,12 +1,13 @@
 from accuracy import classic_theta_switch,classic_replicas_switch
+from PKDGRAV import add_analysis, ASSIGNMENT_ORDER
 
-achOutName      = "example"
+achOutName="data/raw/002" 
 
 # Initial Condition
-dBoxSize        = 30            # Mpc/h
+dBoxSize        = 30          # Mpc/h
 nGrid           = 128           # Simulation has nGrid^3 particles
 iLPT            = 2             # LPT order for IC
-iSeed = 10
+iSeed 			= 2 			# Seed
 dRedFrom        = 49            # Starting redshift
 
 # Cosmology
@@ -27,10 +28,11 @@ bPeriodic       = True          # with a periodic box
 bEwald          = True          # enable Ewald periodic boundaries
 
 # Logging/Output
-iOutInterval    = 10
-#iCheckInterval = 10
+iOutInterval    = 1
+#iCheckInterval = 5
 bDoDensity      = False
 bVDetails       = True
+bWriteIC        = True         # Write initial conditions
 
 bOverwrite      = True
 bParaRead       = True          # Read in parallel
@@ -47,3 +49,22 @@ nReplicas       = classic_replicas_switch()     # 1 if theta > 0.52 otherwise 2
 bMemUnordered   = True          # iOrder replaced by potential and group id
 bNewKDK         = True          # No accelerations in the particle, dual tree possible
 
+class MassGrid:
+    grid = 0
+    order = ASSIGNMENT_ORDER.PCS
+    def __init__(self,name,grid,order=ASSIGNMENT_ORDER.PCS):
+        gridOutName="data/grid/002" 
+        self.name = gridOutName
+        self.grid = grid
+        self.order = order
+    def __call__(self,msr,step,time,**kwargs):
+        if step % 10 == 0:
+            print('calculating density grid')
+            msr.grid_create(self.grid)
+            msr.assign_mass(order=self.order)
+            msr.grid_write(f'{self.name}.{step:05d}')
+            msr.grid_delete()
+    def ephemeral(self,msr,**kwargs):
+        return msr.grid_ephemeral(self.grid)
+
+add_analysis(MassGrid('',nGrid))
