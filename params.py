@@ -1,7 +1,7 @@
 from accuracy import classic_theta_switch,classic_replicas_switch
 from PKDGRAV import add_analysis, ASSIGNMENT_ORDER
 
-achOutName="data/raw/002" 
+achOutName="data/raw/002/" 
 
 # Initial Condition
 dBoxSize        = 30          # Mpc/h
@@ -28,7 +28,7 @@ bPeriodic       = True          # with a periodic box
 bEwald          = True          # enable Ewald periodic boundaries
 
 # Logging/Output
-iOutInterval    = 1
+iOutInterval    = 100
 #iCheckInterval = 5
 bDoDensity      = False
 bVDetails       = True
