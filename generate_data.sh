@@ -16,5 +16,5 @@ do
     sed -i  "s/job-name=.*$/job-name=\"gen-$j\" /g" job.sh;
 
     # # run simulation
-    sbatch --wait job.sh
+    mpirun pkdgrav3/build/pkdgrav3 params.py
 done
