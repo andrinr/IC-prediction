@@ -53,7 +53,7 @@ class MassGrid:
     grid = 0
     order = ASSIGNMENT_ORDER.PCS
     def __init__(self,name,grid,order=ASSIGNMENT_ORDER.PCS):
-        gridOutName="data/grid/002" 
+        gridOutName="data/grid/001" 
         self.name = gridOutName
         self.grid = grid
         self.order = order
