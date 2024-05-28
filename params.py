@@ -1,7 +1,7 @@
 from accuracy import classic_theta_switch,classic_replicas_switch
 from PKDGRAV import add_analysis, ASSIGNMENT_ORDER
 
-achOutName="data/raw/002" 
+achOutName="data/raw/001" 
 
 # Initial Condition
 dBoxSize        = 30          # Mpc/h
@@ -53,7 +53,7 @@ class MassGrid:
     grid = 0
     order = ASSIGNMENT_ORDER.PCS
     def __init__(self,name,grid,order=ASSIGNMENT_ORDER.PCS):
-        gridOutName="data/grid/002" 
+        gridOutName="data/grid/001" 
         self.name = gridOutName
         self.grid = grid
         self.order = order
