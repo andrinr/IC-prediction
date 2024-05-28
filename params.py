@@ -1,13 +1,20 @@
 from accuracy import classic_theta_switch,classic_replicas_switch
 from PKDGRAV import add_analysis, ASSIGNMENT_ORDER
 
-achOutName="data/raw/002/" 
+# accept command line arguments
+import sys
+if len(sys.argv) < 3:
+    print("Usage: python3 params.py <output name> <nGrid>")
+    sys.exit(1)
+
+achOutName = sys.argv[1]
+    
 
 # Initial Condition
 dBoxSize        = 30          # Mpc/h
 nGrid           = 128           # Simulation has nGrid^3 particles
 iLPT            = 2             # LPT order for IC
-iSeed 			= 2 			# Seed
+iSeed 			= 1 			# Seed
 dRedFrom        = 49            # Starting redshift
 
 # Cosmology
@@ -53,8 +60,7 @@ class MassGrid:
     grid = 0
     order = ASSIGNMENT_ORDER.PCS
     def __init__(self,name,grid,order=ASSIGNMENT_ORDER.PCS):
-        gridOutName="data/grid/001" 
-        self.name = gridOutName
+        self.name = name
         self.grid = grid
         self.order = order
     def __call__(self,msr,step,time,**kwargs):
@@ -67,4 +73,4 @@ class MassGrid:
     def ephemeral(self,msr,**kwargs):
         return msr.grid_ephemeral(self.grid)
 
-add_analysis(MassGrid('',nGrid))
+add_analysis(MassGrid(sys.argv[2], nGrid))

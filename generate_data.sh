@@ -10,9 +10,6 @@ do
     mkdir -p "data/raw/$j"
     mkdir -p "data/grid/$j"
 
-    sed -i "s/achOutName=.*/achOutName=\"data\/raw\/$j\/pts" /" job_params.py
-    sed -i "s/gridOutName=.*/gridOutName=\"data\/grid\/$j\/grid" /" job_params.py
-
     # # run simulation
-   ./pkdgrav3/build/pkdgrav3 params.py
+   ./pkdgrav3/build/pkdgrav3 params.py "data/raw/$j/pts" "data/grid/$j/grid"
 done
