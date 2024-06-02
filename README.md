@@ -109,3 +109,8 @@ This steps have to be repeated every day to get a new key.
 3. add key ```ssh-add \path\to\keys\cscs-key```
 
 4. connect with ```ssh cscs``` or use vs code remote ssh extension
+
+### Run data generation on eiger
+
+1. load modules ```module load cray && module swap PrgEnv-cray PrgEnv-gnu && module load cpeGNU GSL Boost cray-hdf5 cray-fftw CMake cray-python hwloc```
+2. 
