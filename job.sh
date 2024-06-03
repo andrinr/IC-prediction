@@ -1,12 +1,8 @@
 #!/bin/bash -l
 
-#SBATCH --job-name="001"
-#SBATCH --time=00:10:00
-#SBATCH --nodes=4
-#SBATCH --ntasks=48
-#SBATCH --ntasks-per-node=12
-#SBATCH --cpus-per-task=16 
-#SBATCH --ntasks-per-core=2
+#SBATCH --job-name="icg001"
+#SBATCH --time=00:60:00
+#SBATCH --nodes=1 --ntasks-per-node=1 --cpus-per-task=48 --ntasks-per-core=1
 #SBATCH --constraint=mc
 #SBATCH --account=uzh29
 

@@ -113,4 +113,6 @@ This steps have to be repeated every day to get a new key.
 ### Run data generation on eiger
 
 1. load modules ```module load cray && module swap PrgEnv-cray PrgEnv-gnu && module load cpeGNU GSL Boost cray-hdf5 cray-fftw CMake cray-python hwloc```
-2. 
+2. run ```bash generate_data.sh```
+3. check task by squeue and filter by username ```squeue -u <USERNAME>```
+4. if needed cancel task with ```scancel <JOBID>```
