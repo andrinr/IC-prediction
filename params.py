@@ -14,7 +14,7 @@ achOutName = sys.argv[1]
 dBoxSize        = 30          # Mpc/h
 nGrid           = 128           # Simulation has nGrid^3 particles
 iLPT            = 2             # LPT order for IC
-iSeed 			= 1 			# Seed
+iSeed 			= 100 			# Seed
 dRedFrom        = 49            # Starting redshift
 
 # Cosmology

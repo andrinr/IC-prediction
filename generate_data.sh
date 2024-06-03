@@ -19,7 +19,9 @@ do
 
     sed -i "s/srun.*/srun $build_path_escape params.py \"$storage_path_escape\/raw\/$j\/pts\" \"$storage_path_escape\/grid\/$j\/grid\" /" job.sh
 
-    sbatch --wait job.sh
+    sbatch job.sh
+
+    echo "Submitted job for seed $i"
 
     # # run simulation
     #./pkdgrav3/build/pkdgrav3 params.py "/project/ic_gen/raw/$j/pts" "/project/ic_gen/grid/$j/grid"
