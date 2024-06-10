@@ -115,9 +115,10 @@ Host cscs
 This steps have to be repeated every day to get a new key.
 1. check if ssh-agent is running with ```Get-Service ssh-agent```
 2. if not running start it with ```Get-Service ssh-agent | Set-Service -StartupType Automatic``` and ```Start-Service ssh-agent```
-3. add key ```ssh-add \path\to\keys\cscs-key```
-
-4. connect with ```ssh cscs``` or use vs code remote ssh extension
+3. Activate the python env ```.\venv\Scripts\activate```
+4. execute the ssh-gen script ```python .\sshservice-cli\cscs-keygen.py``` and enter credentials. No password needed. 
+5. add key ```ssh-add ~\.ssh\cscs-key```
+6. connect with ```ssh cscs``` or use vs code remote ssh extension
 
 ### Run data generation on eiger
 
