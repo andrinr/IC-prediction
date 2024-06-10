@@ -8,6 +8,15 @@ In nature $x_0$ is given by the spatial distribution of mass and to some extent 
 
 There are certain properties, which are assumed to hold for correct IC's. Generally we think the mass distribution is a Gaussian Noise. Usually the IC is constructed by sampling random white noise on a grid with fixed distances. Then a specific discrete convolution operator is applied to obtain a gaussian distribution. This process is oftentimes repeated with a more fine grained grid overlapping the corase first grid. Furthermore the power spectrum of the distribution should follow a certain distribution. As for the training of the model, we can experiment with encoding the IC constraints in the loss function, however this is optional. The most simple case is to simply leverage a voxel wise MSE error, Stadel has proposed to use the cross power spectrum between the truth and predictions.
 
+## Intermediate Learning Projects
+
+To learn some techniques I have made some smaller projects:
+
+- https://github.com/andrinr/jax-gan - GAN for 2D distribution generation
+- https://github.com/andrinr/jax-image-autoencoder - Image autoencoder for compression / image generation
+- https://github.com/andrinr/jax-neural-ode - Neural ODE implementation in JAX including adjoint method for backpropagation
+- https://github.com/andrinr/motion-derivative - Inverse simulation for small N-Body gravitation simulations
+
 ## Learnings / Unclarities
 
 - Data has distribution which is difficult to work with, as vast very empty regions and small dense regions -> log normalization and Z-Score normalization seems to be the way to go.
