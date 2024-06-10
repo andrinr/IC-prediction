@@ -100,4 +100,28 @@ cmake -S . -B build
 cmake --build build
 ```
 
-### 
+### Connect to cscs on windwos
+
+Setup:
+1. follow install instruction for script here: https://user.cscs.ch/access/auth/mfa/
+2. edit config  ```notepad.exe C:\Users\<USER>\.ssh\config``` and add: 
+```
+Host cscs
+	User <USERNAME>
+	HostName daint.cscs.ch
+	ProxyJump <USERNAME>@ela.cscs.ch
+```
+
+This steps have to be repeated every day to get a new key.
+1. check if ssh-agent is running with ```Get-Service ssh-agent```
+2. if not running start it with ```Get-Service ssh-agent | Set-Service -StartupType Automatic``` and ```Start-Service ssh-agent```
+3. add key ```ssh-add \path\to\keys\cscs-key```
+
+4. connect with ```ssh cscs``` or use vs code remote ssh extension
+
+### Run data generation on eiger
+
+1. load modules ```module load cray && module swap PrgEnv-cray PrgEnv-gnu && module load cpeGNU GSL Boost cray-hdf5 cray-fftw CMake cray-python hwloc```
+2. run ```bash generate_data.sh```
+3. check task by squeue and filter by username ```squeue -u <USERNAME>```
+4. if needed cancel task with ```scancel <JOBID>```
