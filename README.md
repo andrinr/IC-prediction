@@ -66,7 +66,7 @@ dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
 
 - They do kindof what we do here: https://astro.ft.uam.es/gustavo/
 
-## Getting started
+## Getting with data gneration
 
 ### Installing pkdgrav
 
@@ -126,3 +126,14 @@ This steps have to be repeated every day to get a new key.
 2. run ```bash generate_data.sh```
 3. check task by squeue and filter by username ```squeue -u <USERNAME>```
 4. if needed cancel task with ```scancel <JOBID>```
+
+## Getting started with data analysis, generative models
+
+Create a new python env
+
+```{bash}
+python -m venv jax.env
+source .env/bin/activate
+pip install -U "jax[cuda12]"
+pip install optax equinox matplotlib
+```
