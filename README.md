@@ -135,5 +135,5 @@ Create a new python env
 python -m venv jax.env
 source .env/bin/activate
 pip install -U "jax[cuda12]"
-pip install optax equinox matplotlib
+pip install optax equinox matplotlib pyccl
 ```
