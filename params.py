@@ -3,8 +3,8 @@ from PKDGRAV import add_analysis, ASSIGNMENT_ORDER
 
 # accept command line arguments
 import sys
-if len(sys.argv) < 3:
-    print("Usage: python3 params.py <output name> <nGrid>")
+if len(sys.argv) < 4:
+    print("Usage: python3 params.py <seed> <output name> <nGrid>")
     sys.exit(1)
 
 achOutName = sys.argv[1]
@@ -14,7 +14,7 @@ achOutName = sys.argv[1]
 dBoxSize        = 30          # Mpc/h
 nGrid           = 128           # Simulation has nGrid^3 particles
 iLPT            = 2             # LPT order for IC
-iSeed 			= 100 			# Seed
+iSeed 			= sys.argv[2] 	# Seed
 dRedFrom        = 49            # Starting redshift
 
 # Cosmology
@@ -73,4 +73,4 @@ class MassGrid:
     def ephemeral(self,msr,**kwargs):
         return msr.grid_ephemeral(self.grid)
 
-add_analysis(MassGrid(sys.argv[2], nGrid))
+add_analysis(MassGrid(sys.argv[3], nGrid))
