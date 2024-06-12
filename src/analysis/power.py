@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 from typing import Tuple
 
-def overdensity(rho : jnp.ndarray) -> jnp.ndarray:
+def compute_overdensity(rho : jnp.ndarray) -> jnp.ndarray:
     return (rho - rho.mean()) / rho.mean()
 
 class PowerSpectrum:
@@ -15,7 +15,7 @@ class PowerSpectrum:
         self.N_half = N//2
         self.n_bins = n_bins
 
-        coords = jnp.linspace(0, self.N_half-1, self.N_half)
+        coords = jnp.linspace(0, self.N_half, self.N_half)
         kx, ky, kz = jnp.meshgrid(coords, coords, coords)
         k = jnp.sqrt(kx**2 + ky**2 + kz**2)
 
@@ -35,6 +35,7 @@ class PowerSpectrum:
         n_modes = jnp.zeros(self.n_bins).at[self.index_grid].add(1)
 
         # compute the average power
+        n_modes = jnp.where(n_modes > 0, n_modes, 1)
         power = power / n_modes
 
         k = jnp.linspace(0, self.N_half, self.n_bins)
