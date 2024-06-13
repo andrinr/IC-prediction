@@ -1,1 +1,1 @@
-from power import *
+from .power import *

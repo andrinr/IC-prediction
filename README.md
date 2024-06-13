@@ -66,6 +66,10 @@ dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
 
 - They do kindof what we do here: https://astro.ft.uam.es/gustavo/
 
+### Cosmology
+
+- Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
+
 ## Getting with data gneration
 
 ### Installing pkdgrav
@@ -137,3 +141,9 @@ source .env/bin/activate
 pip install -U "jax[cuda12]"
 pip install optax equinox matplotlib pyccl
 ```
+
+PYCCL can be a bit tricky to get working. In my case I needed to install ```pip install wheel pyyaml```,
+```sudo apt install libpcre3 libpcre3-dev``` and ```sudo apt install swig``` prior to installing pyccl. 
+Furthermore we need to install classy as described in their instructions here: https://github.com/lesgourg/class_public/wiki/Python-wrapper.
+
+
