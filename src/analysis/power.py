@@ -21,7 +21,11 @@ class PowerSpectrum:
 
         self.index_grid = jnp.digitize(k, jnp.linspace(0, self.N_half, self.n_bins), right=True) - 1
 
+        self.n_modes = jnp.zeros(self.n_bins)
+        self.n_modes = self.n_modes.at[self.index_grid].add(1)
+
     def __call__(self, delta : jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
+        # get the density field in furier space
         delta_k = jnp.fft.fftn(delta)
 
         # Remove negative wave numbers due to Nyquist folding
@@ -30,16 +34,12 @@ class PowerSpectrum:
         power = jnp.zeros(self.n_bins)
         power = power.at[self.index_grid].add(jnp.abs(delta_k))
 
-        # count the number of modes in each bin
-        n_modes = jnp.zeros(self.n_bins)
-        n_modes = n_modes.at[self.index_grid].add(1)
-
-        print(jnp.sum(n_modes))
+        print(jnp.sum(self.n_modes))
         print(self.N_half**3)
 
         # compute the average power
-        # power = power / self.N_half**3
-        power = power / n_modes
+        # power = power / self.N ** 3
+        power = power / self.n_modes
 
         power = jnp.where(jnp.isnan(power), 0, power)
 

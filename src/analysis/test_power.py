@@ -7,9 +7,8 @@ def gen_data(N):
     key = jax.random.PRNGKey(20)
 
     rho = jax.random.normal(key, (N, N, N), dtype=jnp.float32) + 1.0
-    delta = an.compute_overdensity(rho)
 
-    return delta
+    return rho
 
 def test_power():
     N = 128
