@@ -40,6 +40,7 @@ class PowerSpectrum:
         # compute the average power
         # power = power / self.N ** 3
         power = power / self.n_modes
+        power = power / self.N ** 2
 
         power = jnp.where(jnp.isnan(power), 0, power)
 

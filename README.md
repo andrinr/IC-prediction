@@ -17,6 +17,13 @@ To learn some techniques I have made some smaller projects:
 - https://github.com/andrinr/jax-neural-ode - Neural ODE implementation in JAX including adjoint method for backpropagation
 - https://github.com/andrinr/motion-derivative - Inverse simulation for small N-Body gravitation simulations
 
+## Things to think about
+
+- RL approach could be potentially viable, as shown here: https://physicsbaseddeeplearning.org/reinflearn-code.html however we would need an interactive environment to train the model on. This could potentially also be the endgoal, getting a N-Body RL-GYM env?
+- Otherwise we can try two things, we try to find some correlations between initial and final states. This could be trained on a massive amount of data, however quiet unrealistic that there parallels can really be found.
+- We limit the project on trying to invert simulations using DL techniques. I am pretty sure we cannot invert large redshits.
+- We can also try to just build a forward surrogate model, which then is differentiable, meaning we could apply an optimziation strategy for the IC's. 
+
 ## Learnings / Unclarities
 
 - Data has distribution which is difficult to work with, as vast very empty regions and small dense regions -> log normalization and Z-Score normalization seems to be the way to go.
