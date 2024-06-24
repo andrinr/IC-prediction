@@ -19,6 +19,7 @@ To learn some techniques I have made some smaller projects:
 
 ## Things to think about
 
+- How do we quantify the error of the model? Does MSE really capture the interesting aspects?
 - RL approach could be potentially viable, as shown here: https://physicsbaseddeeplearning.org/reinflearn-code.html however we would need an interactive environment to train the model on. This could potentially also be the endgoal, getting a N-Body RL-GYM env?
 - Otherwise we can try two things, we try to find some correlations between initial and final states. This could be trained on a massive amount of data, however quiet unrealistic that there parallels can really be found.
 - We limit the project on trying to invert simulations using DL techniques. I am pretty sure we cannot invert large redshits.
