@@ -105,7 +105,7 @@ source .env/bin/activate
 pip install -r pkdgrav3/requirements.txt
 ```
 
-Cd into pkdgrav subrepo and
+cd into pkdgrav submodule and
 
 ```
 cmake -S . -B build

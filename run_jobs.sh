@@ -6,4 +6,8 @@ grid_storage="/capstor/scratch/cscs/arehmann/ic_gen/grid/$id"
 pts_storage="/capstor/scratch/cscs/arehmann/ic_gen/raw/$id"
 seed=$SLURM_ARRAY_TASK_ID
 
-sbatch —array=1-2 job.sh $SLURM_ARRAY_TASK_ID $pts_storage $grid_storage
+echo $build_path
+echo $grid_storage
+echo $pts_storage
+
+sbatch --array=1-3 job.sh $SLURM_ARRAY_TASK_ID $pts_storage $grid_storage
