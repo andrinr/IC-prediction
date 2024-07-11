@@ -1,20 +1,21 @@
 from accuracy import classic_theta_switch,classic_replicas_switch
 from PKDGRAV import add_analysis, ASSIGNMENT_ORDER
 
+print("Loading parameters...")
+
 # accept command line arguments
 import sys
 if len(sys.argv) < 4:
     print("Usage: python3 params.py <seed> <output name> <nGrid>")
     sys.exit(1)
 
-achOutName = sys.argv[1]
-    
+achOutName = sys.argv[2]
 
 # Initial Condition
 dBoxSize        = 30          # Mpc/h
 nGrid           = 128           # Simulation has nGrid^3 particles
 iLPT            = 2             # LPT order for IC
-iSeed 			= sys.argv[2] 	# Seed
+iSeed 			= int(sys.argv[1]) 	# Seed
 dRedFrom        = 49            # Starting redshift
 
 # Cosmology

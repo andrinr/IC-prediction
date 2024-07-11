@@ -1,4 +1,4 @@
-for i in $(seq 1 100);
+for i in $(seq 1 1);
 do
     # set storage path
     storage_path="/capstor/scratch/cscs/arehmann/ic_gen"
@@ -6,23 +6,9 @@ do
     build_path="pkdgrav3/build/pkdgrav3"
     build_path_escape=$(echo $build_path | sed 's/\//\\\//g')
 
-    # change seed in .par file
-    sed -i "s/iSeed.*/iSeed \t\t\t= $i \t\t\t# Seed/" params.py
+    ./pkdgrav3/build/pkdgrav3 params.py $i "pts" "grid"
 
-    # add zero padding
-    printf -v j "%03d" $i
+    scp grid arehma@cluster.s3it.uzh.ch:/data/arehma/grid
 
-    mkdir -p "$storage_path/raw/$j"
-    mkdir -p "$storage_path/grid/$j"
-
-    sed -i "s/#SBATCH --job-name=.*/#SBATCH --job-name=\"icg$j\"/" job.sh
-
-    sed -i "s/srun.*/srun $build_path_escape params.py \"$storage_path_escape\/raw\/$j\/pts\" \"$storage_path_escape\/grid\/$j\/grid\" /" job.sh
-
-    sbatch job.sh
-
-    echo "Submitted job for seed $i"
-
-    # # run simulation
-    #./pkdgrav3/build/pkdgrav3 params.py "/project/ic_gen/raw/$j/pts" "/project/ic_gen/grid/$j/grid"
+    rm grid
 done
