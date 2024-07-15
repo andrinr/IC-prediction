@@ -147,6 +147,7 @@ Create a new python env
 python -m venv jax.env
 source .env/bin/activate
 pip install -U "jax[cuda12]"
+pip install pytorch torchvision torchaudio cpuonly -c pytorch
 pip install optax equinox matplotlib pyccl
 ```
 
@@ -154,4 +155,22 @@ PYCCL can be a bit tricky to get working. In my case I needed to install ```pip 
 ```sudo apt install libpcre3 libpcre3-dev``` and ```sudo apt install swig``` prior to installing pyccl. 
 Furthermore we need to install classy as described in their instructions here: https://github.com/lesgourg/class_public/wiki/Python-wrapper.
 
+## Science Cluster
 
+### Installation
+
+1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
+2. Load Conda ```module load anaconda3```
+3. Create env ```{bash}
+python -m venv ml-env
+source .env/bin/activate
+pip install -U "jax[cuda12]"
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install optax equinox matplotlib
+```
+
+### Startup
+
+1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
+2. Load Conda ```module load anaconda3```
+3. Load env ```source activate myenv```
