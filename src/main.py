@@ -15,5 +15,9 @@ jax.config.update("jax_enable_x64", False)
 jax.config.update("jax_disable_jit", False)
 
 dataset = CosmoVoxels(
-    "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+    "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/",
+    "grid.",
+    100
 )
+
+dataset.__getitem__(0)
