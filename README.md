@@ -78,7 +78,7 @@ dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
 
 - Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
 
-## Getting with data gneration
+## Getting started with data gneration
 
 ### Installing pkdgrav
 
