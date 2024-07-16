@@ -166,6 +166,7 @@ python -m venv ml-env
 source .env/bin/activate
 pip install -U "jax[cuda12]"
 pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install nvidia-dali-cuda120
 pip install optax equinox matplotlib
 ```
 
