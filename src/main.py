@@ -95,15 +95,16 @@ def loss_fn(params, static, x : jnp.ndarray, y : jnp.ndarray):
 
 @eqx.filter_jit
 def update_fn(
-        batch,
+        start : jnp.ndarray,
+        end : jnp.ndarray,
         model : eqx.Module, 
         optimizer_state : optax.OptState):
 
     params, static = eqx.partition(model, eqx.is_array)
 
     # this could probably be done inside the dali pipile using mean reduction and normalize
-    start_overdensity = jax.vmap(overdensity)(batch['end'])
-    end_overdensity = jax.vmap(overdensity)(batch['start'])
+    start_overdensity = jax.vmap(overdensity)(start)
+    end_overdensity = jax.vmap(overdensity)(end)
 
     loss, grad = eqx.filter_value_and_grad(loss_fn)(
         params, static, end_overdensity, start_overdensity)
@@ -112,16 +113,23 @@ def update_fn(
 
     return new_model, new_optimizer_state, loss
 
-for epoch in range(20):
+for epoch in range(40):
     losses = []
     for i, data in enumerate(data_iterator):
+        start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
+        end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
+
+        # print(jnp.shape(start_d))
         unet, optimizer_state, loss = update_fn(
-            data,
+            start_d,
+            end_d,
             unet,  
             optimzier_state)
         
-        print(loss)
-
+        losses.append(loss)
+    
+    losses = jnp.array(losses)
+    print(losses.mean())
 
 # Delete Data Pipeline
 del data_pipeline
