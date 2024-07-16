@@ -7,7 +7,7 @@ import nvidia.dali.types as types
 
 type Range = tuple[str, int]
 
-class CosmosData:
+class VolumetricSequence:
     def __init__(
             self, 
             batch_size : int, 
@@ -27,10 +27,7 @@ class CosmosData:
     def __call__(self, sample_info : types.SampleInfo):
         stride = 1 if self.load_sequence else (self.range[1] - self.range[0])
         sequence_length = (self.range[1] - self.range[0]) if self.load_sequence else 2
-        batch = jnp.zeros((
-            sequence_length,
-            self.grid_size, self.grid_size, self.grid_size),
-            dtype=jnp.float32)
+        sequence = []
         
         sample_idx = sample_info.idx_in_epoch
 
@@ -38,12 +35,10 @@ class CosmosData:
         files.sort()
 
         for k in range(sequence_length):
-            
             file_dir = os.path.join(self.dir, self.folders[sample_idx], files[k * stride])
             with open(file_dir, 'rb') as f:
                 grid = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 grid = grid.reshape(self.grid_size, self.grid_size, self.grid_size)
-                batch = batch.at[k].set(grid)
-                # batch[k] = grid
+                sequence.append(grid)
 
-        return batch
+        return sequence

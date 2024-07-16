@@ -2,6 +2,7 @@
 **/data
 .lockfile
 **/.pytest_cache
+**/__pycache__
 
 *.out
 core_*
