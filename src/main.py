@@ -6,10 +6,12 @@ from jax.lib import xla_bridge
 from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
+from nvidia.dali.plugin.jax import DALIGenericIterator
 # Other
 import os
 import optax
 import equinox as eqx
+from functools import partial
 # Local
 from VolumetricSequence import VolumetricSequence
 import nn
@@ -26,7 +28,8 @@ jax.config.update("jax_enable_x64", False)
 jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
-vol_seq = VolumetricSequence(BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 30), False)
+vol_seq = VolumetricSequence(
+    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 30), False)
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -34,10 +37,10 @@ vol_seq = VolumetricSequence(BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 30), Fa
     device_id=0,
     py_num_workers=4,
     py_start_method="spawn")
-def pair_pipeline():
+def pair_pipeline(external_iterator):
 
     [start, end] = fn.external_source(
-        source=vol_seq,
+        source=external_iterator,
         num_outputs=2,
         batch=False,
         dtype=types.FLOAT)
@@ -54,23 +57,21 @@ def pair_pipeline():
 
     return start, end
 
-pipe = pair_pipeline()
-pipe.build()
-out = pipe.run()
+data_pipeline = pair_pipeline(vol_seq)
+data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
-print(jnp.shape(out))
-
+# Initialize Neural Network
 init_rng = jax.random.key(0)
 unet = nn.UNet(
     num_spatial_dims=3,
     in_channels=1,
     out_channels=1,
-    hidden_channels=8,
-    num_levels=3,
+    hidden_channels=4,
+    num_levels=2,
     activation=jax.nn.relu,
     padding='SAME',	
-    key=init_rng
-)
+    key=init_rng)
+
 parameter_count = nn.count_parameters(unet)
 print(f'Number of parameters: {parameter_count}')
 
@@ -79,21 +80,35 @@ learning_rate = 3e-3
 optimizer = optax.adam(learning_rate)
 optimzier_state = optimizer.init(eqx.filter(unet, eqx.is_array))
 
-def loss_fn(model : eqx.Module, x : jnp.ndarray, y : jnp.ndarray):
-  y_pred = jax.vmap(model)(x)
-  mse = jnp.mean(jnp.square(y_pred - y))
-  return mse
 
-@eqx.filter_jit
+@partial(jax.jit, static_argnums=1)
+def loss_fn(params, static, x : jnp.ndarray, y : jnp.ndarray):
+    model = eqx.combine(params, static)
+    y_pred = jax.vmap(model)(x)
+    mse = jnp.mean(jnp.square(y_pred - y))
+    return mse
+
 def update_fn(
-  model : eqx.Module, 
-  optimizer_state : optax.OptState, 
-  x : jnp.ndarray, 
-  y : jnp.ndarray):
+        batch,
+        model : eqx.Module, 
+        optimizer_state : optax.OptState):
 
-  loss, grad = eqx.filter_value_and_grad(loss_fn)(model, x, y)
-  updates, new_optimizer_state = optimizer.update(grad, optimizer_state)
-  new_model = eqx.apply_updates(model, updates)
-  return new_model, new_optimizer_state, loss
+    params, static = eqx.partition(model, eqx.is_array)
 
-del pipe
+    loss, grad = eqx.filter_value_and_grad(loss_fn)(
+        params, static, batch['start'], batch['end'])
+    updates, new_optimizer_state = optimizer.update(grad, optimizer_state)
+    new_model = eqx.apply_updates(model, updates)
+
+    return new_model, new_optimizer_state, loss
+
+for i, data in enumerate(data_iterator):
+    unet, optimizer_state, loss = update_fn(
+        data,
+        unet,  
+        optimzier_state)
+    
+    print(loss)
+
+# Delete Data Pipeline
+del data_pipeline
