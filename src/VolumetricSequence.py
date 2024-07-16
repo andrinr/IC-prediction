@@ -1,5 +1,4 @@
 # import jax.numpy as np
-import numpy as np
 import jax.numpy as jnp
 from random import shuffle
 import os
@@ -30,6 +29,9 @@ class VolumetricSequence:
         sequence = []
         
         sample_idx = sample_info.idx_in_epoch
+
+        if sample_idx >= len(self.folders):
+            raise StopIteration()
 
         files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
         files.sort()

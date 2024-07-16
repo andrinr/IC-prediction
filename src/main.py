@@ -7,11 +7,13 @@ from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
+from nvidia.dali.plugin import jax as dax
 # Other
 import os
 import optax
 import equinox as eqx
 from functools import partial
+import statistics
 # Local
 from VolumetricSequence import VolumetricSequence
 import nn
@@ -20,7 +22,7 @@ import nn
 DATA_ROOT = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 INPUT_GRID_SIZE = 128
 GRID_SIZE = 32
-BATCH_SIZE = 4
+BATCH_SIZE = 8
 
 # Settings / Device Info
 print("Jax backend is using %s" % xla_bridge.get_backend().platform)
@@ -35,7 +37,7 @@ vol_seq = VolumetricSequence(
     batch_size=BATCH_SIZE,
     num_threads=2, 
     device_id=0,
-    py_num_workers=4,
+    py_num_workers=16,
     py_start_method="spawn")
 def pair_pipeline(external_iterator):
 
@@ -45,16 +47,16 @@ def pair_pipeline(external_iterator):
         batch=False,
         dtype=types.FLOAT)
 
-    reshape = lambda x : fn.reshape(x, layout="CDHW")
-    resize = lambda x : fn.resize(
+    reshape_fn = lambda x : fn.reshape(x, layout="CDHW")
+    resize_fn = lambda x : fn.resize(
         x,
         interp_type = types.INTERP_CUBIC,
         antialias=False,
         size=(GRID_SIZE, GRID_SIZE, GRID_SIZE))
 
-    start = resize(reshape(start))
-    end = resize(reshape(end))
-
+    start = resize_fn(reshape_fn(start))
+    end = resize_fn(reshape_fn(end))
+    
     return start, end
 
 data_pipeline = pair_pipeline(vol_seq)
@@ -80,6 +82,9 @@ learning_rate = 3e-3
 optimizer = optax.adam(learning_rate)
 optimzier_state = optimizer.init(eqx.filter(unet, eqx.is_array))
 
+def overdensity(density: jax.Array):
+    mean = density.mean()
+    return (density - mean) / mean
 
 @partial(jax.jit, static_argnums=1)
 def loss_fn(params, static, x : jnp.ndarray, y : jnp.ndarray):
@@ -88,6 +93,7 @@ def loss_fn(params, static, x : jnp.ndarray, y : jnp.ndarray):
     mse = jnp.mean(jnp.square(y_pred - y))
     return mse
 
+@eqx.filter_jit
 def update_fn(
         batch,
         model : eqx.Module, 
@@ -95,20 +101,27 @@ def update_fn(
 
     params, static = eqx.partition(model, eqx.is_array)
 
+    # this could probably be done inside the dali pipile using mean reduction and normalize
+    start_overdensity = jax.vmap(overdensity)(batch['end'])
+    end_overdensity = jax.vmap(overdensity)(batch['start'])
+
     loss, grad = eqx.filter_value_and_grad(loss_fn)(
-        params, static, batch['start'], batch['end'])
+        params, static, end_overdensity, start_overdensity)
     updates, new_optimizer_state = optimizer.update(grad, optimizer_state)
     new_model = eqx.apply_updates(model, updates)
 
     return new_model, new_optimizer_state, loss
 
-for i, data in enumerate(data_iterator):
-    unet, optimizer_state, loss = update_fn(
-        data,
-        unet,  
-        optimzier_state)
-    
-    print(loss)
+for epoch in range(20):
+    losses = []
+    for i, data in enumerate(data_iterator):
+        unet, optimizer_state, loss = update_fn(
+            data,
+            unet,  
+            optimzier_state)
+        
+        print(loss)
+
 
 # Delete Data Pipeline
 del data_pipeline
