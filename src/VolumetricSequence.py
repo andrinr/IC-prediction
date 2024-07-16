@@ -38,7 +38,7 @@ class VolumetricSequence:
             file_dir = os.path.join(self.dir, self.folders[sample_idx], files[k * stride])
             with open(file_dir, 'rb') as f:
                 grid = jnp.frombuffer(f.read(), dtype=jnp.float32)
-                grid = grid.reshape(self.grid_size, self.grid_size, self.grid_size)
+                grid = grid.reshape(1, self.grid_size, self.grid_size, self.grid_size)
                 sequence.append(grid)
 
         return sequence
