@@ -7,13 +7,11 @@ from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
-from nvidia.dali.plugin import jax as dax
 # Other
-import os
 import optax
 import equinox as eqx
 from functools import partial
-import statistics
+import matplotlib.pyplot as plt
 # Local
 from VolumetricSequence import VolumetricSequence
 import nn
@@ -68,8 +66,8 @@ unet = nn.UNet(
     num_spatial_dims=3,
     in_channels=1,
     out_channels=1,
-    hidden_channels=4,
-    num_levels=2,
+    hidden_channels=8,
+    num_levels=3,
     activation=jax.nn.relu,
     padding='SAME',	
     key=init_rng)
@@ -77,59 +75,19 @@ unet = nn.UNet(
 parameter_count = nn.count_parameters(unet)
 print(f'Number of parameters: {parameter_count}')
 
-learning_rate = 3e-3
+learning_rate = 3e-5
 
-optimizer = optax.adam(learning_rate)
-optimzier_state = optimizer.init(eqx.filter(unet, eqx.is_array))
+nn.train(
+    unet,
+    data_iterator,
+    learning_rate,
+    10)
 
-def overdensity(density: jax.Array):
-    mean = density.mean()
-    return (density - mean) / mean
+# data = next(data_iterator)
+fig, axs = plt.subplots(3, 1)
+# axs[0].imshow(
 
-@partial(jax.jit, static_argnums=1)
-def loss_fn(params, static, x : jnp.ndarray, y : jnp.ndarray):
-    model = eqx.combine(params, static)
-    y_pred = jax.vmap(model)(x)
-    mse = jnp.mean(jnp.square(y_pred - y))
-    return mse
-
-@eqx.filter_jit
-def update_fn(
-        start : jnp.ndarray,
-        end : jnp.ndarray,
-        model : eqx.Module, 
-        optimizer_state : optax.OptState):
-
-    params, static = eqx.partition(model, eqx.is_array)
-
-    # this could probably be done inside the dali pipile using mean reduction and normalize
-    start_overdensity = jax.vmap(overdensity)(start)
-    end_overdensity = jax.vmap(overdensity)(end)
-
-    loss, grad = eqx.filter_value_and_grad(loss_fn)(
-        params, static, end_overdensity, start_overdensity)
-    updates, new_optimizer_state = optimizer.update(grad, optimizer_state)
-    new_model = eqx.apply_updates(model, updates)
-
-    return new_model, new_optimizer_state, loss
-
-for epoch in range(40):
-    losses = []
-    for i, data in enumerate(data_iterator):
-        start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
-        end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
-
-        # print(jnp.shape(start_d))
-        unet, optimizer_state, loss = update_fn(
-            start_d,
-            end_d,
-            unet,  
-            optimzier_state)
-        
-        losses.append(loss)
-    
-    losses = jnp.array(losses)
-    print(losses.mean())
+# )
 
 # Delete Data Pipeline
 del data_pipeline

@@ -1,10 +1,14 @@
-# import jax.numpy as np
+import numpy as np
 import jax.numpy as jnp
 from random import shuffle
 import os
 import nvidia.dali.types as types
 
 type Range = tuple[str, int]
+
+def overdensity(density):
+    mean = density.mean()
+    return (density - mean) / mean
 
 class VolumetricSequence:
     def __init__(
@@ -41,6 +45,7 @@ class VolumetricSequence:
             with open(file_dir, 'rb') as f:
                 grid = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 grid = grid.reshape(1, self.grid_size, self.grid_size, self.grid_size)
-                sequence.append(grid)
+                delta = overdensity(grid)
+                sequence.append(delta)
 
         return sequence
