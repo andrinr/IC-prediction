@@ -9,7 +9,6 @@ import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Other
 import matplotlib.pyplot as plt
-import scienceplots
 # Local
 import nn
 import data
@@ -70,7 +69,8 @@ unet = nn.UNet(
     hidden_channels=8,
     num_levels=3,
     activation=jax.nn.relu,
-    padding='SAME',	
+    padding='SAME',
+    padding_mode='CIRCULAR',	
     key=init_rng)
 
 parameter_count = nn.count_parameters(unet)

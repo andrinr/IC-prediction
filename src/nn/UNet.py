@@ -9,17 +9,34 @@ class DoubleConv(eqx.Module):
     activation : Callable
 
     def __init__(
-        self, 
-        num_spatial_dims: int,
-        in_channels: int,
-        out_channels: int,
-        activation: Callable,
-        padding: str,
-        key
-    ):
+            self, 
+            num_spatial_dims: int,
+            in_channels: int,
+            out_channels: int,
+            activation: Callable,
+            padding : str,
+            padding_mode: str,
+            key):
+        
         key1, key2 = jax.random.split(key)
-        self.conv_1 = eqx.nn.Conv(num_spatial_dims, in_channels, out_channels, kernel_size=3, padding=padding, key=key1)
-        self.conv_2 = eqx.nn.Conv(num_spatial_dims, out_channels, out_channels, kernel_size=3, padding=padding, key=key2)
+        self.conv_1 = eqx.nn.Conv(
+            num_spatial_dims, 
+            in_channels, 
+            out_channels, 
+            kernel_size=3, 
+            padding=padding,
+            padding_mode=padding_mode, 
+            key=key1)
+        
+        self.conv_2 = eqx.nn.Conv(
+            num_spatial_dims, 
+            out_channels, 
+            out_channels, 
+            kernel_size=3, 
+            padding=padding,
+            padding_mode=padding_mode, 
+            key=key2)
+        
         self.activation = activation
         
     def __call__(self, x):
@@ -38,15 +55,16 @@ class UNet(eqx.Module):
     projection : eqx.nn.Conv
 
     def __init__(
-        self,
-        num_spatial_dims: int,
-        in_channels: int,
-        out_channels: int,
-        hidden_channels: int,
-        num_levels: int,
-        activation: Callable,
-        padding: str,
-        key):
+            self,
+            num_spatial_dims: int,
+            in_channels: int,
+            out_channels: int,
+            hidden_channels: int,
+            num_levels: int,
+            activation: Callable,
+            padding: str,
+            padding_mode: str,
+            key):
 
         key, key_liftiing, key_projection = jax.random.split(key, 3)
 
@@ -56,6 +74,7 @@ class UNet(eqx.Module):
             hidden_channels,
             activation,
             padding,
+            padding_mode,
             key_liftiing
         )
 
@@ -65,6 +84,7 @@ class UNet(eqx.Module):
             out_channels,
             kernel_size=1,
             padding=padding,
+            padding_mode=padding_mode,
             key=key_projection
         )
 
@@ -87,6 +107,7 @@ class UNet(eqx.Module):
                     kernel_size=3,
                     stride=2,
                     padding=padding,
+                    padding_mode=padding_mode,
                     key=key_down
                 )
             )
@@ -98,6 +119,7 @@ class UNet(eqx.Module):
                     lower_level_channels,
                     activation,
                     padding,
+                    padding_mode,
                     key_left
                 )
             )
@@ -109,6 +131,7 @@ class UNet(eqx.Module):
                     upper_level_channels,
                     activation,
                     padding,
+                    padding_mode,
                     key_right
                 )
             )
@@ -121,6 +144,7 @@ class UNet(eqx.Module):
                     kernel_size=3,
                     stride=2,
                     padding=padding,
+                    padding_mode=padding_mode,
                     key=key_up
                 )
             )
