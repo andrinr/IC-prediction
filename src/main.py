@@ -8,13 +8,11 @@ import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Other
-import optax
-import equinox as eqx
-from functools import partial
 import matplotlib.pyplot as plt
 # Local
-from VolumetricSequence import VolumetricSequence
+from data.VolumetricSequence import VolumetricSequence
 import nn
+import data
 
 # Parameters
 DATA_ROOT = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
@@ -28,7 +26,7 @@ jax.config.update("jax_enable_x64", False)
 jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
-vol_seq = VolumetricSequence(
+vol_seq = data.VolumetricSequence(
     BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 30), False)
 
 @pipeline_def(
@@ -37,7 +35,7 @@ vol_seq = VolumetricSequence(
     device_id=0,
     py_num_workers=16,
     py_start_method="spawn")
-def pair_pipeline(external_iterator):
+def volumetric_pairs_pipe(external_iterator):
 
     [start, end] = fn.external_source(
         source=external_iterator,
@@ -57,7 +55,7 @@ def pair_pipeline(external_iterator):
     
     return start, end
 
-data_pipeline = pair_pipeline(vol_seq)
+data_pipeline = volumetric_pairs_pipe(vol_seq)
 data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
 # Initialize Neural Network

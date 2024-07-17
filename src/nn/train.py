@@ -42,7 +42,7 @@ def train(
         for i, data in enumerate(data_iterator):
             start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
             end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
-
+            
             model, optimizer_state, loss = update_fn(
                 start_d,
                 end_d,
