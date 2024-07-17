@@ -37,12 +37,12 @@ def train(
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(eqx.filter(model, eqx.is_array))
 
-    for _ in range(n_epochs):
+    for epoch in range(n_epochs):
         losses = []
         for i, data in enumerate(data_iterator):
             start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
             end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
-            
+
             model, optimizer_state, loss = update_fn(
                 start_d,
                 end_d,
@@ -52,6 +52,7 @@ def train(
             
             losses.append(loss)
         
+        print(f"epoch {epoch}, loss {loss}")
         losses = jnp.array(losses)
         print(losses.mean())
 

@@ -9,16 +9,19 @@ import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Other
 import matplotlib.pyplot as plt
+import scienceplots
 # Local
-from data.VolumetricSequence import VolumetricSequence
 import nn
 import data
+import cosmos
 
 # Parameters
 DATA_ROOT = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 INPUT_GRID_SIZE = 128
 GRID_SIZE = 32
 BATCH_SIZE = 8
+LEARNING_RATE = 3e-5
+N_EPOCHS = 16
 
 # Settings / Device Info
 print("Jax backend is using %s" % xla_bridge.get_backend().platform)
@@ -27,7 +30,7 @@ jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
 vol_seq = data.VolumetricSequence(
-    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 30), False)
+    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 50), False)
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -73,19 +76,47 @@ unet = nn.UNet(
 parameter_count = nn.count_parameters(unet)
 print(f'Number of parameters: {parameter_count}')
 
-learning_rate = 3e-5
-
-nn.train(
+# train the model
+model, losses = nn.train(
     unet,
     data_iterator,
-    learning_rate,
-    10)
+    LEARNING_RATE,
+    N_EPOCHS)
 
-# data = next(data_iterator)
-fig, axs = plt.subplots(3, 1)
-# axs[0].imshow(
+data_pipeline = volumetric_pairs_pipe(vol_seq)
+data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
-# )
+# with plt.style.context('science'):
+data = next(data_iterator)
+start = data['start']
+end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
+
+start_prediction = model(end_d[3])
+
+start = jnp.reshape(start[3], (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
+start_prediction = jnp.reshape(start_prediction, (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
+end_d = jnp.reshape(end_d[3], (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
+
+power_spectrum = cosmos.PowerSpectrum(
+    GRID_SIZE, 20)
+
+fig, axs = plt.subplots(2, 3)
+axs[0, 0].imshow(
+    start[GRID_SIZE // 2, : , :])
+k, power = power_spectrum(start[:, :, :, 0])
+axs[1, 0].plot(k, power)
+
+axs[0, 1].imshow(
+    start_prediction[GRID_SIZE // 2, : , :])
+k, power = power_spectrum(start_prediction[:, :, :, 0])
+axs[1, 1].plot(k, power)
+
+axs[0, 2].imshow(
+    end_d[GRID_SIZE // 2, : , :])
+k, power = power_spectrum(end_d[:, :, :, 0])
+axs[1, 2].plot(k, power)
+
+plt.savefig("pred_vs_real.jpg")
 
 # Delete Data Pipeline
 del data_pipeline
