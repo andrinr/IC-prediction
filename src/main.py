@@ -81,7 +81,8 @@ model, losses = nn.train(
     unet,
     data_iterator,
     LEARNING_RATE,
-    N_EPOCHS)
+    N_EPOCHS,
+    nn.mse_loss)
 
 data_pipeline = volumetric_pairs_pipe(vol_seq)
 data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])

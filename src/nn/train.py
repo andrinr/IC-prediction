@@ -3,39 +3,40 @@ import jax
 import optax
 import equinox as eqx
 from functools import partial
+from typing import Callable
 
-@partial(jax.jit, static_argnums=1)
-def loss_fn(params, static, x : jnp.ndarray, y : jnp.ndarray):
-    model = eqx.combine(params, static)
-    y_pred = jax.vmap(model)(x)
-    mse = jnp.mean(jnp.square(y_pred - y))
-    return mse
-
-@eqx.filter_jit
+@partial(jax.jit, static_argnums=[3, 5, 6])
 def update_fn(
         start : jnp.ndarray,
         end : jnp.ndarray,
-        model : eqx.Module, 
+        model_params,
+        model_static,
         optimizer_state : optax.OptState,
-        optimizer):
+        optimizer_static,
+        loss_function : Callable):
 
-    params, static = eqx.partition(model, eqx.is_array)
+    loss, grad = eqx.filter_value_and_grad(loss_function)(
+        model_params, model_static, end, start)
+    
+    updates, new_optimizer_state = optimizer_static.update(grad, optimizer_state)
 
-    loss, grad = eqx.filter_value_and_grad(loss_fn)(
-        params, static, end, start)
-    updates, new_optimizer_state = optimizer.update(grad, optimizer_state)
+    model =  eqx.combine(model_params, model_static)
     new_model = eqx.apply_updates(model, updates)
+    new_params, _ = eqx.partition(new_model, eqx.is_array)
 
-    return new_model, new_optimizer_state, loss
+    return new_params, new_optimizer_state, loss
 
 def train(
         model,
         data_iterator,
         learning_rate : float,
-        n_epochs : int):
+        n_epochs : int,
+        loss_function : Callable):
     
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(eqx.filter(model, eqx.is_array))
+
+    model_params, model_static = eqx.partition(model, eqx.is_array)
 
     for epoch in range(n_epochs):
         losses = []
@@ -43,12 +44,14 @@ def train(
             start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
             end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
 
-            model, optimizer_state, loss = update_fn(
+            model_params, optimizer_state, loss = update_fn(
                 start_d,
                 end_d,
-                model,  
+                model_params,
+                model_static,
                 optimizer_state,
-                optimizer)
+                optimizer,
+                loss_function)
             
             losses.append(loss)
         
