@@ -1,9 +1,6 @@
 import jax.numpy as jnp
 from typing import Tuple
 
-def compute_overdensity(rho : jnp.ndarray) -> jnp.ndarray:
-    return (rho - rho.mean()) / rho.mean()
-
 class PowerSpectrum:
     N : int
     N_half : int

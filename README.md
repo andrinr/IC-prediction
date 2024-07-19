@@ -78,7 +78,7 @@ dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
 
 - Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
 
-## Getting with data gneration
+## Getting started with data gneration
 
 ### Installing pkdgrav
 
@@ -115,8 +115,13 @@ cmake --build build
 ### Connect to cscs on windwos
 
 Setup:
-1. follow install instruction for script here: https://user.cscs.ch/access/auth/mfa/
-2. edit config  ```notepad.exe C:\Users\<USER>\.ssh\config``` and add: 
+1. Install python
+2. ```git clone https://github.com/eth-cscs/sshservice-cli```
+3. ```python -m venv mfa```
+4. With admin rights ```Set-ExecutionPolicy -ExecutionPolicy Unrestricted```
+5. Activate the python env ```.\venv\Scripts\activate```
+6. ```pip install -r requirements.txt```
+7. edit config  ```notepad.exe C:\Users\<USER>\.ssh\config``` and add: 
 ```
 Host cscs
 	User <USERNAME>
@@ -153,6 +158,7 @@ Create a new python env
 python -m venv jax.env
 source .env/bin/activate
 pip install -U "jax[cuda12]"
+pip install pytorch torchvision torchaudio cpuonly -c pytorch
 pip install optax equinox matplotlib pyccl
 ```
 
@@ -160,4 +166,24 @@ PYCCL can be a bit tricky to get working. In my case I needed to install ```pip 
 ```sudo apt install libpcre3 libpcre3-dev``` and ```sudo apt install swig``` prior to installing pyccl. 
 Furthermore we need to install classy as described in their instructions here: https://github.com/lesgourg/class_public/wiki/Python-wrapper.
 
+## Science Cluster
 
+### Installation
+
+1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
+2. Load Conda ```module load anaconda3```
+3. Create env 
+```
+python -m venv ml-env
+source .env/bin/activate
+pip install -U "jax[cuda12]"
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+pip install nvidia-dali-cuda120
+pip install optax equinox matplotlib
+```
+
+### Startup
+
+1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
+2. Load Conda ```module load anaconda3```
+3. Load env ```source activate myenv```
