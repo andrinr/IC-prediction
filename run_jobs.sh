@@ -1,1 +1,1 @@
-sbatch --array=1-1 job.sh
+sbatch --array=1-500 job.sh
