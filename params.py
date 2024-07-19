@@ -12,8 +12,8 @@ if len(sys.argv) < 4:
 achOutName = sys.argv[2]
 
 # Initial Condition
-dBoxSize        = 30          # Mpc/h
-nGrid           = 128           # Simulation has nGrid^3 particles
+dBoxSize        = 60          # Mpc/h
+nGrid           = 256           # Simulation has nGrid^3 particles
 iLPT            = 2             # LPT order for IC
 iSeed 			= int(sys.argv[1]) 	# Seed
 dRedFrom        = 49            # Starting redshift

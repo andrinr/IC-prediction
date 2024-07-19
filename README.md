@@ -132,6 +132,12 @@ This steps have to be repeated every day to get a new key.
 5. add key ```ssh-add ~\.ssh\cscs-key```
 6. connect with ```ssh cscs``` or use vs code remote ssh extension
 
+### Science Cluster
+
+Data directory:
+
+```/shares/feldmann.ics.mnf.uzh/Andrin```
+
 ### Run data generation on eiger
 
 1. load modules ```module load cray && module swap PrgEnv-cray PrgEnv-gnu && module load cpeGNU GSL Boost cray-hdf5 cray-fftw CMake cray-python hwloc```
