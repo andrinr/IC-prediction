@@ -115,8 +115,13 @@ cmake --build build
 ### Connect to cscs on windwos
 
 Setup:
-1. follow install instruction for script here: https://user.cscs.ch/access/auth/mfa/
-2. edit config  ```notepad.exe C:\Users\<USER>\.ssh\config``` and add: 
+1. Install python
+2. ```git clone https://github.com/eth-cscs/sshservice-cli```
+3. ```python -m venv mfa```
+4. With admin rights ```Set-ExecutionPolicy -ExecutionPolicy Unrestricted```
+5. Activate the python env ```.\venv\Scripts\activate```
+6. ```pip install -r requirements.txt```
+7. edit config  ```notepad.exe C:\Users\<USER>\.ssh\config``` and add: 
 ```
 Host cscs
 	User <USERNAME>
@@ -131,6 +136,12 @@ This steps have to be repeated every day to get a new key.
 4. execute the ssh-gen script ```python .\sshservice-cli\cscs-keygen.py``` and enter credentials. No password needed. 
 5. add key ```ssh-add ~\.ssh\cscs-key```
 6. connect with ```ssh cscs``` or use vs code remote ssh extension
+
+### Science Cluster
+
+Data directory:
+
+```/shares/feldmann.ics.mnf.uzh/Andrin```
 
 ### Run data generation on eiger
 

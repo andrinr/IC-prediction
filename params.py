@@ -12,10 +12,10 @@ if len(sys.argv) < 4:
 achOutName = sys.argv[2]
 
 # Initial Condition
-dBoxSize        = 30          # Mpc/h
-nGrid           = 128           # Simulation has nGrid^3 particles
+dBoxSize        = 60          # Mpc/h
+nGrid           = 256           # Simulation has nGrid^3 particles
 iLPT            = 2             # LPT order for IC
-iSeed 			= int(sys.argv[1]) 	# Seed
+iSeed 			= int(sys.argv[1]) + 1000 	# Seed
 dRedFrom        = 49            # Starting redshift
 
 # Cosmology
@@ -36,7 +36,7 @@ bPeriodic       = True          # with a periodic box
 bEwald          = True          # enable Ewald periodic boundaries
 
 # Logging/Output
-iOutInterval    = 1
+iOutInterval    = 100
 #iCheckInterval = 5
 bDoDensity      = False
 bVDetails       = True
@@ -74,4 +74,4 @@ class MassGrid:
     def ephemeral(self,msr,**kwargs):
         return msr.grid_ephemeral(self.grid)
 
-add_analysis(MassGrid(sys.argv[3], nGrid))
+add_analysis(MassGrid(sys.argv[3], 128))
