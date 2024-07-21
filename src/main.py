@@ -17,7 +17,7 @@ import cosmos
 # Parameters
 DATA_ROOT = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 INPUT_GRID_SIZE = 128
-GRID_SIZE = 32
+GRID_SIZE = 64
 BATCH_SIZE = 8
 LEARNING_RATE = 3e-5
 N_EPOCHS = 16
@@ -67,7 +67,7 @@ unet = nn.UNet(
     in_channels=1,
     out_channels=1,
     hidden_channels=8,
-    num_levels=3,
+    num_levels=4,
     activation=jax.nn.relu,
     padding='SAME',
     padding_mode='CIRCULAR',	
@@ -99,7 +99,7 @@ start_prediction = jnp.reshape(start_prediction, (GRID_SIZE, GRID_SIZE, GRID_SIZ
 end_d = jnp.reshape(end_d[3], (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
 
 power_spectrum = cosmos.PowerSpectrum(
-    GRID_SIZE, 20)
+    GRID_SIZE, 40)
 
 fig, axs = plt.subplots(2, 3)
 axs[0, 0].imshow(

@@ -6,7 +6,7 @@ from functools import partial
 from typing import Callable
 
 @partial(jax.jit, static_argnums=[3, 5, 6])
-def update_fn(
+def learn_batch(
         start : jnp.ndarray,
         end : jnp.ndarray,
         model_params,
@@ -14,6 +14,9 @@ def update_fn(
         optimizer_state : optax.OptState,
         optimizer_static,
         loss_function : Callable):
+    """
+    Learn model on a data batch.
+    """
 
     loss, grad = eqx.filter_value_and_grad(loss_function)(
         model_params, model_static, end, start)
@@ -44,7 +47,7 @@ def train(
             start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
             end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
 
-            model_params, optimizer_state, loss = update_fn(
+            model_params, optimizer_state, loss = learn_batch(
                 start_d,
                 end_d,
                 model_params,
@@ -55,8 +58,7 @@ def train(
             
             losses.append(loss)
         
-        print(f"epoch {epoch}, loss {loss}")
+        print(f"epoch {epoch}, loss {losses.mean()}")
         losses = jnp.array(losses)
-        print(losses.mean())
 
     return model, losses

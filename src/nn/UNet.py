@@ -150,7 +150,6 @@ class UNet(eqx.Module):
             )
 
     def __call__(self, x):
-        print(x.shape)
         x = self.lifting(x)
         residuals = []
 
