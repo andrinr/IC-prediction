@@ -1,3 +1,4 @@
+from __future__ import annotations, type
 import jax.numpy as jnp
 from random import shuffle
 import os

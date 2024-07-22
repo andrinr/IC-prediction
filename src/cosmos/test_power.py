@@ -1,7 +1,7 @@
 import jax.numpy as jnp
 import jax
 from typing import Tuple
-from power import PowerSpectrum
+from .power import PowerSpectrum
 
 def gen_data(N):
     key = jax.random.PRNGKey(20)
