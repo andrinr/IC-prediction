@@ -41,8 +41,9 @@ def train(
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
 
+    training_loss = []
     for epoch in range(n_epochs):
-        losses = []
+        epoch_loss = []
         for i, data in enumerate(data_iterator):
             start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
             end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
@@ -56,9 +57,10 @@ def train(
                 optimizer,
                 loss_function)
             
-            losses.append(loss)
+            epoch_loss.append(loss)
         
-        print(f"epoch {epoch}, loss {losses.mean()}")
-        losses = jnp.array(losses)
+        epoch_loss = jnp.array(epoch_loss)
+        print(f"epoch {epoch}, loss {epoch_loss.mean()}")
+        training_loss.append(epoch_loss.mean())
 
-    return model, losses
+    return model, jnp.array(epoch_loss)

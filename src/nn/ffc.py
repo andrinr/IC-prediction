@@ -1,10 +1,10 @@
 # Implementation of Fast Furier Convolution
-
+from __future__ import annotations
 import equinox as eqx
 from typing import Callable
 import jax
 import jax.numpy as jnp
-from typing import Callable
+from typing import Callable, Tuple
 
 class FFC(eqx.Module):
     """
@@ -14,7 +14,7 @@ class FFC(eqx.Module):
     hidden_channels : int
     n_grid : int
     n_grid_2 : int
-    n_grid_4 : in
+    n_grid_4 : int
     activation_function : Callable
     start : eqx.nn.Conv
     start_fs : eqx.nn.Conv
@@ -53,13 +53,14 @@ class FFC(eqx.Module):
         
         return
 
-    def to_fs(x):
-        x = jnp.fft.fftshift(x)
-        return jnp.fft.fftn(x)
+    def to_fs(x : jnp.ndarray):
+        x_fs = jnp.fft.fftn(x)
+        x_fs = jnp.fft.fftshift(x)
+        return jnp.concatenate([x_fs.real(), x_fs.complex()])
 
-    def from_fs(x):
-        x = ifftshift(x)
-        return jnp.fft.ifftn(x)
+    def from_fs(x_fs : jnp.ndarray):
+        x_fs = jnp.fft.ifftshift(x_fs)
+        return jnp.fft.ifftn(x_fs)
 
     def __call__(self, x):
 
