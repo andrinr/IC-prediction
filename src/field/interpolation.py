@@ -1,18 +1,24 @@
 import jax
 import jax.numpy as jnp
 
-def linear_interp(pos : jnp.ndarray, scalar_field : jnp.ndarray, dx : float) -> jnp.ndarray:
+# @jax.jit
+def lin_interp(
+        pos : jnp.ndarray, 
+        scalar_field : jnp.ndarray) -> jnp.ndarray:
+    
+    n = scalar_field.shape[0]
+    dx = 1.0 / (n)
+    coords = jnp.linspace(start=0, stop=1, num=n+1)
 
-    coords = jnp.linspace(start=0, stop=1, num=scalar_field.shape[0])
+    print(coords)
+    print(dx)
 
     # find position on the grid
-    x_idx = jnp.digitize(pos[0] % 1.0, coords, right=True)
-    y_idx = jnp.digitize(pos[1] % 1.0, coords, right=True)
-    z_idx = jnp.digitize(pos[2] % 1.0, coords, right=True)
+    x_idx = jnp.digitize(pos[0] % 1.0, coords, right=False) - 1
+    y_idx = jnp.digitize(pos[1] % 1.0, coords, right=False) - 1
+    z_idx = jnp.digitize(pos[2] % 1.0, coords, right=False) - 1
 
-    print(x_idx)
-    print(y_idx)
-    print(z_idx)
+    print(x_idx, y_idx, z_idx)
 
     # find the weights
     x_w = (pos[0] % 1.0 - coords[x_idx]) / dx

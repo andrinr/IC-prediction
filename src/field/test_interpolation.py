@@ -1,28 +1,26 @@
 import jax.numpy as jnp
-import jax
-from .interpolation import linear_interp
+from .interpolation import lin_interp
 
 def test_linear():
 
     field = jnp.array([
         [
-            [0, 1],
-            [0, 1]
+            [0, 1, 0],
+            [1, 1, 0],
+            [0, 0, 0],
         ],
         [
-            [0, 0],
-            [0, 0]
-        ]
+            [0, 0, 0],
+            [0, 100, 0],
+            [0, 0, 0],
+        ],
+        [
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 100],
+        ],
     ])
 
-    x = [0.1, 0, 0]
-
-    value = linear_interp(
-        x,
-        field, 
-        1)
-    
-    print(value)
-    
-    assert False
-
+    assert lin_interp([0, 0, 1/6],field) == 0.5
+    assert lin_interp([0, 1/6, 1/6],field) == 0.75
+    assert lin_interp([0, 1/2, 1/2],field) == 0.25
