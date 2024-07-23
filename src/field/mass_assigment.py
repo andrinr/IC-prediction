@@ -2,7 +2,7 @@ import jax
 import jax.numpy as jnp
 from functools import partial
 
-# @partial(jax.jit, static_argnums=(2, 3))
+@partial(jax.jit, static_argnums=(2, 3))
 def linear_ma(
         pos : jnp.ndarray, 
         weight : jnp.ndarray, 
