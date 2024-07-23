@@ -1,5 +1,6 @@
 import jax.numpy as jnp
-from .interpolation import lin_interp
+import jax
+from .interpolation import bilinear_interp
 
 def test_linear():
 
@@ -21,6 +22,6 @@ def test_linear():
         ],
     ])
 
-    assert lin_interp([0, 0, 1/6],field) == 0.5
-    assert lin_interp([0, 1/6, 1/6],field) == 0.75
-    assert lin_interp([0, 1/2, 1/2],field) == 0.25
+    assert bilinear_interp([0, 0, 1/6],field) == 0.5
+    assert bilinear_interp([0, 1/6, 1/6],field) == 0.75
+    assert bilinear_interp([0, 1/2, 1/2],field) == 0.25

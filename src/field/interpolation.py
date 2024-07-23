@@ -2,7 +2,7 @@ import jax
 import jax.numpy as jnp
 
 @jax.jit
-def lin_interp(
+def bilinear_interp(
         pos : jnp.ndarray, 
         scalar_field : jnp.ndarray) -> jnp.ndarray:
     
