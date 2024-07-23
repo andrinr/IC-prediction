@@ -4,53 +4,46 @@ import equinox as eqx
 from typing import Callable
 import jax
 import jax.numpy as jnp
-from typing import Callable, Tuple
+from typing import Callable
+from .DoubleConv import DoubleConv
 
 class FFC(eqx.Module):
     """
     All variables ending with _fs are in furier space, others in normal physical space.
     """
 
-    hidden_channels : int
-    n_grid : int
-    n_grid_2 : int
-    n_grid_4 : int
-    activation_function : Callable
-    start : eqx.nn.Conv
-    start_fs : eqx.nn.Conv
-    middle : list[eqx.nn.Conv]
-    middle_fs : list[eqx.nn.Conv]
-    end : eqx.nn.Conv
-    end_fs : eqx.nn.Conv
+    lift : DoubleConv
+    drop : DoubleConv
 
     def __init__(
             self,
             rnd_key,
-            n_grid : int,
             hidden_channels : int,
+            n_grid : int,
             activation: Callable):
 
         self.n_grid = n_grid
-        self.n_grid_2 = n_grid // 2
-        self.n_grid_4 = n_grid // 4
-        self.hidden_channels = hidden_channels
 
-        self.start = eqx.nn.Conv(
+        keys = jax.random.split(rnd_key, 4)
+
+        self.lift = DoubleConv(
             num_spatial_dims = 3,
             in_channels = 1,
-            out_channels = hidden_channels)
+            out_channels = hidden_channels,
+            activation = activation,
+            padding = 'SAME',
+            padding_mode = 'CIRCULAR',
+            key = keys[0])
         
-        self.start_fs = eqx.nn.Conv(
+        self.drop = DoubleConv(
             num_spatial_dims = 3,
-            in_channels = 1,
-            out_channels = hidden_channels)
+            in_channels = hidden_channels,
+            out_channels = 1,
+            activation = activation,
+            padding = 'SAME',
+            padding_mode = 'CIRCULAR',
+            key = keys[1])
 
-        self.end = 
-
-
-
-
-        
         return
 
     def to_fs(x : jnp.ndarray):
