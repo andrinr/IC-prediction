@@ -62,23 +62,30 @@ data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
 # Initialize Neural Network
 init_rng = jax.random.key(0)
-unet = nn.UNet(
-    num_spatial_dims=3,
-    in_channels=1,
-    out_channels=1,
-    hidden_channels=8,
-    num_levels=4,
-    activation=jax.nn.relu,
-    padding='SAME',
-    padding_mode='CIRCULAR',	
-    key=init_rng)
+# model = nn.UNet(
+#     num_spatial_dims=3,
+#     in_channels=1,
+#     out_channels=1,
+#     hidden_channels=8,
+#     num_levels=4,
+#     activation=jax.nn.relu,
+#     padding='SAME',
+#     padding_mode='CIRCULAR',	
+#     key=init_rng)
 
-parameter_count = nn.count_parameters(unet)
+model = nn.fno.FNO(
+    modes = 16,
+    hidden_channels = 8,
+    activation = jax.nn.relu,
+    n_furier_layers = 4,
+    key = init_rng)
+
+parameter_count = nn.count_parameters(model)
 print(f'Number of parameters: {parameter_count}')
 
 # train the model
 model, losses = nn.train(
-    unet,
+    model,
     data_iterator,
     LEARNING_RATE,
     N_EPOCHS,
