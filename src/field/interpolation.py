@@ -3,8 +3,8 @@ import jax.numpy as jnp
 
 @jax.jit
 def bilinear_interp(
-        pos : jnp.ndarray, 
-        scalar_field : jnp.ndarray) -> jnp.ndarray:
+        pos : jax.Array, 
+        scalar_field : jax.Array) -> jax.Array:
     
     n = scalar_field.shape[0]
     dx = 1.0 / (n)
@@ -33,8 +33,8 @@ def bilinear_interp(
     return interp
 
 def bicubic_interp(
-        pos : jnp.ndarray, 
-        scalar_field : jnp.ndarray) -> jnp.ndarray:
+        pos : jax.Array, 
+        scalar_field : jax.Array) -> jax.Array:
     
     n = scalar_field.shape[0]
     dx = 1.0 / (n)

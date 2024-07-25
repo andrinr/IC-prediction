@@ -1,4 +1,4 @@
-import jax.numpy as jnp
+import jax
 
-def compute_overdensity(rho : jnp.ndarray) -> jnp.ndarray:
+def compute_overdensity(rho : jax.Array) -> jax.Array:
     return (rho - rho.mean()) / rho.mean()

@@ -1,11 +1,12 @@
 import jax.numpy as jnp
+import jax
 from typing import Tuple
 
 class PowerSpectrum:
     N : int
     N_half : int
     n_bins : int
-    index_grid : jnp.ndarray
+    index_grid : jax.Array
 
     def __init__(self, N : int, n_bins : int):
         self.N = N
@@ -21,7 +22,7 @@ class PowerSpectrum:
         self.n_modes = jnp.zeros(self.n_bins)
         self.n_modes = self.n_modes.at[self.index_grid].add(1)
 
-    def __call__(self, delta : jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
+    def __call__(self, delta : jax.Array) -> Tuple[jax.Array, jax.Array]:
         # get the density field in furier space
         delta_k = jnp.fft.fftn(delta)
 

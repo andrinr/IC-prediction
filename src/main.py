@@ -13,23 +13,24 @@ import matplotlib.pyplot as plt
 import nn
 import data
 import cosmos
+import field
 
 # Parameters
 DATA_ROOT = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 INPUT_GRID_SIZE = 128
-GRID_SIZE = 32
+GRID_SIZE = 64
 BATCH_SIZE = 8
-LEARNING_RATE = 0.0001
+LEARNING_RATE = 0.001
 N_EPOCHS = 30
 
-# Settings / Device Info
+# JAX Settings / Device Info
 print("Jax backend is using %s" % xla_bridge.get_backend().platform)
 jax.config.update("jax_enable_x64", False)
 jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
 vol_seq = data.VolumetricSequence(
-    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 50), False)
+    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (45, 46), False)
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -74,8 +75,8 @@ init_rng = jax.random.key(0)
 #     key=init_rng)
 
 model = nn.fno.FNO(
-    modes = 16,
-    hidden_channels = 8,
+    modes = 4,
+    hidden_channels = 16,
     activation = jax.nn.relu,
     n_furier_layers = 4,
     key = init_rng)
@@ -96,33 +97,43 @@ data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
 # with plt.style.context('science'):
 data = next(data_iterator)
-start = data['start']
 end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
+start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
 
 start_prediction = model(end_d[3])
 
-start = jnp.reshape(start[3], (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
+start_d = jnp.reshape(start_d[3], (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
 start_prediction = jnp.reshape(start_prediction, (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
 end_d = jnp.reshape(end_d[3], (GRID_SIZE, GRID_SIZE, GRID_SIZE, 1))
 
 power_spectrum = cosmos.PowerSpectrum(
     GRID_SIZE, 40)
 
-fig, axs = plt.subplots(2, 3)
+fig, axs = plt.subplots(2, 4)
+
+axs[0, 0].set_title("Y star")
 axs[0, 0].imshow(
-    start[GRID_SIZE // 2, : , :])
-k, power = power_spectrum(start[:, :, :, 0])
+    start_d[GRID_SIZE // 2, : , :])
+k, power = power_spectrum(start_d[:, :, :, 0])
 axs[1, 0].plot(k, power)
 
+axs[0, 1].set_title("Y")
 axs[0, 1].imshow(
     start_prediction[GRID_SIZE // 2, : , :])
 k, power = power_spectrum(start_prediction[:, :, :, 0])
 axs[1, 1].plot(k, power)
 
+axs[0, 2].set_title("X")
 axs[0, 2].imshow(
     end_d[GRID_SIZE // 2, : , :])
 k, power = power_spectrum(end_d[:, :, :, 0])
 axs[1, 2].plot(k, power)
+
+difference = start_prediction[GRID_SIZE // 2, : , :] - start_d[GRID_SIZE // 2, : , :]
+
+axs[0, 3].set_title("X")
+axs[0, 3].imshow(
+    difference)
 
 plt.savefig("pred_vs_real.jpg")
 

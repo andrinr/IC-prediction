@@ -1,4 +1,4 @@
-from __future__ import annotations
+# from __future__ import annotations
 import equinox as eqx
 from typing import Callable
 import jax
@@ -46,8 +46,6 @@ class SpectralConvolution(eqx.Module):
             self.weights_imag.append(imag)
         
     def complex_mul3d(self, a, b):
-        print(a.shape, b.shape)
-
         return jnp.einsum("ixyz,ioxyz->oxyz", a, b)
 
     def __call__(self, x):

@@ -2,9 +2,9 @@ import jax
 import jax.numpy as jnp
 
 def central_difference(
-        field : jnp.ndarray,
+        field : jax.Array,
         axis : int, 
-        delta : float) -> jnp.ndarray:
+        delta : float) -> jax.Array:
     
     field_r = jnp.roll(field, 1, axis=axis)
     field_l = jnp.roll(field, -1, axis=axis)
@@ -12,8 +12,8 @@ def central_difference(
     return (field_r - 2 * field + field_l) / (delta ** 2)
 
 def gradient(
-        field : jnp.ndarray,
-        delta : float) -> jnp.ndarray:
+        field : jax.Array,
+        delta : float) -> jax.Array:
     
     grad_x = central_difference(field, 0, delta)
     grad_y = central_difference(field, 1, delta)

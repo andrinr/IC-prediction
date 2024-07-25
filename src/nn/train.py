@@ -7,8 +7,8 @@ from typing import Callable
 
 @partial(jax.jit, static_argnums=[3, 5, 6])
 def learn_batch(
-        start : jnp.ndarray,
-        end : jnp.ndarray,
+        start : jax.Array,
+        end : jax.Array,
         model_params,
         model_static,
         optimizer_state : optax.OptState,
@@ -56,7 +56,6 @@ def train(
                 optimizer_state,
                 optimizer,
                 loss_function)
-            
             epoch_loss.append(loss)
         
         epoch_loss = jnp.array(epoch_loss)

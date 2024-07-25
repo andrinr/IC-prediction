@@ -4,10 +4,10 @@ from functools import partial
 
 @partial(jax.jit, static_argnums=(2, 3))
 def linear_ma(
-        pos : jnp.ndarray, 
-        weight : jnp.ndarray, 
+        pos : jax.Array, 
+        weight : jax.Array, 
         grid_size : int, 
-        dx : float) -> jnp.ndarray:
+        dx : float) -> jax.Array:
 
     coords = jnp.linspace(start=0, stop=1, num=grid_size+1)
 
@@ -25,10 +25,10 @@ def linear_ma(
 
 @partial(jax.jit, static_argnums=(2, 3))
 def cic_ma(
-        pos : jnp.ndarray, 
-        weight : jnp.ndarray, 
+        pos : jax.Array, 
+        weight : jax.Array, 
         n : int, 
-        dx : float) -> jnp.ndarray:
+        dx : float) -> jax.Array:
     
     coords = jnp.linspace(start=0, stop=1, num=n+1)
 
