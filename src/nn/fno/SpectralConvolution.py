@@ -14,7 +14,6 @@ class SpectralConvolution(eqx.Module):
     """
 
     modes : int
-    activation : Callable
     weights_real : list[jax.Array]
     weights_imag : list[jax.Array]
 
@@ -22,11 +21,9 @@ class SpectralConvolution(eqx.Module):
             self, 
             modes : int,
             n_channels : int,
-            activation: Callable,
             key):
         
         self.modes = modes
-        self.activation = activation
         keys = jax.random.split(key, 8)
         
         scale = 1.0 / (n_channels ** 2)
@@ -37,51 +34,46 @@ class SpectralConvolution(eqx.Module):
         for i in range(4):
             real = jax.random.uniform(
                 keys[i], 
-                (n_channels, n_channels, modes, modes, modes, 2),
+                (n_channels, n_channels, modes, modes, modes),
                 minval=-scale, maxval=scale)
             
             imag = jax.random.uniform(
                 keys[i + 4], 
-                (n_channels, n_channels, modes, modes, modes, 2),
+                (n_channels, n_channels, modes, modes, modes),
                 minval=-scale, maxval=scale)
             
             self.weights_real.append(real)
             self.weights_imag.append(imag)
         
     def complex_mul3d(self, a, b):
-        op = jnp.einsum("ixyz,ioxyz->oxyz")
+        print(a.shape, b.shape)
 
-        return op(a, b)
+        return jnp.einsum("ixyz,ioxyz->oxyz", a, b)
 
     def __call__(self, x):
+        N = x.shape[1]
         # x shape : n_channels, N, N, N
         # x_fs shape : n_channels, N, N, N // 2, 2
-        print(x.shape)
 
-        x_fs = jnp.fft.rfftn(x)
-
-        print(x_fs.shape)
+        x_fs = jnp.fft.rfftn(x, s=(N, N, N), axes=(1, 2, 3))
 
         out_fs = jnp.zeros_like(x_fs)
 
         weights = self.weights_real[0] + 1j * self.weights_imag[0]
+
         out_fs = out_fs.at[:, :self.modes, :self.modes, :self.modes].set(
-            self.complex_mul(weights, x_fs[:, :self.modes, :self.modes, :self.modes]))
+            self.complex_mul3d(x_fs[:, :self.modes, :self.modes, :self.modes], weights))
         
         weights = self.weights_real[1] + 1j * self.weights_imag[1]
         out_fs = out_fs.at[:, -self.modes:, :self.modes, :self.modes].set(
-            self.complex_mul(self.weights, x_fs[:, -self.modes:, :self.modes, :self.modes]))
+            self.complex_mul3d(x_fs[:, -self.modes:, :self.modes, :self.modes], weights))
         
         weights = self.weights_real[2] + 1j * self.weights_imag[2]
         out_fs = out_fs.at[:, :self.modes, -self.modes:, :self.modes].set(
-            self.complex_mul(weights, x_fs[:, :self.modes, -self.modes:, :self.modes]))
+            self.complex_mul3d(x_fs[:, :self.modes, -self.modes:, :self.modes], weights))
         
         weights = self.weights_real[3] + 1j * self.weights_imag[3]
-        out_fs = out_fs.at[:, :-self.modes, :-self.modes, :self.modes].set(
-            self.complex_mul(weights, x_fs[:, :-self.modes, :-self.modes, :self.modes]))
+        out_fs = out_fs.at[:, -self.modes:, -self.modes:, :self.modes].set(
+            self.complex_mul3d(x_fs[:, -self.modes:, -self.modes:, :self.modes], weights))
            
-        out = jax.vmap(jnp.fft.ifftn)(out_fs)
-
-        print(out.shape)
-
-        return out
+        return jnp.fft.irfftn(out_fs, s=(N, N, N), axes=(1, 2, 3))
