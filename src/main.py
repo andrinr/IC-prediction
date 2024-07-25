@@ -29,8 +29,10 @@ jax.config.update("jax_enable_x64", False)
 jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
-vol_seq = data.VolumetricSequence(
-    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (7, 10), False)
+# dataset = data.VolumetricSequence(
+#     BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (7, 10), False)
+
+dataset = data.TestData(BATCH_SIZE, GRID_SIZE)
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -58,7 +60,7 @@ def volumetric_pairs_pipe(external_iterator):
     
     return start, end
 
-data_pipeline = volumetric_pairs_pipe(vol_seq)
+data_pipeline = volumetric_pairs_pipe(dataset)
 data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
 # Initialize Neural Network
@@ -75,10 +77,10 @@ init_rng = jax.random.key(0)
 #     key=init_rng)
 
 model = nn.fno.FNO(
-    modes = 16,
-    hidden_channels = 32,
+    modes = 8,
+    hidden_channels = 4,
     activation = jax.nn.relu,
-    n_furier_layers = 4,
+    n_furier_layers = 2,
     key = init_rng)
 
 parameter_count = nn.count_parameters(model)
@@ -92,7 +94,7 @@ model, losses = nn.train(
     N_EPOCHS,
     nn.mse_loss)
 
-data_pipeline = volumetric_pairs_pipe(vol_seq)
+data_pipeline = volumetric_pairs_pipe(dataset)
 data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
 # with plt.style.context('science'):

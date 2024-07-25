@@ -64,19 +64,19 @@ class SpectralConvolution(eqx.Module):
         out_fs = out_fs.at[:, :self.modes, :self.modes, :self.modes].set(
             self.complex_mul3d(x_fs[:, :self.modes, :self.modes, :self.modes], weights))
         
-        # # high pass dim 1, low pass else
-        # weights = self.weights_real[1] + 1j * self.weights_imag[1]
-        # out_fs = out_fs.at[:, -self.modes:, :self.modes, :self.modes].set(
-        #     self.complex_mul3d(x_fs[:, -self.modes:, :self.modes, :self.modes], weights))
+        # high pass dim 1, low pass else
+        weights = self.weights_real[1] + 1j * self.weights_imag[1]
+        out_fs = out_fs.at[:, -self.modes:, :self.modes, :self.modes].set(
+            self.complex_mul3d(x_fs[:, -self.modes:, :self.modes, :self.modes], weights))
         
-        # # high pass dim 2, low pass else
-        # weights = self.weights_real[2] + 1j * self.weights_imag[2]
-        # out_fs = out_fs.at[:, :self.modes, -self.modes:, :self.modes].set(
-        #     self.complex_mul3d(x_fs[:, :self.modes, -self.modes:, :self.modes], weights))
+        # high pass dim 2, low pass else
+        weights = self.weights_real[2] + 1j * self.weights_imag[2]
+        out_fs = out_fs.at[:, :self.modes, -self.modes:, :self.modes].set(
+            self.complex_mul3d(x_fs[:, :self.modes, -self.modes:, :self.modes], weights))
         
-        # # low pass dim 3, high else
-        # weights = self.weights_real[3] + 1j * self.weights_imag[3]
-        # out_fs = out_fs.at[:, -self.modes:, -self.modes:, :self.modes].set(
-        #     self.complex_mul3d(x_fs[:, -self.modes:, -self.modes:, :self.modes], weights))
+        # low pass dim 3, high else
+        weights = self.weights_real[3] + 1j * self.weights_imag[3]
+        out_fs = out_fs.at[:, -self.modes:, -self.modes:, :self.modes].set(
+            self.complex_mul3d(x_fs[:, -self.modes:, -self.modes:, :self.modes], weights))
            
         return jnp.fft.irfftn(out_fs, s=(N, N, N), axes=(1, 2, 3))

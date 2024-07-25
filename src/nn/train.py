@@ -57,6 +57,8 @@ def train(
                 optimizer,
                 loss_function)
             epoch_loss.append(loss)
+
+            print(f"epoch {epoch}, batch {i}, loss {loss}")
         
         epoch_loss = jnp.array(epoch_loss)
         print(f"epoch {epoch}, loss {epoch_loss.mean()}")
