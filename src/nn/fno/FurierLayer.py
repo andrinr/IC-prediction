@@ -35,5 +35,5 @@ class FurierLayer(eqx.Module):
         
     def __call__(self, x):
         y = self.spectral_conv(x)
-        z = self.bypass_conv(x)
-        return self.activation(y + z)
+        # z = self.bypass_conv(x)
+        return self.activation(y)

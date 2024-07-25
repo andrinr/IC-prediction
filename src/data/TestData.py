@@ -7,26 +7,18 @@ import random
 
 type Range = tuple[str, int]
 
-def overdensity(density):
-    mean = density.mean()
-    return (density - mean) / mean
-
 class VolumetricSequence:
     def __init__(
             self, 
             batch_size : int, 
             grid_size : int, 
-            directory : str,
-            range : Range,
-            load_sequence : bool = False):
+            range : Range):
 
         self.dir = os.path.abspath(directory)
         self.batch_size = batch_size
         self.grid_size = grid_size
-        self.range = range
-        self.load_sequence = load_sequence
-        self.folders = os.listdir(self.dir)
-        shuffle(self.folders)
+
+        self.keys = jax.random
 
     def __call__(self, sample_info : types.SampleInfo):
         stride = 1 if self.load_sequence else (self.range[1] - self.range[0])

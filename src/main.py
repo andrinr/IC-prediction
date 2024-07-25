@@ -18,10 +18,10 @@ import field
 # Parameters
 DATA_ROOT = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 INPUT_GRID_SIZE = 128
-GRID_SIZE = 64
+GRID_SIZE = 32
 BATCH_SIZE = 8
 LEARNING_RATE = 0.001
-N_EPOCHS = 30
+N_EPOCHS = 100
 
 # JAX Settings / Device Info
 print("Jax backend is using %s" % xla_bridge.get_backend().platform)
@@ -30,7 +30,7 @@ jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
 vol_seq = data.VolumetricSequence(
-    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (45, 46), False)
+    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (7, 10), False)
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -75,8 +75,8 @@ init_rng = jax.random.key(0)
 #     key=init_rng)
 
 model = nn.fno.FNO(
-    modes = 4,
-    hidden_channels = 16,
+    modes = 16,
+    hidden_channels = 32,
     activation = jax.nn.relu,
     n_furier_layers = 4,
     key = init_rng)
