@@ -8,5 +8,4 @@ def mse_loss(params, static, x : jax.Array, y_star : jax.Array):
     model = eqx.combine(params, static)
     y = jax.vmap(model)(x)
     mse = jnp.sum((y_star - y) ** 2)
-    print(mse.shape)
     return mse
