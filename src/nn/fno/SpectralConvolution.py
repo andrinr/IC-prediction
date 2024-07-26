@@ -53,8 +53,6 @@ class SpectralConvolution(eqx.Module):
         # x shape : n_channels, N, N, N
         # x_fs shape : n_channels, N, N, N // 2, 2
 
-        print(x.shape)
-
         x_fs = jnp.fft.rfftn(x, s=(N, N, N), axes=(1, 2, 3))
 
         # TODO: plot amplitude of x_fs for debugging

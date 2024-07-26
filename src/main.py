@@ -30,10 +30,10 @@ jax.config.update("jax_enable_x64", False)
 jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
-# dataset = data.VolumetricSequence(
-#     BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (7, 10), False)
+dataset = data.VolumetricSequence(
+    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (7, 10), False)
 
-dataset = data.TestData(BATCH_SIZE, GRID_SIZE)
+# dataset = data.TestData(BATCH_SIZE, GRID_SIZE)
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
