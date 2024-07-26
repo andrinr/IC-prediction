@@ -12,6 +12,8 @@ class FNO(eqx.Module):
     All variables ending with _fs are in furier space, others in normal physical space.
     """
 
+    # TODO: scaling before furier layers
+
     lift : eqx.nn.Conv
     furier_layers : list[FurierLayer]
     project : eqx.nn.Conv
