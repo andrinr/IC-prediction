@@ -55,8 +55,6 @@ class SpectralConvolution(eqx.Module):
 
         x_fs = jnp.fft.rfftn(x, s=(N, N, N), axes=(1, 2, 3))
 
-        # TODO: plot amplitude of x_fs for debugging
-
         out_fs = jnp.zeros_like(x_fs)
 
         # low pass filter for all dimensions
