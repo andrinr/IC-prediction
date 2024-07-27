@@ -11,6 +11,7 @@ class SpectralConvolution(eqx.Module):
 
     Implementation inspired by:
     Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
+    NeuralOperator: https://github.com/neuraloperator/neuraloperator
     """
 
     modes : int
@@ -54,8 +55,6 @@ class SpectralConvolution(eqx.Module):
         # x_fs shape : n_channels, N, N, N // 2, 2
 
         x_fs = jnp.fft.rfftn(x, s=(N, N, N), axes=(1, 2, 3))
-
-        # TODO: plot amplitude of x_fs for debugging
 
         out_fs = jnp.zeros_like(x_fs)
 
