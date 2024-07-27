@@ -8,7 +8,7 @@ import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
-import layers
+import nn
 import data
 import visualize
 
@@ -73,12 +73,15 @@ init_rng = jax.random.key(0)
 #     padding_mode='CIRCULAR',	
 #     key=init_rng)
 
-model = layers.fno.FNO(
-    modes = 16,
-    hidden_channels = 4,
+fno_hyperparams = {
+    "modes" : 16,
+    "hidden_channels" : 4,
+    "n_furier_layers" : 4}
+
+model = nn.fno.fno(
     activation = jax.nn.relu,
-    n_furier_layers = 4,
-    key = init_rng)
+    key = init_rng,
+    **fno_hyperparams)
 
 # model = nn.Dummy(
 #     num_spatial_dims=3,
@@ -88,16 +91,16 @@ model = layers.fno.FNO(
 #     padding_mode='CIRCULAR',
 #     key=init_rng)
 
-parameter_count = layers.count_parameters(model)
+parameter_count = nn.count_parameters(model)
 print(f'Number of parameters: {parameter_count}')
 
 # train the model
-model, losses = layers.train(
+model, losses = nn.train(
     model,
     data_iterator,
     LEARNING_RATE,
     N_EPOCHS,
-    layers.mse_loss)
+    nn.mse_loss)
 
 data_pipeline = volumetric_pairs_pipe(dataset)
 data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])

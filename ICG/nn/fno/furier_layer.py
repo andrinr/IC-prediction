@@ -2,9 +2,17 @@
 import equinox as eqx
 from typing import Callable
 import jax
-from .SpectralConvolution import SpectralConvolution
+from .spectral_convolution import SpectralConvolution
 
 class FurierLayer(eqx.Module):
+    """
+    Paper by Li et. al:
+    FOURIER NEURAL OPERATOR FOR PARAMETRIC PARTIAL DIFFERENTIAL EQUATIONS
+
+    Implementation inspired by:
+    Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
+    NeuralOperator: https://github.com/neuraloperator/neuraloperator
+    """
     spectral_conv : SpectralConvolution
     bypass_conv : eqx.nn.Conv
     activation : Callable

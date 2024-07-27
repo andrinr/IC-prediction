@@ -11,6 +11,7 @@ class SpectralConvolution(eqx.Module):
 
     Implementation inspired by:
     Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
+    NeuralOperator: https://github.com/neuraloperator/neuraloperator
     """
 
     modes : int

@@ -5,11 +5,16 @@ from typing import Callable
 import jax
 import jax.numpy as jnp
 from typing import Callable
-from .FurierLayer import FurierLayer
+from .furier_layer import FurierLayer
 
 class FNO(eqx.Module):
     """
-    All variables ending with _fs are in furier space, others in normal physical space.
+    Paper by Li et. al:
+    FOURIER NEURAL OPERATOR FOR PARAMETRIC PARTIAL DIFFERENTIAL EQUATIONS
+
+    Implementation inspired by:
+    Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
+    NeuralOperator: https://github.com/neuraloperator/neuraloperator
     """
 
     # TODO: scaling before furier layers

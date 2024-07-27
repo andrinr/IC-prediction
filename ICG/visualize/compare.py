@@ -21,7 +21,7 @@ def compare(
 
     power_spectrum = cosmos.PowerSpectrum(grid_size, 40)
 
-    fig = plt.figure(figsize=(10, 8), layout="constrained")
+    fig = plt.figure(figsize=(21, 14), layout="constrained")
     grid = fig.add_gridspec(nrows=2, ncols=3)
 
     ax_y_star = fig.add_subplot(grid[0, 0])
