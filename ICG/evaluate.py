@@ -102,6 +102,7 @@ model, losses = nn.train(
     N_EPOCHS,
     nn.mse_loss)
 
+# reload data iterator for visualization of random sample
 data_pipeline = volumetric_pairs_pipe(dataset)
 data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 

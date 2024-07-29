@@ -1,5 +1,6 @@
 import equinox as eqx
 import jax.tree_util as jtu
+import jax
 import json
 
 def count_parameters(model: eqx.Module):
@@ -11,8 +12,8 @@ def save(filename, hyperparams, model):
         f.write((hyperparam_str + "\n").encode())
         eqx.tree_serialise_leaves(f, model)
 
-def load(filename):
+def load(filename, model_constructor):
     with open(filename, "rb") as f:
         hyperparams = json.loads(f.readline().decode())
-        model = make(key=jr.PRNGKey(0), **hyperparams)
+        model = model_constructor(key=jax.random.PRNGKey(0), **hyperparams)
         return eqx.tree_deserialise_leaves(f, model)
