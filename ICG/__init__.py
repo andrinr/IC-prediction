@@ -1,5 +1,5 @@
 from .cosmos import *
 from .data import *
 from .field import *
-from .layers import *
+from .nn import *
 from .visualize import *

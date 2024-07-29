@@ -1,6 +1,6 @@
-from .SpectralConvolution import SpectralConvolution
-from .FurierLayer import FurierLayer
-from .FNO import FNO
+from .spectral_convolution import SpectralConvolution
+from .furier_layer import FurierLayer
+from .fno import FNO
 import jax
 import jax.numpy as jnp
 

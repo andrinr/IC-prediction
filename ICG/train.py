@@ -10,10 +10,10 @@ from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
 import data
-import visualize
 
 # Parameters
-DATA_ROOT = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+DATA_DIR = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+MODEL_OUT_DIR = "ICG/model_params/"
 INPUT_GRID_SIZE = 128
 GRID_SIZE = 64
 BATCH_SIZE = 8
@@ -27,7 +27,7 @@ jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
 dataset = data.VolumetricSequence(
-    BATCH_SIZE, INPUT_GRID_SIZE, DATA_ROOT, (0, 50), False)
+    BATCH_SIZE, INPUT_GRID_SIZE, DATA_DIR, (0, 50), False)
 
 # dataset = data.TestData(BATCH_SIZE, GRID_SIZE)
 
@@ -62,26 +62,29 @@ data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
 # Initialize Neural Network
 init_rng = jax.random.key(0)
-# model = nn.UNet(
-#     num_spatial_dims=3,
-#     in_channels=1,
-#     out_channels=1,
-#     hidden_channels=8,
-#     num_levels=2,
-#     activation=jax.nn.relu,
-#     padding='SAME',
-#     padding_mode='CIRCULAR',	
-#     key=init_rng)
+unet_hyperparams = {
+    "num_spatial_dims" : 3,
+    "in_channels" : 1,
+    "out_channels" : 1,
+    "hidden_channels" : 8,
+    "num_levels" : 2,
+    "padding" : 'SAME',
+    "padding_mode" : 'CIRCULAR'}
 
-fno_hyperparams = {
-    "modes" : 16,
-    "hidden_channels" : 4,
-    "n_furier_layers" : 4}
+model = nn.UNet(
+    activation=jax.nn.relu,
+    **unet_hyperparams,	
+    key=init_rng)
 
-model = nn.fno.fno(
-    activation = jax.nn.relu,
-    key = init_rng,
-    **fno_hyperparams)
+# fno_hyperparams = {
+#     "modes" : 16,
+#     "hidden_channels" : 4,
+#     "n_furier_layers" : 4}
+
+# model = nn.fno.FNO(
+#     activation = jax.nn.relu,
+#     key = init_rng,
+#     **fno_hyperparams)
 
 # model = nn.Dummy(
 #     num_spatial_dims=3,
@@ -95,24 +98,14 @@ parameter_count = nn.count_parameters(model)
 print(f'Number of parameters: {parameter_count}')
 
 # train the model
-model, losses = nn.train(
+model, losses = nn.train_model(
     model,
     data_iterator,
     LEARNING_RATE,
     N_EPOCHS,
     nn.mse_loss)
 
-# reload data iterator for visualization of random sample
-data_pipeline = volumetric_pairs_pipe(dataset)
-data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
-
-data = next(data_iterator)
-x = jax.device_put(data['end'], jax.devices('gpu')[0])
-y_star = jax.device_put(data['start'], jax.devices('gpu')[0])
-y = model(x[0])
-
-visualize.compare(
-    "compare.jpg", x=x, y=y, y_star=y_star)
+nn.save(MODEL_OUT_DIR, "unet.eqx", unet_hyperparams, model)
 
 # Delete Data Pipeline
 del data_pipeline
