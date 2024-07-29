@@ -44,7 +44,7 @@ def compare(
 
     ax_x.axis('off')
     ax_x.set_title("X")
-    ax_x.imshow(x[grid_size // 2, : , :], cmap='inferno')
+    ax_x.imshow(x[grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
     k, power = power_spectrum(x[:, :, :, 0])
     ax_power.plot(k, power, label='x')
 
@@ -55,5 +55,6 @@ def compare(
 
     ax_power.legend()
     ax_power.set_yscale('log')
+    ax_power.set_xscale('log')
 
     plt.savefig(ouput_file)

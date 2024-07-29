@@ -45,9 +45,9 @@ init_rng = jax.random.key(0)
 #     key=init_rng)
 
 fno_hyperparams = {
-    "modes" : 16,
+    "modes" : 8,
     "hidden_channels" : 4,
-    "n_furier_layers" : 5}
+    "n_furier_layers" : 4}
 
 model = nn.fno.FNO(
     activation = jax.nn.relu,
