@@ -47,12 +47,16 @@ class RadialSpectralConvolution(eqx.Module):
             self.weights_imag.append(imag)
         
     def complex_mul3d(self, a, b):
-        return jnp.einsum("ixyz,ioxyz->oxyz", a, b)
+        return jnp.einsum("ik,iok->ok", a, b)
 
     def __call__(self, x):
         N = x.shape[1]
         # x shape : n_channels, N, N, N
         # x_fs shape : n_channels, N, N, N // 2, 2
+
+        k = jnp.fft.fftfreq(16, 1/16)
+        kx, ky, kz = jnp.meshgrid(k, k, k)
+        k2 = kx ** 2 + ky ** 2 + kz ** 2
 
         x_fs = jnp.fft.rfftn(x, s=(N, N, N), axes=(1, 2, 3))
 
