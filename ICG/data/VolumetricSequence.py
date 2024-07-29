@@ -2,26 +2,54 @@
 import jax.numpy as jnp
 from random import shuffle
 import os
+# NVIDIA Dali
+from nvidia.dali import pipeline_def
+import nvidia.dali.fn as fn
 import nvidia.dali.types as types
-import random
 
 type Range = tuple[str, int]
+
+BATCH_SIZE = 8
 
 def overdensity(density):
     mean = density.mean()
     return (density - mean) / mean
 
+@pipeline_def(
+    batch_size=BATCH_SIZE,
+    num_threads=2, 
+    device_id=0,
+    py_num_workers=16,
+    py_start_method="spawn")
+def volumetric_pairs_pipe(external_iterator, grid_size):
+
+    [start, end] = fn.external_source(
+        source=external_iterator,
+        num_outputs=2,
+        batch=False,
+        dtype=types.FLOAT)
+
+    reshape_fn = lambda x : fn.reshape(x, layout="CDHW")
+    resize_fn = lambda x : fn.resize(
+        x,
+        interp_type = types.INTERP_CUBIC,
+        antialias=False,
+        size=(grid_size, grid_size, grid_size))
+
+    start = resize_fn(reshape_fn(start))
+    end = resize_fn(reshape_fn(end))
+    
+    return start, end
+
 class VolumetricSequence:
     def __init__(
             self, 
-            batch_size : int, 
             grid_size : int, 
             directory : str,
             range : Range,
             load_sequence : bool = False):
 
         self.dir = os.path.abspath(directory)
-        self.batch_size = batch_size
         self.grid_size = grid_size
         self.range = range
         self.load_sequence = load_sequence
