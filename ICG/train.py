@@ -25,7 +25,7 @@ jax.config.update("jax_disable_jit", False)
 dataset = data.VolumetricSequence(
     INPUT_GRID_SIZE, DATA_DIR, (0, 50), False)
 
-data_pipeline = data.volumetric_pairs_pipe(dataset, GRID_SIZE)
+data_pipeline = data.volumetric_sequence_pipe(dataset, GRID_SIZE)
 data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
 
 # Initialize Neural Network

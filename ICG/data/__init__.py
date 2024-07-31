@@ -1,2 +1,2 @@
-from .VolumetricSequence import *
-from .TestData import *
+from .sequential_data import *
+from .test_data import *
