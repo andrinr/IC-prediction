@@ -30,19 +30,14 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
         batch=False,
         dtype=types.FLOAT)
 
-    reshape_fn = lambda x : fn.reshape(x, layout="CDHW")
+    reshape_fn = lambda x : fn.reshape(x, layout="FCDHW")
     resize_fn = lambda x : fn.resize(
         x,
         interp_type = types.INTERP_CUBIC,
         antialias=False,
         size=(grid_size, grid_size, grid_size))
     
-    print(sequence)
-
-    sequence = jax.vmap(reshape_fn)(sequence)
-    sequence = jax.vmap(resize_fn)(sequence)
-    
-    return sequence, steps
+    return resize_fn(reshape_fn(sequence)), steps
 
 class VolumetricSequence:
     def __init__(

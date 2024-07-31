@@ -29,16 +29,6 @@ dataset = data.VolumetricSequence(
     steps = 50,
     stride = 10)
 
-sample_info = types.SampleInfo(
-    idx_in_epoch=5,
-    idx_in_batch=0,
-    iteration=0,
-    epoch_idx=0)
-
-[sequence, steps] = dataset(sample_info)
-print(sequence.shape)
-print(steps)
-
 data_pipeline = data.volumetric_sequence_pipe(dataset, GRID_SIZE)
 data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "steps"])
 

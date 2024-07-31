@@ -5,6 +5,7 @@ import equinox as eqx
 from functools import partial
 from typing import Callable
 
+
 @partial(jax.jit, static_argnums=[3, 5, 6])
 def learn_batch(
         start : jax.Array,
@@ -17,6 +18,9 @@ def learn_batch(
     """
     Learn model on a data batch.
     """
+
+    def scan_f(state : jax.Array,_):
+    
 
     loss, grad = eqx.filter_value_and_grad(loss_function)(
         model_params, model_static, end, start)
@@ -44,11 +48,10 @@ def train_model(
     for epoch in range(n_epochs):
         epoch_loss = []
         for _, data in enumerate(data_iterator):
-            start_d = jax.device_put(data['start'], jax.devices('gpu')[0])
-            end_d = jax.device_put(data['end'], jax.devices('gpu')[0])
+            sequence_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
 
             model_params, optimizer_state, loss = learn_batch(
-                start_d,
+                sequence_d,
                 end_d,
                 model_params,
                 model_static,
