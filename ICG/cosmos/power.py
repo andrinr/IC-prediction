@@ -44,6 +44,7 @@ class PowerSpectrum:
 
         jnp.sum(power)
 
+        # TODO: use rfftfreq instead
         k = jnp.linspace(0, self.N_half, self.n_bins)
 
         return k, power

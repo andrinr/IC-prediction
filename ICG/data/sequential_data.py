@@ -2,7 +2,7 @@
 import jax.numpy as jnp
 import jax
 from random import shuffle
-import os
+import os 
 # NVIDIA Dali
 from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
@@ -23,8 +23,8 @@ def overdensity(density):
     py_num_workers=16,
     py_start_method="spawn")
 def volumetric_sequence_pipe(external_iterator, grid_size):
-
-    [start, end] = fn.external_source(
+    # https://docs.nvidia.com/deeplearning/dali/user-guide/docs/examples/general/data_loading/external_input.html
+    [sequence, steps] = fn.external_source(
         source=external_iterator,
         num_outputs=2,
         batch=False,
@@ -36,35 +36,35 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
         interp_type = types.INTERP_CUBIC,
         antialias=False,
         size=(grid_size, grid_size, grid_size))
-
-    start = resize_fn(reshape_fn(start))
-    end = resize_fn(reshape_fn(end))
     
-    return start, end
+    print(sequence)
+
+    sequence = jax.vmap(reshape_fn)(sequence)
+    sequence = jax.vmap(resize_fn)(sequence)
+    
+    return sequence, steps
 
 class VolumetricSequence:
     def __init__(
             self, 
             grid_size : int, 
             directory : str,
-            start : int | str, # start index of the sequence, can be 'random'
-            end : int,
+            start : int,
             steps : int,
             stride : int = None):
 
         self.dir = os.path.abspath(directory)
         self.grid_size = grid_size
         self.start = start
-        if start == 'random':
-            self.start = jax.random.randint(0, end - steps)
         self.steps = steps
         self.stride = steps if stride is None else stride
         self.folders = os.listdir(self.dir)
         shuffle(self.folders)
 
     def __call__(self, sample_info : types.SampleInfo):
-        sequence_length = self.steps // self.stride
-        sequence = []
+        sequence_length = self.steps // self.stride + 1
+        sequence = jnp.zeros(
+            (sequence_length, 1, self.grid_size, self.grid_size, self.grid_size))
         
         sample_idx = sample_info.idx_in_epoch
 
@@ -74,13 +74,15 @@ class VolumetricSequence:
         files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
         files.sort()
 
-        for k in range(sequence_length):
+        for i in range(sequence_length):
             file_dir = os.path.join(
-                self.dir, self.folders[sample_idx], files[self.start + k * self.stride])
+                self.dir, self.folders[sample_idx], files[self.start + i * self.stride])
             with open(file_dir, 'rb') as f:
-                grid = jnp.frombuffer(f.read(), dtype=jnp.float32)
-                grid = grid.reshape(1, self.grid_size, self.grid_size, self.grid_size)
-                delta = overdensity(grid)
-                sequence.append(delta)
+                rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
+                rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
+                delta = overdensity(rho)
+                sequence = sequence.at[i].set(delta)
 
-        return sequence
+        steps = jnp.linspace(self.start, self.stride * (sequence_length - 1), sequence_length)
+
+        return list([sequence, steps])

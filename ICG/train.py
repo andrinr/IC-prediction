@@ -2,7 +2,7 @@
 import jax.numpy as jnp
 import jax
 from jax.lib import xla_bridge
-
+import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
@@ -23,10 +23,24 @@ jax.config.update("jax_disable_jit", False)
 
 # Data Pipeline
 dataset = data.VolumetricSequence(
-    INPUT_GRID_SIZE, DATA_DIR, (0, 50), False)
+    grid_size = INPUT_GRID_SIZE,
+    directory = DATA_DIR,
+    start = 0,
+    steps = 50,
+    stride = 10)
+
+sample_info = types.SampleInfo(
+    idx_in_epoch=5,
+    idx_in_batch=0,
+    iteration=0,
+    epoch_idx=0)
+
+[sequence, steps] = dataset(sample_info)
+print(sequence.shape)
+print(steps)
 
 data_pipeline = data.volumetric_sequence_pipe(dataset, GRID_SIZE)
-data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
+data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "steps"])
 
 # Initialize Neural Network
 init_rng = jax.random.key(0)
