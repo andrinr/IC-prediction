@@ -69,18 +69,22 @@ class VolumetricSequence:
         files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
         files.sort()
 
+        timeline = jnp.zeros(sequence_length)
+
         for i in range(sequence_length):
+            time = self.start + i * self.stride
+            timeline = timeline.at[i].set(time)
             file_dir = os.path.join(
-                self.dir, self.folders[sample_idx], files[self.start + i * self.stride])
+                self.dir, self.folders[sample_idx], files[time])
+        
             with open(file_dir, 'rb') as f:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
                 delta = overdensity(rho)
                 sequence = sequence.at[i].set(delta)
 
-        steps = jnp.linspace(self.start, self.stride * (sequence_length - 1), sequence_length)
-
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
+            timeline = jnp.flip(timeline, axis=0)
 
-        return list([sequence, steps])
+        return list([sequence, timeline])

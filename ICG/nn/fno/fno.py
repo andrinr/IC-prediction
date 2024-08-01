@@ -63,7 +63,7 @@ class FNO(eqx.Module):
 
         return
 
-    def __call__(self, x):
+    def __call__(self, x : jax.Array):
             
         x = self.lift(x)
 

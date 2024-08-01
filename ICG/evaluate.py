@@ -1,8 +1,9 @@
 # JAX 
 import jax
-from jax.lib import xla_bridge
 # NVIDIA Dali
 from nvidia.dali.plugin.jax import DALIGenericIterator
+# Equinox
+import equinox as eqx
 # Local
 import nn
 import data
@@ -15,28 +16,42 @@ INPUT_GRID_SIZE = 128
 GRID_SIZE = 64
 BATCH_SIZE = 8
 
-# JAX Settings / Device Info
-print("Jax backend is using %s" % xla_bridge.get_backend().platform)
-jax.config.update("jax_enable_x64", False)
-jax.config.update("jax_disable_jit", False)
-
 # Data Pipeline
 dataset = data.VolumetricSequence(
-    INPUT_GRID_SIZE, DATA_DIR, (0, 50), False)
+    grid_size = INPUT_GRID_SIZE,
+    directory = DATA_DIR,
+    start = 0,
+    steps = 50,
+    stride = 10,
+    flip=True)
 
 data_pipeline = data.volumetric_sequence_pipe(dataset, GRID_SIZE)
-data_iterator = DALIGenericIterator(data_pipeline, ["start", "end"])
+data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "time"])
 
 model = nn.load(
     MODEL_OUT_DIR, "fno.eqx", nn.fno.FNO, jax.nn.relu)
+model_params, model_static = eqx.partition(model, eqx.is_array)
 
 data = next(data_iterator)
-x = jax.device_put(data['end'], jax.devices('gpu')[0])
-y_star = jax.device_put(data['start'], jax.devices('gpu')[0])
-y = model(x[0])
+sequence = jax.device_put(data['sequence'], jax.devices('gpu')[0])[0]
+n_frames = sequence.shape[0]
+sequence_prediction = nn.predict_sequence(
+    sequence[0], 
+    steps = n_frames - 1,
+    model_params = model_params, 
+    model_static = model_static)
 
-visualize.compare(
-    "compare.jpg", x=x, y=y, y_star=y_star)
+timeline = data["time"][0]
+print(timeline)
+print(sequence.shape)
+print(sequence_prediction.shape)
+print(jax.numpy.sum(jax.numpy.isnan(sequence_prediction)))
+
+visualize.sequence(
+    "seq.jpg", 
+    sequence = sequence, 
+    sequence_prediction = sequence_prediction,
+    timeline = timeline)
 
 # Delete Data Pipeline
 del data_pipeline

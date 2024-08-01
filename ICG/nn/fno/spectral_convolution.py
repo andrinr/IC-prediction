@@ -49,7 +49,7 @@ class SpectralConvolution(eqx.Module):
     def complex_mul3d(self, a, b):
         return jnp.einsum("ixyz,ioxyz->oxyz", a, b)
 
-    def __call__(self, x):
+    def __call__(self, x : jax.Array):
         N = x.shape[1]
         # x shape : n_channels, N, N, N
         # x_fs shape : n_channels, N, N, N // 2, 2
