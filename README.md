@@ -66,13 +66,7 @@ Grafic 1
 
 ### Methodology
 
-- GAN for distribution generation, advantage is that critic is better able ad judging results than straight forward loss functions from final states, only applied for 2D cases here. *From EMBER to FIRE: predicting high resolution baryon fields from
-dark matter simulations with Deep Learning* https://arxiv.org/pdf/2110.11970
-- Single image generation using denoising diffusion model. https://arxiv.org/pdf/2211.12445
-- Diffusion models tutorial: https://cvpr2022-tutorial-diffusion-models.github.io/
-- Neural PDE as described here https://arxiv.org/pdf/2110.10249
-
-- They do kindof what we do here: https://astro.ft.uam.es/gustavo/
+- FNO + RNN https://arxiv.org/pdf/2303.02243
 
 ### Cosmology
 

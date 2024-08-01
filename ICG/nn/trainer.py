@@ -4,7 +4,7 @@ import optax
 import equinox as eqx
 from functools import partial
     
-@partial(jax.jit, static_argnums=3)
+@partial(jax.jit, static_argnums=1)
 def mse_loss(
         model_params,
         model_static : eqx.Module,
@@ -12,10 +12,10 @@ def mse_loss(
         next_state : jax.Array):
     
     model = eqx.combine(model_params, model_static)
-    next_state_pred = jax.vmap(model)(state)
-    mse = jnp.mean((next_state - next_state_pred) ** 2)
+    next_pred = jax.vmap(model)(state)
+    mse = jnp.mean((next_state - next_pred) ** 2)
 
-    return mse, next_state_pred
+    return mse, next_pred
 
 @partial(jax.jit, static_argnums=[2, 4])
 def learn_batch(
@@ -34,21 +34,23 @@ def learn_batch(
     print(sequence.shape)
 
     n_frames = sequence.shape[1]
-    total_grad = []
-    value_and_grad = eqx.filter_value_and_grad(mse_loss)
+    value_and_grad = eqx.filter_value_and_grad(mse_loss, has_aux=True)
 
     for i in range(n_frames-1):
-        loss, grad = value_and_grad(
+        (loss, pred), grad = value_and_grad(
             model_params, 
             model_static, 
-            sequence[i],
-            sequence[i+1])
+            sequence[:, i],
+            sequence[:, i+1])
         
-    updates, new_optimizer_state = optimizer_static.update(total_grad, optimizer_state)
+        updates, optimizer_state = optimizer_static.update(grad, optimizer_state)
 
-    new_params = optax.apply_updates(model_params, updates)
+        model = eqx.combine(model_params, model_static)
+        model = eqx.apply_updates(model, updates)
+        model_params, model_static = eqx.partition(model, eqx.is_array)
+        # model_params = optax.apply_updates(model_params, updates)
 
-    return new_params, new_optimizer_state, loss
+    return model_params, optimizer_state, loss
 
 def train_model(
         model_params,

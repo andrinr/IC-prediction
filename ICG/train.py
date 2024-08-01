@@ -21,8 +21,6 @@ print("Jax backend is using %s" % xla_bridge.get_backend().platform)
 jax.config.update("jax_enable_x64", False)
 jax.config.update("jax_disable_jit", False)
 
-steps = 50
-stride = 10
 dataset = data.VolumetricSequence(
     grid_size = INPUT_GRID_SIZE,
     directory = DATA_DIR,
@@ -51,24 +49,16 @@ init_rng = jax.random.key(0)
 #     key=init_rng)
 
 sq_fno_hyperparams = {
-    "modes" : 32,
-    "hidden_channels" : 4,
+    "modes" : 16,
+    "hidden_channels" : 8,
     "n_furier_layers" : 4}
 
-model_params = []
-model_static = None
-for i in range(steps // stride):    
-    model = nn.FNO(
-        activation = jax.nn.relu,
-        key = init_rng,
-        **sq_fno_hyperparams)
-    
-    params, model_static = eqx.partition(model, eqx.is_array)
-    print(params)
-    model_params.append(params)
+model = nn.FNO(
+    activation = jax.nn.relu,
+    key = init_rng,
+    **sq_fno_hyperparams)
 
-if steps // stride == 1:
-    model_params = model_params[0]
+model_params, model_static = eqx.partition(model, eqx.is_array)
 
 # model = nn.Dummy(
 #     num_spatial_dims=3,
@@ -82,12 +72,14 @@ parameter_count = nn.count_parameters(model)
 print(f'Number of parameters: {parameter_count}')
 
 # train the model
-model, losses = nn.train_model(
-    model_static, 
+model_params, losses = nn.train_model(
     model_params,
+    model_static, 
     data_iterator,
     LEARNING_RATE,
     N_EPOCHS)
+
+model = eqx.combine(model_params, model_static)
 
 nn.save(MODEL_OUT_DIR, "sq_fno.eqx", sq_fno_hyperparams, model)
 
