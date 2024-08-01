@@ -1,8 +1,6 @@
 # JAX 
-import jax.numpy as jnp
 import jax
 from jax.lib import xla_bridge
-import nvidia.dali.types as types
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
@@ -13,7 +11,7 @@ DATA_DIR = "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 MODEL_OUT_DIR = "ICG/model_params/"
 INPUT_GRID_SIZE = 128
 GRID_SIZE = 64
-LEARNING_RATE = 0.001
+LEARNING_RATE = 0.003
 N_EPOCHS = 100
 
 # JAX Settings / Device Info
@@ -27,7 +25,8 @@ dataset = data.VolumetricSequence(
     directory = DATA_DIR,
     start = 0,
     steps = 50,
-    stride = 10)
+    stride = 25,
+    flip=True)
 
 data_pipeline = data.volumetric_sequence_pipe(dataset, GRID_SIZE)
 data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "steps"])
@@ -49,7 +48,7 @@ init_rng = jax.random.key(0)
 #     key=init_rng)
 
 fno_hyperparams = {
-    "modes" : 8,
+    "modes" : 16,
     "hidden_channels" : 4,
     "n_furier_layers" : 4}
 
@@ -74,8 +73,7 @@ model, losses = nn.train_model(
     model,
     data_iterator,
     LEARNING_RATE,
-    N_EPOCHS,
-    nn.mse_loss)
+    N_EPOCHS)
 
 nn.save(MODEL_OUT_DIR, "fno.eqx", fno_hyperparams, model)
 

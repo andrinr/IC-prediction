@@ -1,6 +1,5 @@
 # from __future__ import annotations, type
 import jax.numpy as jnp
-import jax
 from random import shuffle
 import os 
 # NVIDIA Dali
@@ -8,13 +7,7 @@ from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 
-type Range = tuple[str, int]
-
 BATCH_SIZE = 8
-
-def overdensity(density):
-    mean = density.mean()
-    return (density - mean) / mean
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -23,13 +16,14 @@ def overdensity(density):
     py_num_workers=16,
     py_start_method="spawn")
 def volumetric_sequence_pipe(external_iterator, grid_size):
-    # https://docs.nvidia.com/deeplearning/dali/user-guide/docs/examples/general/data_loading/external_input.html
+    
     [sequence, steps] = fn.external_source(
         source=external_iterator,
         num_outputs=2,
         batch=False,
         dtype=types.FLOAT)
 
+    # Frames, Channels, Depth, Height, Width
     reshape_fn = lambda x : fn.reshape(x, layout="FCDHW")
     resize_fn = lambda x : fn.resize(
         x,
@@ -39,6 +33,10 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
     
     return resize_fn(reshape_fn(sequence)), steps
 
+def overdensity(density):
+    mean = density.mean()
+    return (density - mean) / mean
+
 class VolumetricSequence:
     def __init__(
             self, 
@@ -46,13 +44,15 @@ class VolumetricSequence:
             directory : str,
             start : int,
             steps : int,
-            stride : int = None):
+            stride : int = None,
+            flip : bool = True):
 
         self.dir = os.path.abspath(directory)
         self.grid_size = grid_size
         self.start = start
         self.steps = steps
         self.stride = steps if stride is None else stride
+        self.flip = flip
         self.folders = os.listdir(self.dir)
         shuffle(self.folders)
 
@@ -79,5 +79,8 @@ class VolumetricSequence:
                 sequence = sequence.at[i].set(delta)
 
         steps = jnp.linspace(self.start, self.stride * (sequence_length - 1), sequence_length)
+
+        if self.flip:
+            sequence = jnp.flip(sequence, axis=0)
 
         return list([sequence, steps])

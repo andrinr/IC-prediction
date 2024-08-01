@@ -9,7 +9,7 @@ def mse_loss(params, static, x : jax.Array, y_star : jax.Array):
     model = eqx.combine(params, static)
     y = jax.vmap(model)(x)
     mse = jnp.mean((y_star - y) ** 2)
-    return mse
+    return mse, y
 
 @partial(jax.jit, static_argnums=1)
 def spectral_loss(params, static, x : jax.Array, y_star : jax.Array):
