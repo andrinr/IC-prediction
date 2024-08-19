@@ -1,9 +1,8 @@
 import jax.numpy as jnp
 import jax
-from .mass_assigment import linear_ma, cic_ma
+from .mass_assigment import nn_ma, cic_ma
 
-def test_linear():
-
+def test_nn():
     pos = jnp.array([
         [0],
         [0.6125],
@@ -11,8 +10,9 @@ def test_linear():
     ])
     weight = jnp.array([1.0])
 
-    field = linear_ma(
-        pos, weight, 4, 1)
+    field = nn_ma(pos, weight, 4)
+
+    print(f"field: {field}")
 
     assert field[0, 2, 0] == 1.0
 
@@ -23,8 +23,7 @@ def test_cic():
 
     total = jnp.sum(weight)
 
-    field = cic_ma(
-        pos, weight, 4, 1)
+    field = cic_ma(pos, weight, 4)
     
     assert jnp.sum(field) == total
     

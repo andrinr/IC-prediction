@@ -5,6 +5,9 @@ import jax.numpy as jnp
 def bilinear_interp(
         pos : jax.Array, 
         scalar_field : jax.Array) -> jax.Array:
+    """
+    Returns values of a scalar field at a given position using bilinear interpolation.
+    """
     
     n = scalar_field.shape[0]
     dx = 1.0 / (n)
@@ -35,6 +38,9 @@ def bilinear_interp(
 def bicubic_interp(
         pos : jax.Array, 
         scalar_field : jax.Array) -> jax.Array:
+    """
+    Returns values of a scalar field at a given position using bicubic interpolation.
+    """
     
     n = scalar_field.shape[0]
     dx = 1.0 / (n)

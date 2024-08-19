@@ -2,15 +2,14 @@ import jax
 import jax.numpy as jnp
 from functools import partial
 
-@partial(jax.jit, static_argnums=(2, 3))
-def linear_ma(
+@partial(jax.jit, static_argnums=(2))
+def nn_ma(
         pos : jax.Array, 
         weight : jax.Array, 
-        grid_size : int, 
-        dx : float) -> jax.Array:
+        grid_size : int) -> jax.Array:
 
     """
-    Periodic cloud in a cell mass (CIC) mass assignment. 
+    Nearest Neighbour (NN) mass assignment.
     Position are assumed to be normalized between 0 and 1.
     """
 
@@ -24,25 +23,25 @@ def linear_ma(
     z_idx = jnp.digitize(pos[2] % 1.0, coords, right=False) - 1
 
     # assign the mass
-    grid = grid.at[x_idx, y_idx, z_idx].add(weight / dx**3)
+    grid = grid.at[x_idx, y_idx, z_idx].add(weight)
 
     return grid
 
-@partial(jax.jit, static_argnums=(2, 3))
+@partial(jax.jit, static_argnums=(2))
 def cic_ma(
         pos : jax.Array, 
         weight : jax.Array, 
-        N : int) -> jax.Array:
+        grid_size : int) -> jax.Array:
 
     """
     Periodic cloud in a cell mass (CIC) mass assignment. 
     Position are assumed to be normalized between 0 and 1.
     """
     
-    dx = 1 / N
-    coords = jnp.linspace(start=0, stop=1, num=N+1)
+    dx = 1 / grid_size
+    coords = jnp.linspace(start=0, stop=1, num=grid_size+1)
 
-    field = jnp.zeros((N, N, N))
+    field = jnp.zeros((grid_size, grid_size, grid_size))
 
     # find position on the grid
     x = jnp.digitize(pos[0] % 1.0, coords, right=False) - 1
@@ -54,16 +53,14 @@ def cic_ma(
     yw = (pos[1] % 1.0 - coords[y]) / dx
     zw = (pos[2] % 1.0 - coords[z]) / dx
 
-    weight_ = weight / dx**3
-
     # assign the mass
-    field = field.at[x, y, z].add(weight_ * (1 - xw) * (1 - yw) * (1 - zw))
-    field = field.at[(x + 1) % N, y, z].add(weight_ * xw * (1 - yw) * (1 - zw))
-    field = field.at[x, (y + 1) % N, z].add(weight_ * (1 - xw) * yw * (1 - zw))
-    field = field.at[(x + 1) % N, (y + 1) % N, z].add(weight_ * xw * yw * (1 - zw))
-    field = field.at[x, y, (z + 1) % N].add(weight_ * (1 - xw) * (1 - yw) * zw)
-    field = field.at[(x + 1) % N, y, (z + 1) % N].add(weight_ * xw * (1 - yw) * zw)
-    field = field.at[x, (y + 1) % N, (z + 1) % N].add(weight_ * (1 - xw) * yw * zw)
-    field = field.at[(x + 1) % N, (y + 1) % N, (z + 1) % N].add(weight_ * xw * yw * zw)
+    field = field.at[x, y, z].add(weight * (1 - xw) * (1 - yw) * (1 - zw))
+    field = field.at[(x + 1) % grid_size, y, z].add(weight * xw * (1 - yw) * (1 - zw))
+    field = field.at[x, (y + 1) % grid_size, z].add(weight * (1 - xw) * yw * (1 - zw))
+    field = field.at[(x + 1) % grid_size, (y + 1) % grid_size, z].add(weight * xw * yw * (1 - zw))
+    field = field.at[x, y, (z + 1) % grid_size].add(weight * (1 - xw) * (1 - yw) * zw)
+    field = field.at[(x + 1) % grid_size, y, (z + 1) % grid_size].add(weight * xw * (1 - yw) * zw)
+    field = field.at[x, (y + 1) % grid_size, (z + 1) % grid_size].add(weight * (1 - xw) * yw * zw)
+    field = field.at[(x + 1) % grid_size, (y + 1) % grid_size, (z + 1) % grid_size].add(weight * xw * yw * zw)
 
     return field

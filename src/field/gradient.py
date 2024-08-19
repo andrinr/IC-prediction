@@ -5,6 +5,9 @@ def central_difference(
         field : jax.Array,
         axis : int, 
         delta : float) -> jax.Array:
+    """
+    Compute the central difference of a field along a given axis.
+    """
     
     field_r = jnp.roll(field, 1, axis=axis)
     field_l = jnp.roll(field, -1, axis=axis)
@@ -14,6 +17,9 @@ def central_difference(
 def gradient(
         field : jax.Array,
         delta : float) -> jax.Array:
+    """
+    Compute the gradient of a field using central differences.
+    """
     
     grad_x = central_difference(field, 0, delta)
     grad_y = central_difference(field, 1, delta)

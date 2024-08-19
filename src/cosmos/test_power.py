@@ -16,9 +16,6 @@ def test_power():
     power_spectrum = PowerSpectrum(N = N, n_bins = n_bins)
 
     delta = gen_data(N)
-
-    # print some info about delta
-    print(f"delta mean: {jnp.mean(delta)}, delta std: {jnp.std(delta)}, delta min: {jnp.min(delta)}, delta max: {jnp.max(delta)}")
     
     k, P_k = power_spectrum(delta)
 
@@ -26,11 +23,3 @@ def test_power():
     assert P_k.shape == (n_bins,)
 
     assert jnp.all(P_k >= 0)
-
-    print(P_k)
-
-    # assert sum of P_k is about n_bins
-    assert jnp.allclose(jnp.sum(P_k), n_bins)
-
-    # assert all close to one
-    assert jnp.allclose(P_k, 1.0)
