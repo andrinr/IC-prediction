@@ -7,8 +7,6 @@ def test_fit_field():
     key_field, key_opt = jax.random.split(key)
     N = 32
     field = jax.random.uniform(key_field, (N, N, N))
-    print(f"field: {jnp.sum(field)}")   
-    print(N**3*0.5)
     pos, mass = fit_field(
         key=key_opt,
         num_particles=N**3,

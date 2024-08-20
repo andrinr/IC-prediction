@@ -3,8 +3,6 @@ import jax
 import jax.numpy as jnp
 # NVIDIA Dali
 from nvidia.dali.plugin.jax import DALIGenericIterator
-# Equinox
-import equinox as eqx
 # Local
 import nn
 import data

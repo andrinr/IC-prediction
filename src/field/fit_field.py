@@ -28,6 +28,11 @@ def fit_field(
         iterations : float = 400,
         learning_rate : float = 0.005,
         ) -> Tuple[jax.Array, jax.Array]:
+    """
+    Fit a field using a set of particles. 
+    The field is assumed to be a 3D grid of shape (N, N, N).
+    The function returns the position and mass of the particles.
+    """
 
     # start random
     pos = jax.random.uniform(key, (3, num_particles))
