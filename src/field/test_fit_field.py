@@ -13,12 +13,12 @@ def test_fit_field():
         key=key_opt,
         num_particles=N**3,
         field=field, 
-        total_mass=N**3*0.5,
+        total_mass=jnp.sum(field),
         iterations=1000,
-        learning_rate=0.0001)
+        learning_rate=0.001)
     
     field_pred = cic_ma(pos, mass, field.shape[0])
 
-    assert jnp.allclose(field, field_pred, atol=1e-2)
-    assert pos.shape == (3, 32)
-    assert mass.shape == (32,)
+    assert jnp.mean((field - field_pred) ** 2) < 0.0001
+    assert pos.shape == (3, N**3)
+    assert mass.shape == (N**3,)

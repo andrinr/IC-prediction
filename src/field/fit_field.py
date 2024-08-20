@@ -25,23 +25,22 @@ def fit_field(
         num_particles : int,
         field : jax.Array,
         total_mass : float,
-        iterations : float = 100,
-        learning_rate : float = 0.1,
+        iterations : float = 400,
+        learning_rate : float = 0.005,
         ) -> Tuple[jax.Array, jax.Array]:
 
     # start random
     pos = jax.random.uniform(key, (3, num_particles))
-    mass = jnp.zeros(num_particles) * total_mass / num_particles
+    mass = jnp.ones(num_particles) * total_mass / num_particles
 
     optimizer = optax.adam(learning_rate)
     opt_state = optimizer.init(pos)
 
-    loss_grad = jax.grad(loss)
+    grad_f = jax.grad(loss)
 
-    # @jax.jit
+    @jax.jit
     def step(pos, opt_state):
-        grad = loss_grad(pos, mass, field)
-        print(grad)
+        grad = grad_f(pos, mass, field)
         updates, opt_state = optimizer.update(grad, opt_state)
         pos = optax.apply_updates(pos, updates)
         return pos, opt_state
