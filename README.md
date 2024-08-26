@@ -17,32 +17,6 @@ To learn some techniques I have made some smaller projects:
 - https://github.com/andrinr/jax-neural-ode - Neural ODE implementation in JAX including adjoint method for backpropagation
 - https://github.com/andrinr/motion-derivative - Inverse simulation for small N-Body gravitation simulations
 
-## Things to think about
-
-- How do we quantify the error of the model? Does MSE really capture the interesting aspects?
-- RL approach could be potentially viable, as shown here: https://physicsbaseddeeplearning.org/reinflearn-code.html however we would need an interactive environment to train the model on. This could potentially also be the endgoal, getting a N-Body RL-GYM env?
-- Otherwise we can try two things, we try to find some correlations between initial and final states. This could be trained on a massive amount of data, however quiet unrealistic that there parallels can really be found.
-- We limit the project on trying to invert simulations using DL techniques. I am pretty sure we cannot invert large redshits.
-- We can also try to just build a forward surrogate model, which then is differentiable, meaning we could apply an optimziation strategy for the IC's. 
-
-## Learnings / Unclarities
-
-- Data has distribution which is difficult to work with, as vast very empty regions and small dense regions -> log normalization and Z-Score normalization seems to be the way to go.
-- The way we measure the error is important, MSE does not appear to work great. 
-- Training the model on predicting the difference between timesteps seems to work better. 
-- U-NET works, however cannot efficently train it on my local machine on res greater than 32^3
-
-
-- Train UNET on previous time prediction
-    - W
-
-## Potential Applications
-
-- Evolution of structures in the universe, matter distribution today is known
-- Local universe stuff / or more global. 
-- Local: more or less pos and vel. 
-- Large scale: Euclid arena, only 3D. 
-
 ## Vocabulary
 
 - **Zoom-In Simulations** a certain section of the simulation domain is simulated at a higher resolution.
@@ -51,28 +25,8 @@ To learn some techniques I have made some smaller projects:
 - **Gigaparsec** A gigaparsec (Gpc) is a unit of length used in astronomy and cosmology. It's equal to one billion parsecs or approximately 3.26 billion light-years.  The size of the observable universe is about 28.5 gigaparsec. 
 - **Observable Universe** The part of the universe we can observe, we don't know how large the Universe outside this section is.
 - **Halos** refer to the regions of space where matter (both normal matter and dark matter) has collapsed under gravity to form structures, such as galaxies or clusters of galaxies.   
-- **Phase Based Density**
 
-## Ressources
-
-Grafic 1
-
-### IC
-
-- *Initial Conditions for large Comological Simulations* https://arxiv.org/pdf/0804.3536
-- Han & Abel
-- *Transients from Initial Conditions: A Perturbative Analysis* https://arxiv.org/pdf/astro-ph/9711187
-- https://ui.adsabs.harvard.edu/abs/2011ascl.soft06008B/abstract
-
-### Methodology
-
-- FNO + RNN https://arxiv.org/pdf/2303.02243
-
-### Cosmology
-
-- Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
-
-## Getting started with data gneration
+## Getting started with data generation
 
 ### Installing pkdgrav
 
@@ -131,36 +85,14 @@ This steps have to be repeated every day to get a new key.
 5. add key ```ssh-add ~\.ssh\cscs-key```
 6. connect with ```ssh cscs``` or use vs code remote ssh extension
 
-### Science Cluster
+### Run data generation on SLURM system
 
-Data directory:
-
-```/shares/feldmann.ics.mnf.uzh/Andrin```
-
-### Run data generation on eiger
-
-1. load modules ```module load cray && module swap PrgEnv-cray PrgEnv-gnu && module load cpeGNU GSL Boost cray-hdf5 cray-fftw CMake cray-python hwloc```
+1. load modules (Specific for Eiger CSCS) ```module load cray && module swap PrgEnv-cray PrgEnv-gnu && module load cpeGNU GSL Boost cray-hdf5 cray-fftw CMake cray-python hwloc```
 2. run ```bash generate_data.sh```
 3. check task by squeue and filter by username ```squeue -u <USERNAME>```
 4. if needed cancel task with ```scancel <JOBID>```
 
-## Getting started with data analysis, generative models
-
-Create a new python env
-
-```{bash}
-python -m venv jax.env
-source .env/bin/activate
-pip install -U "jax[cuda12]"
-pip install pytorch torchvision torchaudio cpuonly -c pytorch
-pip install optax equinox matplotlib pyccl
-```
-
-PYCCL can be a bit tricky to get working. In my case I needed to install ```pip install wheel pyyaml```,
-```sudo apt install libpcre3 libpcre3-dev``` and ```sudo apt install swig``` prior to installing pyccl. 
-Furthermore we need to install classy as described in their instructions here: https://github.com/lesgourg/class_public/wiki/Python-wrapper.
-
-## Science Cluster
+## Data Analsysis on slurm machine
 
 ### Installation
 
@@ -171,7 +103,6 @@ Furthermore we need to install classy as described in their instructions here: h
 python -m venv ml-env
 source .env/bin/activate
 pip install -U "jax[cuda12]"
-(pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu)
 pip install nvidia-dali-cuda120
 pip install optax equinox matplotlib
 ```
@@ -181,3 +112,23 @@ pip install optax equinox matplotlib
 1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
 2. Load Conda ```module load anaconda3```
 3. Load env ```source activate myenv```
+4. Train model ```python src/train.py```
+5. Evaluate model ```python src/evaluate.py```
+
+
+## Sources
+
+
+### IC Generation
+
+- *Initial Conditions for large Comological Simulations* https://arxiv.org/pdf/0804.3536
+- *Transients from Initial Conditions: A Perturbative Analysis* https://arxiv.org/pdf/astro-ph/9711187
+- https://ui.adsabs.harvard.edu/abs/2011ascl.soft06008B/abstract
+
+### Methodology
+
+- FNO + RNN https://arxiv.org/pdf/2303.02243
+
+### Cosmology
+
+- Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
