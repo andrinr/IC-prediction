@@ -26,7 +26,30 @@ To learn some techniques I have made some smaller projects:
 - **Observable Universe** The part of the universe we can observe, we don't know how large the Universe outside this section is.
 - **Halos** refer to the regions of space where matter (both normal matter and dark matter) has collapsed under gravity to form structures, such as galaxies or clusters of galaxies.   
 
-## Getting started with data generation
+## Data Analsysis on slurm machine
+
+### Installation
+
+1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
+2. Load Conda ```module load anaconda3```
+3. Create env 
+```
+python -m venv ml-env
+source .env/bin/activate
+pip install -U "jax[cuda12]"
+pip install nvidia-dali-cuda120
+pip install optax equinox matplotlib
+```
+
+### Train & Eval
+
+1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
+2. Load Conda ```module load anaconda3```
+3. Load env ```source activate myenv```
+4. Train model ```python src/train.py default_config.yaml```
+5. Evaluate model ```python src/evaluate.py default_config.yaml```
+
+## Data Generation
 
 ### Installing pkdgrav
 
@@ -88,33 +111,9 @@ This steps have to be repeated every day to get a new key.
 ### Run data generation on SLURM system
 
 1. load modules (Specific for Eiger CSCS) ```module load cray && module swap PrgEnv-cray PrgEnv-gnu && module load cpeGNU GSL Boost cray-hdf5 cray-fftw CMake cray-python hwloc```
-2. run ```bash generate_data.sh```
+2. run ```bash slurm/generate_data.sh```
 3. check task by squeue and filter by username ```squeue -u <USERNAME>```
 4. if needed cancel task with ```scancel <JOBID>```
-
-## Data Analsysis on slurm machine
-
-### Installation
-
-1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
-2. Load Conda ```module load anaconda3```
-3. Create env 
-```
-python -m venv ml-env
-source .env/bin/activate
-pip install -U "jax[cuda12]"
-pip install nvidia-dali-cuda120
-pip install optax equinox matplotlib
-```
-
-### Startup
-
-1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
-2. Load Conda ```module load anaconda3```
-3. Load env ```source activate myenv```
-4. Train model ```python src/train.py```
-5. Evaluate model ```python src/evaluate.py```
-
 
 ## Sources
 
