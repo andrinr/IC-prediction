@@ -6,11 +6,13 @@ The goal is to apply this technique to observed density distributions and see if
 
 In nature $x_0$ is given by the spatial distribution of mass and to some extent their velocity. The velocity on the axis tangential to the viewer cannot be determined. The primary inspiration for the approximate inverse simulation model $f^{\prime}$ comes from conditional generative models for image generation / analysis. Therefore we perform a 3D mass assignment of the given objects, where discrete convolution, pooling and similar operations can be learned on.
 
-There are certain properties, which are assumed to hold for correct IC's. Generally we think the mass distribution is a Gaussian Noise. Usually the IC is constructed by sampling random white noise on a grid with fixed distances. Then a specific discrete convolution operator is applied to obtain a gaussian distribution. 
+There are certain properties, which are assumed to hold for correct IC's. Generally we assume the mass distribution is a Gaussian Noise with a specific power spectrum, which is known from the cosmic background radiation. For simulations, the $x_0$ is constructed by sampling random white noise on a grid with fixed distances. Then a convolution is used to imprint the specific power spectrum into the noise. This is a trivial element wise matrix operation, when done in furier space.
 
 A specific example on how to generate random intial conditions can be found in src/experiments/IC.ipynb.
 
-Furthermore the power spectrum of the distribution should follow a certain distribution. As for the training of the model, we can experiment with encoding the IC constraints in the loss function, however this is optional. The most simple case is to simply leverage a voxel wise MSE error.
+## Structure of the code
+
+The main code is organized in the ``src`` folder we ``train.py`` serves as the entry point for training the model. There are two models implemented, a 3D UNET and a 3D FNO (Furier Neural Operator). The models can be found in ``src/nn/``. The code also includes different methods mass assignment and grid interpolations, which are implemented in JAX and therefore fully differentiable. The differentiable property is leveraged in ``src/field/fit_field.py``, which can be used to fit the particle positions to a 3D density field. 
 
 ## Intermediate Learning Projects
 
