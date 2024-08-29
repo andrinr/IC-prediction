@@ -1,6 +1,6 @@
 import jax
 import jax.numpy as jnp
-from ..cosmos import PowerSpectrum
+from cosmos import PowerSpectrum
 import matplotlib.pyplot as plt
 
 def compare(

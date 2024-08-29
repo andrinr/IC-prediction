@@ -1,8 +1,6 @@
 from accuracy import classic_theta_switch,classic_replicas_switch
 from PKDGRAV import add_analysis, ASSIGNMENT_ORDER
 
-print("Loading parameters...")
-
 # accept command line arguments
 import sys
 if len(sys.argv) < 4:
@@ -74,4 +72,4 @@ class MassGrid:
     def ephemeral(self,msr,**kwargs):
         return msr.grid_ephemeral(self.grid)
 
-add_analysis(MassGrid(sys.argv[3], 128))
+add_analysis(MassGrid(sys.argv[3], nGrid))

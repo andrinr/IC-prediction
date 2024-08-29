@@ -1,12 +1,15 @@
 import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
+from config import Config
 
 def sequence(
         ouput_file : str,
         sequence_prediction : jax.Array,
+        config : Config,
         sequence : jax.Array,
-        timeline : jax.Array):
+        timeline : jax.Array,
+        means : jax.Array):
     
     frames = sequence.shape[0]
     grid_size = sequence.shape[2]
@@ -17,7 +20,7 @@ def sequence(
     sequence_prediction = jnp.reshape(
         sequence_prediction, (frames, grid_size, grid_size, grid_size, 1))
 
-    fig = plt.figure(figsize=(21, 14), layout="constrained")
+    fig = plt.figure(figsize=(10, 6), layout="constrained")
     grid = fig.add_gridspec(nrows=2, ncols=frames)
 
     for frame in range(frames):
@@ -36,7 +39,7 @@ def sequence(
         if frame > 0:
             ax_pred.axis('off')   
             ax_pred.set_title(f"pred t: {timeline[frame]}")
-            ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :])#, vmin=min, vmax=max, cmap='inferno')
+            ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
 
         ax_seq.axis('off')   
         ax_seq.set_title(f"sim t: {timeline[frame]}")

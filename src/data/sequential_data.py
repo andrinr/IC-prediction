@@ -6,6 +6,7 @@ import os
 from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
+from cosmos import compute_overdensity
 
 BATCH_SIZE = 8
 
@@ -17,9 +18,9 @@ BATCH_SIZE = 8
     py_start_method="spawn")
 def volumetric_sequence_pipe(external_iterator, grid_size):
     
-    [sequence, steps] = fn.external_source(
+    [sequence, steps, means] = fn.external_source(
         source=external_iterator,
-        num_outputs=2,
+        num_outputs=3,
         batch=False,
         dtype=types.FLOAT)
 
@@ -31,11 +32,7 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
         antialias=False,
         size=(grid_size, grid_size, grid_size))
     
-    return resize_fn(reshape_fn(sequence)), steps
-
-def overdensity(density):
-    mean = density.mean()
-    return (density - mean) / mean
+    return resize_fn(reshape_fn(sequence)), steps, means
 
 class VolumetricSequence:
     def __init__(
@@ -70,6 +67,7 @@ class VolumetricSequence:
         files.sort()
 
         timeline = jnp.zeros(sequence_length)
+        density_means = jnp.zeros(sequence_length)
 
         for i in range(sequence_length):
             time = self.start + i * self.stride
@@ -80,11 +78,13 @@ class VolumetricSequence:
             with open(file_dir, 'rb') as f:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
-                delta = overdensity(rho)
+                delta, mean = compute_overdensity(rho)
+                density_means = density_means.at[i].set(mean)
                 sequence = sequence.at[i].set(delta)
 
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
             timeline = jnp.flip(timeline, axis=0)
+            density_means = jnp.flip(density_means, axis=0)
 
-        return list([sequence, timeline])
+        return list([sequence, timeline, density_means])

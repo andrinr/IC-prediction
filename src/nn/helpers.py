@@ -13,8 +13,7 @@ def save(
         hyperparams : dict,
         model : eqx.Module):
     
-    file = os.path.abspath(filename)
-    with open(file, "wb") as f:
+    with open(filename, "wb") as f:
         hyperparam_str = json.dumps(hyperparams)
         f.write((hyperparam_str + "\n").encode())
         eqx.tree_serialise_leaves(f, model)
@@ -24,9 +23,7 @@ def load(
         constructor, 
         activation : Callable):
     
-    file = os.path.abspath(filename)
-
-    with open(file, "rb") as f:
+    with open(filename, "rb") as f:
         hyperparams = json.loads(f.readline().decode())
         model = constructor(
             key=jax.random.PRNGKey(0), **hyperparams, activation=activation)
