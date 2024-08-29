@@ -7,6 +7,7 @@ def bilinear_interp(
         scalar_field : jax.Array) -> jax.Array:
     """
     Returns values of a scalar field at a given position using bilinear interpolation.
+    Periodic boundary conditions are used.
     """
     
     n = scalar_field.shape[0]
@@ -40,6 +41,7 @@ def bicubic_interp(
         scalar_field : jax.Array) -> jax.Array:
     """
     Returns values of a scalar field at a given position using bicubic interpolation.
+    Periodic boundary conditions are used.
     """
     
     n = scalar_field.shape[0]
