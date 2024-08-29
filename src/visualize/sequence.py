@@ -1,7 +1,7 @@
 import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
-from config import Config
+from ..config import Config
 
 def sequence(
         ouput_file : str,

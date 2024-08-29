@@ -121,6 +121,10 @@ This steps have to be repeated every day to get a new key.
 3. check task by squeue and filter by username ```squeue -u <USERNAME>```
 4. if needed cancel task with ```scancel <JOBID>```
 
+## Testing
+
+Make sure pytest is installed and run ```python -m pytest``` from the root directory. 
+
 ## Sources
 
 

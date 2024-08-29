@@ -1,7 +1,6 @@
 import jax.numpy as jnp
 import jax
-from typing import Tuple
-from .power import PowerSpectrum
+from .power_spectrum import PowerSpectrum
 
 def gen_data(N):
     key = jax.random.PRNGKey(20)
@@ -13,7 +12,7 @@ def gen_data(N):
 def test_power():
     N = 128
     n_bins = 32
-    power_spectrum = PowerSpectrum(N = N, n_bins = n_bins)
+    power_spectrum = PowerSpectrum(n_grid=N, n_bins=n_bins)
 
     delta = gen_data(N)
     

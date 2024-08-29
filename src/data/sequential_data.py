@@ -6,7 +6,8 @@ import os
 from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
-from cosmos import compute_overdensity
+# local
+from ..cosmos import compute_overdensity
 
 BATCH_SIZE = 8
 

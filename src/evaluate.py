@@ -43,7 +43,7 @@ def main(argv) -> None:
     means = data["means"][0]
 
     visualize.sequence(
-        "seq.jpg", 
+        "img/seq.jpg", 
         sequence = sequence, 
         config = config,
         sequence_prediction = pred,
