@@ -21,6 +21,8 @@ def sequence(
     grid = fig.add_gridspec(nrows=2, ncols=frames)
 
     for frame in range(frames):
+
+        # TODO: add colorbar, vscale
         
         min = jnp.min(sequence[frame, grid_size // 2])
         max = jnp.max(sequence[frame, grid_size // 2])
@@ -28,7 +30,6 @@ def sequence(
             min = jnp.min(jnp.array([sequence_prediction[frame, grid_size // 2], sequence[frame, grid_size // 2]]))
             max = jnp.max(jnp.array([sequence_prediction[frame, grid_size // 2], sequence[frame, grid_size // 2]]))
 
-        
         ax_seq = fig.add_subplot(grid[0, frame])
         ax_pred = fig.add_subplot(grid[1, frame])
 

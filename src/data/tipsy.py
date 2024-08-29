@@ -1,12 +1,11 @@
-from jax import numpy as jnp
 import numpy as np
 
-header_type = jnp.dtype([('time', '>f8'),('N', '>i4'), ('Dims', '>i4'), ('Ngas', '>i4'), ('Ndark', '>i4'), ('Nstar', '>i4'), ('pad', '>i4')])
-gas_type  = jnp.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
+header_type = np.dtype([('time', '>f8'),('N', '>i4'), ('Dims', '>i4'), ('Ngas', '>i4'), ('Ndark', '>i4'), ('Nstar', '>i4'), ('pad', '>i4')])
+gas_type  = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
 	                ('rho','>f4'), ('temp','>f4'), ('hsmooth','>f4'), ('metals','>f4'), ('phi','>f4')])
-dark_type = jnp.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
+dark_type = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
 	                ('eps','>f4'), ('phi','>f4')])
-star_type  = jnp.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
+star_type = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
 	                ('metals','>f4'), ('tform','>f4'), ('eps','>f4'), ('phi','>f4')])
 
 def generate_tipsy(
@@ -38,6 +37,10 @@ def generate_tipsy(
     dark['x'] = pos[:, 0]
     dark['y'] = pos[:, 1]
     dark['z'] = pos[:, 2]
+
+    # TODO
+    # phi just set to zero
+    # epsilon softening -> 1 / n_grid * 1 / 50
 
     with open(file_name, 'wb') as ofile:
         header.tofile(ofile)
