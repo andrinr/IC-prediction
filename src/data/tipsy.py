@@ -11,6 +11,7 @@ star_type = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('
 def generate_tipsy(
         file_name : str,
         pos : np.ndarray,
+        vel : np.ndarray,
         mass : np.ndarray,
         time : float = 0.0):
     """
@@ -34,13 +35,15 @@ def generate_tipsy(
 
     # fill dark matter
     dark['mass'] = mass
-    dark['x'] = pos[:, 0]
-    dark['y'] = pos[:, 1]
-    dark['z'] = pos[:, 2]
+    dark['x'] = pos[0, :]
+    dark['y'] = pos[1, :]
+    dark['z'] = pos[2, :]
+    dark['vx'] = vel[0, :]
+    dark['vy'] = vel[1, :]
+    dark['vz'] = vel[2, :]
 
-    # TODO
-    # phi just set to zero
-    # epsilon softening -> 1 / n_grid * 1 / 50
+    dark['eps'] = np.zeros(N) * 1 / (N * 50)
+    # phi stays zero
 
     with open(file_name, 'wb') as ofile:
         header.tofile(ofile)
