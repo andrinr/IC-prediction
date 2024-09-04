@@ -6,9 +6,11 @@ import jax.numpy as jnp
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
-from data import VolumetricSequence, volumetric_sequence_pipe
+from data import VolumetricSequence, volumetric_sequence_pipe, generate_tipsy
 import visualize
+import cosmos
 from config import load_config
+import field
 
 def main(argv) -> None:
    
@@ -39,16 +41,32 @@ def main(argv) -> None:
         print(i)
         pred = pred.at[i].set(model(pred[i-1]))
 
-    timeline = data["steps"][0]
-    means = data["means"][0]
+    time = data["steps"][0]
+    mean = data["means"][0]
 
-    visualize.sequence(
-        "img/seq.jpg", 
-        sequence = sequence, 
-        config = config,
-        sequence_prediction = pred,
-        timeline = timeline,
-        means = means)
+    potential = cosmos.Potential(config.grid_size)(pred)
+    
+    velocity_field = cosmos.compute_velocity(potential, config.dt_PKDGRAV3)
+
+    rho = cosmos.compute_density(pred, mean)
+
+    total_mass = jnp.sum(rho)
+
+    position, mass = field.fit_field(
+        jax.random.PRNGKey(0),
+        config.num_particles,
+        rho,
+        total_mass,
+        400)
+    
+    velocity = field.bilinear_interp(position.pos, velocity_field)
+
+    generate_tipsy(
+        config.output_tipsy_file,
+        position,
+        velocity,
+        mass,
+        config.redshift_start)
 
     # Delete Data Pipeline
     del data_pipeline

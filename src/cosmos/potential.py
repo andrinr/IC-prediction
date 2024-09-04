@@ -2,7 +2,7 @@ import jax.numpy as jnp
 import jax
 from .frequency_operation import FrequencyOperation
 
-class PowerSpectrum(FrequencyOperation):
+class Potential(FrequencyOperation):
 
     def __init__(self, n_grid : int):
         super().__init__(n_grid=n_grid)
