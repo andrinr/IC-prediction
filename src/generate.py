@@ -7,7 +7,6 @@ from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
 from data import VolumetricSequence, volumetric_sequence_pipe, generate_tipsy
-import visualize
 import cosmos
 from config import load_config
 import field
