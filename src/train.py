@@ -28,7 +28,7 @@ def main(argv) -> None:
         flip=True)
 
     data_pipeline = data.volumetric_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "time"])
+    data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "step", "mean"])
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
@@ -64,7 +64,7 @@ def main(argv) -> None:
     #     activation=jax.nn.relu,
     #     padding='SAME',
     #     padding_mode='CIRCULAR',
-    #     key=init_rng)
+    #     key=init_rng) 
 
     parameter_count = nn.count_parameters(model)
     print(f'Number of parameters: {parameter_count}')

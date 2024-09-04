@@ -55,6 +55,13 @@ class UNet(eqx.Module):
     up_sampling : list[eqx.nn.Conv]
     projection : eqx.nn.Conv
 
+    """
+    Variable dimension UNet.
+    
+    Implementation inspired by:
+    Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
+    """
+
     def __init__(
             self,
             num_spatial_dims: int,

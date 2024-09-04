@@ -1,6 +1,6 @@
 import jax
 import jax.numpy as jnp
-from ..cosmos import PowerSpectrum
+from ..cosmos import Potential
 import matplotlib.pyplot as plt
 
 def compare(
@@ -19,7 +19,7 @@ def compare(
     min = jnp.min(jnp.array([y_star, y]))
     max = jnp.max(jnp.array([y_star, y]))
 
-    power_spectrum = PowerSpectrum(grid_size, 40)
+    power_spectrum = Potential(grid_size, 40)
 
     fig = plt.figure(figsize=(21, 14), layout="constrained")
     grid = fig.add_gridspec(nrows=2, ncols=3)

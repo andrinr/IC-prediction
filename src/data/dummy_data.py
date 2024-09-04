@@ -3,7 +3,7 @@ import jax.numpy as jnp
 import nvidia.dali.types as types
 import random
 
-class TestData:
+class DummyData:
     def __init__(
             self, 
             batch_size : int, 

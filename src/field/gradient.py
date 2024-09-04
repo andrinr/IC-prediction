@@ -7,6 +7,7 @@ def central_difference(
         delta : float) -> jax.Array:
     """
     Compute the central difference of a field along a given axis.
+    Periodic boundary conditions are used.
     """
     
     field_r = jnp.roll(field, 1, axis=axis)
@@ -19,6 +20,7 @@ def gradient(
         delta : float) -> jax.Array:
     """
     Compute the gradient of a field using central differences.
+    Periodic boundary conditions are used.
     """
     
     grad_x = central_difference(field, 0, delta)

@@ -16,9 +16,7 @@ class FNO(eqx.Module):
     Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
     NeuralOperator: https://github.com/neuraloperator/neuraloperator
     """
-
-    # TODO: scaling before furier layers
-
+    
     lift : eqx.nn.Conv
     furier_layers : list[FurierLayer]
     project : eqx.nn.Conv
@@ -30,7 +28,7 @@ class FNO(eqx.Module):
             activation: Callable,
             n_furier_layers : int,
             key):
-        
+         
         k1, k2, k3 = jax.random.split(key, 3)
 
         self.lift = eqx.nn.Conv(

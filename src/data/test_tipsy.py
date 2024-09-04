@@ -10,4 +10,3 @@ def test_tipsy():
         'test.tipsy', pos=pos, mass=mass, time=0)
     
     assert True
-    

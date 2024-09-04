@@ -1,8 +1,15 @@
 train_data_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 test_data_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
-model_params_file : "/model_params/fno.eqx"
+model_params_file : "models/fno.eqx"
+output_tipsy_file : "particles.tipsy"
 input_grid_size : 128
 grid_size : 64
 learning_rate : 0.004
 n_epochs : 100
 stride : 50
+# cosmology parameters
+redshift_start : 49
+redshift_end : 0
+box_size : 60 # Mpc/h
+dt_PKDGRAV3 : 0.0012517188943844037 # Given redshift 49
+num_particles : 16777216

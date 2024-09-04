@@ -6,12 +6,7 @@ import jax.numpy as jnp
 
 class RadialSpectralConvolution(eqx.Module):
     """
-    Paper by Li et. al:
-    FOURIER NEURAL OPERATOR FOR PARAMETRIC PARTIAL DIFFERENTIAL EQUATIONS
-
-    Implementation inspired by:
-    Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
-    NeuralOperator: https://github.com/neuraloperator/neuraloperator
+    Idea to drastically reduce the parameter count of FNO's by leveraging radial symmetries.
     """
 
     modes : int
