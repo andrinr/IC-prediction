@@ -141,3 +141,5 @@ Make sure pytest is installed and run ```python -m pytest``` from the root direc
 ### Cosmology
 
 - Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
+- How to get velocities from density fields: https://arxiv.org/pdf/astro-ph/9506070
+- zeldovhich: https://iopscience.iop.org/article/10.1086/498496/pdf
