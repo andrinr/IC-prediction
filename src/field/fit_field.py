@@ -27,15 +27,25 @@ def fit_field(
         total_mass : float,
         iterations : float = 400,
         learning_rate : float = 0.005,
-        ) -> Tuple[jax.Array, jax.Array]:
+        ) -> Tuple[jax.Array, jax.Array, jax.Array]:
     """
-    Fit a field using a set of particles. 
+    Fit a field using a set of particles.
+    Returns the lagrangian positions, the eulerian positions and the mass of the particles.
     The field is assumed to be a 3D grid of shape (N, N, N).
     The function returns the position and mass of the particles.
     """
 
-    # start random
-    pos = jax.random.uniform(key, (3, num_particles))
+    # equispaced particles in grid
+    pos_lag = jnp.array(jnp.meshgrid(
+        jnp.linspace(0, 1, num_particles),
+        jnp.linspace(0, 1, num_particles),
+        jnp.linspace(0, 1, num_particles)))
+    
+    pos_lag = jnp.moveaxis(pos_lag, 0, -1)
+
+    pos = pos_lag
+
+    # pos = jax.random.uniform(key, (3, num_particles))
     mass = jnp.ones(num_particles) * total_mass / num_particles
 
     optimizer = optax.adam(learning_rate)
@@ -55,4 +65,4 @@ def fit_field(
         if i % 10 == 0:
             print(f"Loss: {loss(pos, mass, field)}")
 
-    return pos, mass
+    return pos_lag, pos, mass

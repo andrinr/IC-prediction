@@ -51,21 +51,21 @@ def main(argv) -> None:
 
     total_mass = jnp.sum(rho)
 
-    position, mass = field.fit_field(
+    lagrangian_position, euelerian_position, mass = field.fit_field(
         jax.random.PRNGKey(0),
         config.num_particles,
         rho,
         total_mass,
         400)
     
-    velocity = field.bilinear_interp(position.pos, velocity_field)
-
-    generate_tipsy(
-        config.output_tipsy_file,
-        position,
-        velocity,
-        mass,
-        config.redshift_start)
+    #euelerian_position = lagrangian_position + dspls * m_Dplus;
+    D_plus = cosmos.compute_growth_factor(
+        time,
+        config.Omega_M,
+        config.Omega_L)
+    
+    displacement = (euelerian_position - lagrangian_position) / D_plus
+    
 
     # Delete Data Pipeline
     del data_pipeline
