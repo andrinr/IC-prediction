@@ -32,22 +32,18 @@ def main(argv) -> None:
 
     data = next(data_iterator)
     sequence = jax.device_put(data['sequence'], jax.devices('gpu')[0])[0]
-    pred = jnp.zeros_like(sequence)
+    delta_pred = jnp.zeros_like(sequence)
 
     n_frames = sequence.shape[0]
-    pred = pred.at[0].set(sequence[0])
+    delta_pred = delta_pred.at[0].set(sequence[0])
     for i in range(1, n_frames):
         print(i)
-        pred = pred.at[i].set(model(pred[i-1]))
+        delta_pred = delta_pred.at[i].set(model(delta_pred[i-1]))
 
     time = data["steps"][0]
     mean = data["means"][0]
 
-    potential = cosmos.Potential(config.grid_size)(pred)
-    
-    velocity_field = cosmos.compute_velocity(potential, config.dt_PKDGRAV3)
-
-    rho = cosmos.compute_density(pred, mean)
+    rho = cosmos.compute_density(delta_pred, mean)
 
     total_mass = jnp.sum(rho)
 
@@ -65,8 +61,22 @@ def main(argv) -> None:
         config.Omega_L)
     
     displacement = (euelerian_position - lagrangian_position) / D_plus
-    
 
+    D_plus_da = cosmos.compute_growth_factor_deriv(
+        time,
+        config.Omega_M,
+        config.Omega_L)
+
+    velocity = displacement * D_plus_da
+
+    generate_tipsy(
+        config.output_tipsy_file,
+        lagrangian_position,
+        velocity,
+        mass,
+        config.box_size,
+        config.dt_PKDGRAV3)
+    
     # Delete Data Pipeline
     del data_pipeline
 
