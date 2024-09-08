@@ -14,6 +14,6 @@ def compute_growth_factor(
     Compute the growth factor at a given scale factor a.
     """
 
-    D_plus = compute_growth_factor_deriv(a, Omega_M, Omega_L) * a
+    D_plus = compute_growth_factor_deriv(Omega_M, Omega_L) * a
 
     return D_plus
