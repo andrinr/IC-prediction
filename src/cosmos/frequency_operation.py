@@ -12,7 +12,8 @@ class FrequencyOperation:
 
     def __init__(self, n_grid : int):
         self.n_grid = n_grid
+        self.nyquist = n_grid // 2
         self.frequencies = jnp.fft.fftfreq(n_grid)
+        print(self.frequencies)
         kx, ky, kz = jnp.meshgrid(self.frequencies, self.frequencies, self.frequencies)
         self.k = jnp.sqrt(kx**2 + ky**2 + kz**2)
-        self.nyquist = n_grid // 2
