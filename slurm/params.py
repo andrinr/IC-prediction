@@ -34,7 +34,7 @@ bPeriodic       = True          # with a periodic box
 bEwald          = True          # enable Ewald periodic boundaries
 
 # Logging/Output
-iOutInterval    = 100
+iOutInterval    = 20
 #iCheckInterval = 5
 bDoDensity      = False
 bVDetails       = True
