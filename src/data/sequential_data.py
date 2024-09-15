@@ -10,6 +10,9 @@ import nvidia.dali.types as types
 from ..cosmos import compute_overdensity
 
 BATCH_SIZE = 8
+TRAIN_SIZE = 0.8
+TEST_SIZE = 0.1
+VAL_SIZE= 0.1
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -38,6 +41,7 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
 class VolumetricSequence:
     def __init__(
             self, 
+            type : str,
             grid_size : int, 
             directory : str,
             start : int,
@@ -52,7 +56,19 @@ class VolumetricSequence:
         self.stride = steps if stride is None else stride
         self.flip = flip
         self.folders = os.listdir(self.dir)
-        shuffle(self.folders)
+        # shuffle(self.folders)
+
+        b = int(TRAIN_SIZE * len(self.folders))
+        c = b + int(VAL_SIZE * len(self.folders))
+
+        if type == 'train':
+            self.folders = self.folders[0 : b]
+        
+        if type == 'val':
+            self.folders = self.folders[b : c]
+
+        if type == 'test':
+            self.folders = self.folders[c : -1]
 
     def __call__(self, sample_info : types.SampleInfo):
         sequence_length = self.steps // self.stride + 1

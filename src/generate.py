@@ -18,7 +18,7 @@ def main(argv) -> None:
     # Data Pipeline
     dataset = VolumetricSequence(
         grid_size = config.input_grid_size,
-        directory = config.train_data_dir,
+        directory = config.data_dir,
         start = 0,
         steps = config.stride,
         stride = config.stride,

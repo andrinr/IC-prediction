@@ -55,7 +55,8 @@ def learn_batch(
 def train_model(
         model_params,
         model_static : eqx.Module,
-        data_iterator,
+        train_data_iterator,
+        val_data_iterator,
         learning_rate : float,
         n_epochs : int):
     
@@ -63,9 +64,13 @@ def train_model(
     optimizer_state = optimizer.init(model_params)
 
     training_loss = []
+    validation_loss = []
+
     for epoch in range(n_epochs):
-        epoch_loss = []
-        for _, data in enumerate(data_iterator):
+        epoch_train_loss = []
+        epoch_val_loss = []
+
+        for _, data in enumerate(train_data_iterator):
             sequence_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
 
             model_params, optimizer_state, loss = learn_batch(
@@ -74,10 +79,24 @@ def train_model(
                 model_static,
                 optimizer_state,
                 optimizer)
-            epoch_loss.append(loss)
-        
-        epoch_loss = jnp.array(epoch_loss)
-        print(f"epoch {epoch}, loss {epoch_loss.mean()}")
-        training_loss.append(epoch_loss.mean())
+            epoch_train_loss.append(loss)
 
-    return model_params, jnp.array(epoch_loss)
+        for _, data in enumerate(val_data_iterator):
+            sequence_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
+
+            model_params, optimizer_state, loss = learn_batch(
+                sequence_d,
+                model_params,
+                model_static,
+                optimizer_state,
+                optimizer)
+            epoch_val_loss.append(loss)
+        
+        epoch_train_loss = jnp.array(epoch_train_loss)
+        epoch_val_loss = jnp.array(epoch_val_loss)
+        print(f"epoch {epoch}, train loss {epoch_train_loss.mean()}")
+        print(f"epoch {epoch}, val loss {epoch_val_loss.mean()}")
+        training_loss.append(epoch_train_loss.mean())
+        validation_loss.append(epoch_val_loss.mean())
+
+    return model_params, jnp.array(epoch_train_loss), jnp.array(epoch_val_loss)

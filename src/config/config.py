@@ -1,8 +1,7 @@
 from typing import NamedTuple
 
 class Config(NamedTuple):
-    train_data_dir : str
-    test_data_dir : str
+    data_dir : str
     model_params_file : str
     output_tipsy_file : str
     input_grid_size : int
@@ -17,3 +16,4 @@ class Config(NamedTuple):
     num_particles : int
     omega_L : float
     omega_M : float
+    

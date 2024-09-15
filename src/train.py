@@ -19,16 +19,24 @@ def main(argv) -> None:
     jax.config.update("jax_enable_x64", False)
     jax.config.update("jax_disable_jit", False)
 
-    dataset = data.VolumetricSequence(
-        grid_size = config.input_grid_size,
-        directory = config.train_data_dir,
-        start = 0,
-        steps = config.stride,
-        stride = config.stride,
-        flip=True)
+    dataset_params = {
+        "grid_size" : config.input_grid_size,
+        "directory" : config.data_dir,
+        "start" : 0,
+        "steps" : config.stride,
+        "stride" : config.stride,
+        "flip" : True,
+        "type" : "train"}
+    
+    train_dataset = data.VolumetricSequence(**dataset_params)
+    train_data_pipeline = data.volumetric_sequence_pipe(train_dataset, config.grid_size)
+    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["sequence", "step", "mean"])
 
-    data_pipeline = data.volumetric_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "step", "mean"])
+    dataset_params["type"] = "val"
+
+    val_dataset = data.VolumetricSequence(**dataset_params)
+    val_data_pipeline = data.volumetric_sequence_pipe(val_dataset, config.grid_size)
+    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["sequence", "step", "mean"])
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
@@ -70,10 +78,11 @@ def main(argv) -> None:
     print(f'Number of parameters: {parameter_count}')
 
     # train the model
-    model_params, losses = nn.train_model(
+    model_params, train_loss, val_loss = nn.train_model(
         model_params,
         model_static, 
-        data_iterator,
+        train_data_iterator,
+        val_data_iterator,
         config.learning_rate,
         config.n_epochs)
 
@@ -82,7 +91,7 @@ def main(argv) -> None:
     nn.save(config.model_params_file, sq_fno_hyperparams, model)
 
     # Delete Data Pipeline
-    del data_pipeline
+    del val_data_pipeline
 
 if __name__ == "__main__":
     main(sys.argv[1:])
