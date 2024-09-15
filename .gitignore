@@ -6,3 +6,5 @@
 *.out
 core_*
 .vscode
+
+/PMIC

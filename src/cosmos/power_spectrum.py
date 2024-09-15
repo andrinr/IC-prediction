@@ -23,7 +23,11 @@ class PowerSpectrum(FrequencyOperation):
 
         # Remove negative wave numbers due to Nyquist folding
         # TODO: ensure this is correct?
-        delta_k = delta_k[:self.nyquist:, :self.nyquist:, :self.nyquist]
+        # delta_k = delta_k[:self.nyquist:, :self.nyquist:, :self.nyquist]
+
+        print(delta_k.shape)
+        print(self.k.shape)
+        print(self.index_grid.shape)
         
         power = jnp.zeros(self.n_bins)
         power = power.at[self.index_grid].add(jnp.abs(delta_k))

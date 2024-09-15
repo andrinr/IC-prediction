@@ -14,7 +14,7 @@ export SRUN_CPUS_PER_TASK=${SLURM_CPUS_PER_TASK}
 
 printf -v id "%03d" $SLURM_ARRAY_TASK_ID
 
-build_path="pkdgrav3/build/pkdgrav3"
+build_path="../pkdgrav3/build/pkdgrav3"
 grid_storage="/capstor/scratch/cscs/arehmann/pairs/grid/$id/grid"
 pts_storage="/capstor/scratch/cscs/arehmann/pairs/raw/$id/raw"
 seed=$SLURM_ARRAY_TASK_ID
@@ -23,4 +23,4 @@ seed=$SLURM_ARRAY_TASK_ID
 mkdir -p $grid_storage
 mkdir -p $pts_storage
 
-srun pkdgrav3/build/pkdgrav3 params.py $seed $pts_storage $grid_storage
+srun ../pkdgrav3/build/pkdgrav3 params.py $seed $pts_storage $grid_storage
