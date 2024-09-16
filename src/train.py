@@ -60,7 +60,7 @@ def main(argv) -> None:
     sq_fno_hyperparams = {
         "modes" : 20,
         "hidden_channels" : 3,
-        "n_furier_layers" : 3}
+        "n_furier_layers" : 5}
 
     model = nn.FNO(
         activation = jax.nn.relu,
