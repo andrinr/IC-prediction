@@ -7,12 +7,12 @@ from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 # local
-from ..cosmos import compute_overdensity
+from cosmos import compute_overdensity
 
 BATCH_SIZE = 8
 TRAIN_SIZE = 0.8
 TEST_SIZE = 0.1
-VAL_SIZE= 0.1
+VAL_SIZE = 0.1
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -48,6 +48,14 @@ class VolumetricSequence:
             steps : int,
             stride : int = None,
             flip : bool = True):
+        
+        """
+
+        Loads all folder in a directory, 
+        where each folder contains a sequence of 3D arrays, each stored as a binary.
+        All sequences should have the same length. 
+        Train, test and validation splits are not shuffled.
+        """
 
         self.dir = os.path.abspath(directory)
         self.grid_size = grid_size
@@ -56,7 +64,6 @@ class VolumetricSequence:
         self.stride = steps if stride is None else stride
         self.flip = flip
         self.folders = os.listdir(self.dir)
-        # shuffle(self.folders)
 
         b = int(TRAIN_SIZE * len(self.folders))
         c = b + int(VAL_SIZE * len(self.folders))
