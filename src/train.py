@@ -5,7 +5,6 @@ from nvidia.dali.plugin.jax import DALIGenericIterator
 # equinox
 import equinox as eqx
 # other
-import pandas as pd
 import sys
 # Local
 import nn

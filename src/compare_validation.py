@@ -9,29 +9,24 @@ import jax
 
 def main(argv) -> None:
 
-    folder = "model/fno_layers"
+    folder = "models/fno_layers"
 
     files = os.listdir(folder)
     files.sort()
 
-    plots = []
-    for file in files:
+    for i, file in enumerate(files):
+        print(file)
+        filename = os.path.join(folder, file)
         model, config, training_stats = nn.load(
-            file, nn.FNO, jax.nn.relu)
+            filename, nn.FNO, jax.nn.relu)
         
-        
-        
+        validation_loss = training_stats['val_loss']
 
+        plt.plot(validation_loss, label=f"{i+1} layers")
 
-    data = pd.read_csv(config.train_log_file, header=0, index_col=0)
-
-    print(data)
-
-    plot = data.plot(title="Training and validation loss", ylabel="MSE", xlabel="epoch")
-    fig = plot.get_figure()
-
-    fig.savefig("img/training.png")
-
-
+    plt.yscale("log")
+    plt.legend()
+    plt.savefig("img/validation.png")
+    
 if __name__ == "__main__":
     main(sys.argv[1:])

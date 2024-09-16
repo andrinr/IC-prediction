@@ -10,7 +10,7 @@ def count_parameters(model: eqx.Module):
 
 def custom_serializer(obj):
     if isinstance(obj, jax.Array):
-        return np.array(obj).tolist()  # Convert JAX array to a Python list
+        return np.array(obj).tolist() 
     raise TypeError(f"Object of type '{obj.__class__.__name__}' is not JSON serializable")
 
 def save(
