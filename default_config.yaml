@@ -4,7 +4,7 @@ output_tipsy_file : "particles.tipsy"
 input_grid_size : 128
 grid_size : 64
 learning_rate : 0.004
-n_epochs : 100
+n_epochs : 80
 stride : 90
 # cosmology parameters
 # all values have to agree with the values used in the simulation

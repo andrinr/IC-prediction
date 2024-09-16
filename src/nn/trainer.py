@@ -3,8 +3,8 @@ import jax
 import optax
 import equinox as eqx
 from functools import partial
-from typing import NamedTuple
-    
+import time
+
 @partial(jax.jit, static_argnums=1)
 def mse_loss(
         model_params,
@@ -31,8 +31,6 @@ def learn_batch(
     shape of sequence:
     [Batch, Frames, Channels, Depth, Height, Width]
     """
-
-    print(sequence.shape)
 
     n_frames = sequence.shape[1]
     value_and_grad = eqx.filter_value_and_grad(mse_loss, has_aux=True)
@@ -66,7 +64,9 @@ def train_model(
 
     training_loss = []
     validation_loss = []
+    timestamps = []
 
+    start = time.time()
     for epoch in range(n_epochs):
         epoch_train_loss = []
         epoch_val_loss = []
@@ -99,5 +99,6 @@ def train_model(
         print(f"epoch {epoch}, val loss {epoch_val_loss.mean()}")
         training_loss.append(epoch_train_loss.mean())
         validation_loss.append(epoch_val_loss.mean())
+        timestamps.append(time.time() - start)
 
-    return model_params, jnp.array(training_loss), jnp.array(validation_loss)
+    return model_params, jnp.array(training_loss), jnp.array(validation_loss), jnp.array(timestamps)

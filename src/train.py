@@ -59,7 +59,7 @@ def main(argv) -> None:
     sq_fno_hyperparams = {
         "modes" : 20,
         "hidden_channels" : 3,
-        "n_furier_layers" : 5}
+        "n_furier_layers" : 4}
 
     model = nn.FNO(
         activation = jax.nn.relu,
@@ -80,7 +80,7 @@ def main(argv) -> None:
     print(f'Number of parameters: {parameter_count}')
 
     # train the model
-    model_params, train_loss, val_loss = nn.train_model(
+    model_params, train_loss, val_loss, time = nn.train_model(
         model_params,
         model_static, 
         train_data_iterator,
@@ -92,7 +92,8 @@ def main(argv) -> None:
 
     training_stats = {
         "train_loss" : train_loss,
-        "val_loss" : val_loss}
+        "val_loss" : val_loss,
+        "time" : time}
 
     now = datetime.now()
     datetime_str = now.strftime("%Y%m%d_%H%M%S")

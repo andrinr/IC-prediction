@@ -21,10 +21,14 @@ def main(argv) -> None:
             filename, nn.FNO, jax.nn.relu)
         
         validation_loss = training_stats['val_loss']
+        times = training_stats['time']
 
-        plt.plot(validation_loss, label=f"{i+1} layers")
+        plt.plot(times, validation_loss, label=f"{i+1} layers")
 
+    plt.xlabel("Compute (seconds)")
+    plt.ylabel("MSE")
     plt.yscale("log")
+    plt.xscale("log")
     plt.legend()
     plt.savefig("img/validation.png")
     
