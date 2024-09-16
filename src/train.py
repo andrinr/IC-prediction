@@ -79,8 +79,6 @@ def main(argv) -> None:
     parameter_count = nn.count_parameters(model)
     print(f'Number of parameters: {parameter_count}')
 
-    k_params = int(parameter_count / 1000)
-
     # train the model
     model_params, train_loss, val_loss = nn.train_model(
         model_params,
@@ -92,7 +90,13 @@ def main(argv) -> None:
 
     model = eqx.combine(model_params, model_static)
 
-    nn.save(config.model_params_file, sq_fno_hyperparams, model)
+    training_stats = {
+        "train_loss" : train_loss,
+        "val_loss" : val_loss,
+        "learning_rate" : config.learning_rate,
+        "n_epochs" : config.n_epochs}
+
+    nn.save(config.model_params_file, sq_fno_hyperparams, training_stats, model)
 
     d = {
         'train' : train_loss,

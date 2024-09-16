@@ -21,12 +21,13 @@ def main(argv) -> None:
         start = 0,
         steps = config.stride,
         stride = config.stride,
-        flip=True)
+        flip=True,        
+        type = "test")
 
     data_pipeline = volumetric_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "steps", "means"])
 
-    model = nn.load(
+    model, training_stats = nn.load(
         config.model_params_file, nn.FNO, jax.nn.relu)
 
     data = next(data_iterator)

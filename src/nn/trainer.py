@@ -3,6 +3,7 @@ import jax
 import optax
 import equinox as eqx
 from functools import partial
+from typing import NamedTuple
     
 @partial(jax.jit, static_argnums=1)
 def mse_loss(
