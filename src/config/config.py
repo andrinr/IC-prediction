@@ -2,7 +2,7 @@ from typing import NamedTuple
 
 class Config(NamedTuple):
     data_dir : str
-    model_params_file : str
+    model_dir : str
     output_tipsy_file : str
     input_grid_size : int
     grid_size : int

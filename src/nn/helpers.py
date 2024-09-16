@@ -2,7 +2,7 @@ import equinox as eqx
 import jax.tree_util as jtu
 import jax
 import json
-from typing import Callable
+from typing import Callable, Tuple
 import numpy as np
 
 def count_parameters(model: eqx.Module):
@@ -15,11 +15,14 @@ def custom_serializer(obj):
 
 def save(
         filename : str, 
-        hyperparams : dict,
+        config : dict,
         training_stats : dict,
+        hyperparams : dict,
         model : eqx.Module):
     
     with open(filename, "wb") as f:
+        config_str = json.dumps(config)
+        f.write((config_str + "\n").encode())
         training_params_stream = json.dumps(training_stats, default=custom_serializer)
         f.write((training_params_stream + "\n").encode())
         hyperparam_str = json.dumps(hyperparams)
@@ -29,11 +32,12 @@ def save(
 def load(
         filename : str, 
         constructor, 
-        activation : Callable):
+        activation : Callable) -> Tuple[eqx.Module, dict, dict]:
     
     with open(filename, "rb") as f:
+        config = json.loads(f.readline().decode())
         training_stats = json.loads(f.readline().decode())
         hyperparams = json.loads(f.readline().decode())
         model = constructor(
             key=jax.random.PRNGKey(0), **hyperparams, activation=activation)
-        return eqx.tree_deserialise_leaves(f, model), training_stats
+        return eqx.tree_deserialise_leaves(f, model), config, training_stats

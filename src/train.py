@@ -11,6 +11,7 @@ import sys
 import nn
 import data
 from config import load_config
+from datetime import datetime
 
 def main(argv) -> None:
    
@@ -92,17 +93,12 @@ def main(argv) -> None:
 
     training_stats = {
         "train_loss" : train_loss,
-        "val_loss" : val_loss,
-        "learning_rate" : config.learning_rate,
-        "n_epochs" : config.n_epochs}
+        "val_loss" : val_loss}
 
-    nn.save(config.model_params_file, sq_fno_hyperparams, training_stats, model)
-
-    d = {
-        'train' : train_loss,
-        'val' : val_loss}
-    log = pd.DataFrame(data=d)
-    log.to_csv(config.train_log_file)
+    now = datetime.now()
+    datetime_str = now.strftime("%Y%m%d_%H%M%S")
+    filename =f"{config.model_dir}/model_{datetime_str}.eqx"
+    nn.save(filename, config._asdict(), training_stats, sq_fno_hyperparams, model)
 
     # Delete Data Pipeline
     del val_data_pipeline

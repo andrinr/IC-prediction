@@ -8,12 +8,17 @@ from nvidia.dali.plugin.jax import DALIGenericIterator
 import nn
 from data import VolumetricSequence, volumetric_sequence_pipe
 import visualize
-from config import load_config
+from config import Config
 
 def main(argv) -> None:
    
-    config = load_config(argv[0])
+    model_name = argv[0]
 
+    model, config, training_stats = nn.load(
+        model_name, nn.FNO, jax.nn.relu)
+    
+    config = Config(**config)
+    
     # Data Pipeline
     dataset = VolumetricSequence(
         grid_size = config.input_grid_size,
@@ -26,9 +31,6 @@ def main(argv) -> None:
 
     data_pipeline = volumetric_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "steps", "means"])
-
-    model, training_stats = nn.load(
-        config.model_params_file, nn.FNO, jax.nn.relu)
 
     data = next(data_iterator)
     sequence = jax.device_put(data['sequence'], jax.devices('gpu')[0])[0]
