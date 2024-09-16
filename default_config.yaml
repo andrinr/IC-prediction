@@ -1,11 +1,12 @@
 data_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 model_params_file : "models/fno.eqx"
+train_log_file : "models/logs/fno.log"
 output_tipsy_file : "particles.tipsy"
 input_grid_size : 128
 grid_size : 64
 learning_rate : 0.004
 n_epochs : 100
-stride : 50
+stride : 90
 # cosmology parameters
 # all values have to agree with the values used in the simulation
 redshift_start : 49

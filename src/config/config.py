@@ -3,6 +3,7 @@ from typing import NamedTuple
 class Config(NamedTuple):
     data_dir : str
     model_params_file : str
+    train_log_file : str
     output_tipsy_file : str
     input_grid_size : int
     grid_size : int

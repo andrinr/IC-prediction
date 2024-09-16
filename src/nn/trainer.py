@@ -99,4 +99,4 @@ def train_model(
         training_loss.append(epoch_train_loss.mean())
         validation_loss.append(epoch_val_loss.mean())
 
-    return model_params, jnp.array(epoch_train_loss), jnp.array(epoch_val_loss)
+    return model_params, jnp.array(training_loss), jnp.array(validation_loss)

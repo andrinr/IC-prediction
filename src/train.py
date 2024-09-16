@@ -1,10 +1,12 @@
-import sys
 # JAX 
 import jax
 from jax.lib import xla_bridge
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # equinox
 import equinox as eqx
+# other
+import pandas as pd
+import sys
 # Local
 import nn
 import data
@@ -77,6 +79,8 @@ def main(argv) -> None:
     parameter_count = nn.count_parameters(model)
     print(f'Number of parameters: {parameter_count}')
 
+    k_params = int(parameter_count / 1000)
+
     # train the model
     model_params, train_loss, val_loss = nn.train_model(
         model_params,
@@ -89,6 +93,12 @@ def main(argv) -> None:
     model = eqx.combine(model_params, model_static)
 
     nn.save(config.model_params_file, sq_fno_hyperparams, model)
+
+    d = {
+        'train' : train_loss,
+        'val' : val_loss}
+    log = pd.DataFrame(data=d)
+    log.to_csv(config.train_log_file)
 
     # Delete Data Pipeline
     del val_data_pipeline
