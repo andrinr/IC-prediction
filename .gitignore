@@ -8,3 +8,5 @@ core_*
 .vscode
 
 /PMIC
+
+/models
