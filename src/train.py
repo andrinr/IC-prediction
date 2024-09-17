@@ -58,7 +58,7 @@ def main(argv) -> None:
 
     sq_fno_hyperparams = {
         "modes" : 20,
-        "hidden_channels" : 3,
+        "hidden_channels" : 16,
         "n_furier_layers" : 4}
 
     model = nn.FNO(
