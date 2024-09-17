@@ -2,6 +2,8 @@ import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
 from config import Config
+from cosmos import PowerSpectrum
+from cosmos import compute_rho
 
 def sequence(
         ouput_file : str,
@@ -23,9 +25,22 @@ def sequence(
     fig = plt.figure(figsize=(10, 6), layout="constrained")
     grid = fig.add_gridspec(nrows=2, ncols=frames)
 
+    power_spectrum = PowerSpectrum(grid_size, 50)
+
+    ax_power = fig.add_subplot(grid[1, 0])
+
     for frame in range(frames):
 
-        # TODO: add colorbar, vscale
+        mean = means[frame]
+        mean = jax.device_put(mean, device=jax.devices("gpu")[0])
+        print(mean)
+
+        k, power = power_spectrum(compute_rho(sequence[frame, :, :, :, 0], mean))
+        ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
+
+        if frame > 0:
+            k, power = power_spectrum(compute_rho(sequence_prediction[frame, :, :, :, 0], mean))
+            ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
         
         min = jnp.min(sequence[frame, grid_size // 2])
         max = jnp.max(sequence[frame, grid_size // 2])
@@ -34,15 +49,22 @@ def sequence(
             max = jnp.max(jnp.array([sequence_prediction[frame, grid_size // 2], sequence[frame, grid_size // 2]]))
 
         ax_seq = fig.add_subplot(grid[0, frame])
-        ax_pred = fig.add_subplot(grid[1, frame])
 
         if frame > 0:
+            ax_pred = fig.add_subplot(grid[1, frame])
             ax_pred.axis('off')   
             ax_pred.set_title(f"pred t: {timeline[frame]}")
             ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
 
         ax_seq.axis('off')   
         ax_seq.set_title(f"sim t: {timeline[frame]}")
-        ax_seq.imshow(sequence[frame, grid_size // 2, : , :])#, vmin=min, vmax=max, cmap='inferno')
+        ax_seq.imshow(sequence[frame, grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
+
+    ax_power.set_yscale('log')
+    ax_power.set_xscale('log')
+    ax_power.legend()
+
+    # ax_power.set_xticks(jnp.linspace(0, config.box_size, 5))
+    # ax_power.set_yticks(jnp.linspace(0, 0.1, 5))
 
     plt.savefig(ouput_file)

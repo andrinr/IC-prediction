@@ -27,7 +27,7 @@ def main(argv) -> None:
         steps = config.stride,
         stride = config.stride,
         flip=True,        
-        type = "test")
+        type = "train")
 
     data_pipeline = volumetric_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "steps", "means"])
