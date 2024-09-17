@@ -1,6 +1,6 @@
 import jax.numpy as jnp
 import jax
-from .power_spectrum import PowerSpectrum
+from cosmos import PowerSpectrum
 
 def gen_data(N):
     key = jax.random.PRNGKey(20)

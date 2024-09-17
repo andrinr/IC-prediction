@@ -1,6 +1,6 @@
 import jax.numpy as jnp
 import jax
-from .interpolation import bilinear_interp
+from field import bilinear_interp
 
 def test_linear():
 

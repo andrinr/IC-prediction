@@ -1,6 +1,6 @@
 import jax
 import jax.numpy as jnp
-from .unet import UNet
+from nn import UNet
 
 def test_unet():
 

@@ -1,6 +1,6 @@
 import jax.numpy as jnp
 import jax
-from .mass_assigment import nn_ma, cic_ma
+from field import nn_ma, cic_ma
 
 def test_nn():
     pos = jnp.array([

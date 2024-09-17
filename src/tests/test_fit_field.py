@@ -1,5 +1,5 @@
-from .fit_field import *
-from .mass_assigment import *
+from field import fit_field, cic_ma
+import jax
 import jax.numpy as jnp
 
 def test_fit_field():
