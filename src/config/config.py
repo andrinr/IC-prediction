@@ -16,4 +16,3 @@ class Config(NamedTuple):
     num_particles : int
     omega_L : float
     omega_M : float
-    

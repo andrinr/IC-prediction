@@ -26,7 +26,7 @@ class PowerSpectrum(FrequencyOperation):
 
         # compute the average power
         power = power / self.n_modes
-        power = power / (self.n_grid ** 3)
+        # power = power / (self.n_grid ** 3)
 
         power = jnp.where(jnp.isnan(power), 0, power)
 

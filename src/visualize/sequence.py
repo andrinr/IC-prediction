@@ -25,7 +25,7 @@ def sequence(
     fig = plt.figure(figsize=(10, 6), layout="constrained")
     grid = fig.add_gridspec(nrows=2, ncols=frames)
 
-    power_spectrum = PowerSpectrum(grid_size, config.grid_size)
+    power_spectrum = PowerSpectrum(grid_size, 30)
 
     ax_power = fig.add_subplot(grid[1, 0])
 
@@ -35,11 +35,11 @@ def sequence(
         mean = jax.device_put(mean, device=jax.devices("gpu")[0])
         print(mean)
 
-        k, power = power_spectrum(compute_rho(sequence[frame, :, :, :, 0], mean))
+        k, power = power_spectrum(sequence[frame, :, :, :, 0])
         ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
 
         if frame > 0:
-            k, power = power_spectrum(compute_rho(sequence_prediction[frame, :, :, :, 0], mean))
+            k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
             ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
         
         min = jnp.min(sequence[frame, grid_size // 2])
