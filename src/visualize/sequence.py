@@ -25,7 +25,7 @@ def sequence(
     fig = plt.figure(figsize=(10, 6), layout="constrained")
     grid = fig.add_gridspec(nrows=2, ncols=frames)
 
-    power_spectrum = PowerSpectrum(grid_size, 50)
+    power_spectrum = PowerSpectrum(grid_size, config.grid_size)
 
     ax_power = fig.add_subplot(grid[1, 0])
 
