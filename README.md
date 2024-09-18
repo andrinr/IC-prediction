@@ -47,6 +47,13 @@ pip install nvidia-dali-cuda120
 pip install optax equinox matplotlib
 ```
 
+### Power Spectrum Plots
+
+```
+conda create --name nbodykit-env python=3.8
+conda install -c bccp nbodykit
+```
+
 ### Train & Eval
 
 1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
