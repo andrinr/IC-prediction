@@ -45,6 +45,15 @@ source .env/bin/activate
 pip install -U "jax[cuda12]"
 pip install nvidia-dali-cuda120
 pip install optax equinox matplotlib
+conda install -c bccp nbodykit
+conda update -c bccp --all
+```
+
+### Power Spectrum Plots
+
+```
+conda create --name nbodykit-env python=3.8
+conda install -c bccp nbodykit
 ```
 
 ### Train & Eval

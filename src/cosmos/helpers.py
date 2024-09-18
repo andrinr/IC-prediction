@@ -8,7 +8,7 @@ def compute_overdensity(rho : jax.Array) -> Tuple[jax.Array, float]:
     mean = rho.mean()
     return (rho - mean) / mean, mean
 
-def compute_rho(overdensity : jax.Array, mean) -> Tuple[jax.Array]:
+def compute_rho(overdensity : jax.Array, mean : float) -> Tuple[jax.Array]:
     """
     Get density (rho) from overdensity (delta)
     """

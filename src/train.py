@@ -1,14 +1,16 @@
-import sys
 # JAX 
 import jax
 from jax.lib import xla_bridge
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # equinox
 import equinox as eqx
+# other
+import sys
 # Local
 import nn
 import data
 from config import load_config
+from datetime import datetime
 
 def main(argv) -> None:
    
@@ -40,29 +42,29 @@ def main(argv) -> None:
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
-    # unet_hyperparams = {
-    #     "num_spatial_dims" : 3,
-    #     "in_channels" : 1,
-    #     "out_channels" : 1,
-    #     "hidden_channels" : 8,
-    #     "num_levels" : 4,
-    #     "padding" : 'SAME',
-    #     "padding_mode" : 'CIRCULAR'}
+    unet_hyperparams = {
+        "num_spatial_dims" : 3,
+        "in_channels" : 1,
+        "out_channels" : 1,
+        "hidden_channels" : 8,
+        "num_levels" : 4,
+        "padding" : 'SAME',
+        "padding_mode" : 'CIRCULAR'}
 
-    # model = nn.UNet(
-    #     activation=jax.nn.relu,
-    #     **unet_hyperparams,	
-    #     key=init_rng)
+    model = nn.UNet(
+        activation=jax.nn.relu,
+        **unet_hyperparams,	
+        key=init_rng)
 
-    sq_fno_hyperparams = {
-        "modes" : 20,
-        "hidden_channels" : 3,
-        "n_furier_layers" : 3}
+    # sq_fno_hyperparams = {
+    #     "modes" : 20,
+    #     "hidden_channels" : 16,
+    #     "n_furier_layers" : 4}
 
-    model = nn.FNO(
-        activation = jax.nn.relu,
-        key = init_rng,
-        **sq_fno_hyperparams)
+    # model = nn.FNO(
+    #     activation = jax.nn.relu,
+    #     key = init_rng,
+    #     **sq_fno_hyperparams)
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
 
@@ -78,7 +80,7 @@ def main(argv) -> None:
     print(f'Number of parameters: {parameter_count}')
 
     # train the model
-    model_params, train_loss, val_loss = nn.train_model(
+    model_params, train_loss, val_loss, time = nn.train_model(
         model_params,
         model_static, 
         train_data_iterator,
@@ -88,7 +90,15 @@ def main(argv) -> None:
 
     model = eqx.combine(model_params, model_static)
 
-    nn.save(config.model_params_file, sq_fno_hyperparams, model)
+    training_stats = {
+        "train_loss" : train_loss,
+        "val_loss" : val_loss,
+        "time" : time}
+
+    now = datetime.now()
+    datetime_str = now.strftime("%Y%m%d_%H%M%S")
+    filename =f"{config.model_dir}/model_{datetime_str}.eqx"
+    nn.save(filename, config._asdict(), training_stats, sq_fno_hyperparams, model)
 
     # Delete Data Pipeline
     del val_data_pipeline

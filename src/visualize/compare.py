@@ -1,6 +1,6 @@
 import jax
 import jax.numpy as jnp
-from ..cosmos import Potential
+from cosmos import Potential
 import matplotlib.pyplot as plt
 
 def compare(
