@@ -9,10 +9,10 @@ import nvidia.dali.types as types
 # local
 from cosmos import compute_overdensity
 
-BATCH_SIZE = 8
+BATCH_SIZE = 4
 TRAIN_SIZE = 0.8
-TEST_SIZE = 0.1
-VAL_SIZE = 0.1
+TEST_SIZE = 0.05
+VAL_SIZE = 0.05
 
 @pipeline_def(
     batch_size=BATCH_SIZE,

@@ -22,11 +22,11 @@ class PowerSpectrum(FrequencyOperation):
         delta_k = jnp.fft.rfftn(delta)
 
         power = jnp.zeros(self.n_bins)
-        power = power.at[self.index_grid].add(jnp.abs(delta_k))
+        power = power.at[self.index_grid].add(abs(delta_k) ** 2)
 
         # compute the average power
         power = power / self.n_modes
-        # power = power / (self.n_grid ** 3)
+        power = power / (self.n_grid ** 2 * self.nyquist)
 
         power = jnp.where(jnp.isnan(power), 0, power)
 

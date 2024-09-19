@@ -42,29 +42,29 @@ def main(argv) -> None:
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
-    unet_hyperparams = {
-        "num_spatial_dims" : 3,
-        "in_channels" : 1,
-        "out_channels" : 1,
-        "hidden_channels" : 8,
-        "num_levels" : 4,
-        "padding" : 'SAME',
-        "padding_mode" : 'CIRCULAR'}
+    # unet_hyperparams = {
+    #     "num_spatial_dims" : 3,
+    #     "in_channels" : 1,
+    #     "out_channels" : 1,
+    #     "hidden_channels" : 8,
+    #     "num_levels" : 4,
+    #     "padding" : 'SAME',
+    #     "padding_mode" : 'CIRCULAR'}
 
-    model = nn.UNet(
-        activation=jax.nn.relu,
-        **unet_hyperparams,	
-        key=init_rng)
+    # model = nn.UNet(
+    #     activation=jax.nn.relu,
+    #     **unet_hyperparams,	
+    #     key=init_rng)
 
-    # sq_fno_hyperparams = {
-    #     "modes" : 20,
-    #     "hidden_channels" : 16,
-    #     "n_furier_layers" : 4}
+    sq_fno_hyperparams = {
+        "modes" : 20,
+        "hidden_channels" : 4,
+        "n_furier_layers" : 4}
 
-    # model = nn.FNO(
-    #     activation = jax.nn.relu,
-    #     key = init_rng,
-    #     **sq_fno_hyperparams)
+    model = nn.FNO(
+        activation = jax.nn.relu,
+        key = init_rng,
+        **sq_fno_hyperparams)
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
 

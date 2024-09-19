@@ -27,13 +27,13 @@ def main(argv) -> None:
         steps = config.stride,
         stride = config.stride,
         flip=True,        
-        type = "train")
+        type = "val")
 
     data_pipeline = volumetric_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["sequence", "steps", "means"])
 
     data = next(data_iterator)
-    sequence = jax.device_put(data['sequence'], jax.devices('gpu')[0])[0]
+    sequence = jax.device_put(data['sequence'], jax.devices('gpu')[0])[3]
     pred = jnp.zeros_like(sequence)
 
     n_frames = sequence.shape[0]
