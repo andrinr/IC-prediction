@@ -4,10 +4,11 @@ import optax
 import equinox as eqx
 from functools import partial
 import time
+from jaxtyping import PyTree
 
 @partial(jax.jit, static_argnums=1)
 def mse_loss(
-        model_params,
+        model_params : list,
         model_static : eqx.Module,
         state : jax.Array,
         next_state : jax.Array):
@@ -18,34 +19,37 @@ def mse_loss(
 
     return mse, next_pred
 
-@partial(jax.jit, static_argnums=[2])
+@partial(jax.jit, static_argnums=[2, 3])
 def predict_batch(
         sequence : jax.Array,
         model_params,
-        model_static : eqx.Module):
+        model_static : eqx.Module,
+        sequential_mode : bool):
     
     n_frames = sequence.shape[1]
 
     total_loss = 0
 
-    for i in range(n_frames-1):
-        loss, pred = mse_loss(
-            model_params, 
-            model_static, 
-            sequence[:, i],
-            sequence[:, i+1])
-        
-        total_loss += loss
+    if sequential_mode:
+        for i in range(n_frames-1):
+            loss, pred = mse_loss(
+                model_params[i] if sequential_mode else model_params,
+                model_static, 
+                sequence[:, i],
+                sequence[:, i+1])
+            
+            total_loss += loss
 
-    return total_loss
+    return total_loss, loss
 
-@partial(jax.jit, static_argnums=[2, 4])
+@partial(jax.jit, static_argnums=[2, 4, 5])
 def learn_batch(
         sequence : jax.Array,
         model_params,
         model_static : eqx.Module,
         optimizer_state : optax.OptState,
-        optimizer_static):
+        optimizer_static,
+        sequential_mode : bool):
     """
     Learn model on batch of sequences.
 
@@ -60,18 +64,23 @@ def learn_batch(
 
     for i in range(n_frames-1):
         (loss, pred), grad = value_and_grad(
-            model_params, 
+            model_params[i] if sequential_mode else model_params,
             model_static, 
             sequence[:, i],
             sequence[:, i+1])
         
         updates, optimizer_state = optimizer_static.update(grad, optimizer_state)
 
-        model = eqx.combine(model_params, model_static)
+        model = eqx.combine(model_params[i] if sequential_mode else model_params, model_static)
         model = eqx.apply_updates(model, updates)
-        model_params, model_static = eqx.partition(model, eqx.is_array)
+        model_params_i, model_static = eqx.partition(model, eqx.is_array)
 
         total_loss += loss
+
+        if sequential_mode:
+            model_params[i] = model_params_i
+        else:
+            model_params = model_params_i
 
     return model_params, optimizer_state, total_loss
 
@@ -81,7 +90,8 @@ def train_model(
         train_data_iterator,
         val_data_iterator,
         learning_rate : float,
-        n_epochs : int):
+        n_epochs : int,
+        sequential_mode : bool = True):
     
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(model_params)
@@ -103,7 +113,8 @@ def train_model(
                 model_params,
                 model_static,
                 optimizer_state,
-                optimizer)
+                optimizer,
+                sequential_mode)
             epoch_train_loss.append(loss)
 
         for _, data in enumerate(val_data_iterator):

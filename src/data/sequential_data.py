@@ -78,9 +78,8 @@ class VolumetricSequence:
             self.folders = self.folders[c : -1]
 
     def __call__(self, sample_info : types.SampleInfo):
-        sequence_length = self.steps // self.stride + 1
         sequence = jnp.zeros(
-            (sequence_length, 1, self.grid_size, self.grid_size, self.grid_size))
+            (self.steps, 1, self.grid_size, self.grid_size, self.grid_size))
         
         sample_idx = sample_info.idx_in_epoch
 
@@ -90,10 +89,10 @@ class VolumetricSequence:
         files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
         files.sort()
 
-        timeline = jnp.zeros(sequence_length)
-        density_means = jnp.zeros(sequence_length)
+        timeline = jnp.zeros(self.steps)
+        density_means = jnp.zeros(self.steps)
 
-        for i in range(sequence_length):
+        for i in range(self.steps):
             time = self.start + i * self.stride
             timeline = timeline.at[i].set(time)
             file_dir = os.path.join(

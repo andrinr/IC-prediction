@@ -5,7 +5,7 @@ from typing import Callable
 import jax
 import jax.numpy as jnp
 from typing import Callable
-from .furier_layer import FurierLayer
+from .fourier_layer import FourierLayer
 
 class FNO(eqx.Module):
     """
@@ -18,7 +18,7 @@ class FNO(eqx.Module):
     """
     
     lift : eqx.nn.Conv
-    furier_layers : list[FurierLayer]
+    furier_layers : list[FourierLayer]
     project : eqx.nn.Conv
 
     def __init__(
@@ -44,7 +44,7 @@ class FNO(eqx.Module):
         furier_keys = jax.random.split(k2, n_furier_layers)
 
         for i in range(n_furier_layers):
-            self.furier_layers.append(FurierLayer(
+            self.furier_layers.append(FourierLayer(
                 modes = modes,
                 n_channels = hidden_channels,
                 activation = activation,

@@ -25,7 +25,7 @@ def main(argv) -> None:
         "grid_size" : config.input_grid_size,
         "directory" : config.data_dir,
         "start" : 0,
-        "steps" : config.stride,
+        "steps" : config.steps,
         "stride" : config.stride,
         "flip" : True,
         "type" : "train"}
@@ -56,17 +56,25 @@ def main(argv) -> None:
     #     **unet_hyperparams,	
     #     key=init_rng)
 
+
     sq_fno_hyperparams = {
-        "modes" : 20,
+        "modes" : 8,
         "hidden_channels" : 4,
         "n_furier_layers" : 4}
 
-    model = nn.FNO(
-        activation = jax.nn.relu,
-        key = init_rng,
-        **sq_fno_hyperparams)
+    model_static = 0
+    model_params = []
+    for i in range(config.steps):
+        model = nn.FNO(
+            activation = jax.nn.relu,
+            key = init_rng,
+            **sq_fno_hyperparams)
 
-    model_params, model_static = eqx.partition(model, eqx.is_array)
+        model_params_i, model_static = eqx.partition(model, eqx.is_array)
+        model_params.append(model_params_i)
+
+    if not config.sequential_mode:
+        model_params = model_params[0]
 
     # model = nn.Dummy(
     #     num_spatial_dims=3,
@@ -81,12 +89,13 @@ def main(argv) -> None:
 
     # train the model
     model_params, train_loss, val_loss, time = nn.train_model(
-        model_params,
-        model_static, 
-        train_data_iterator,
-        val_data_iterator,
-        config.learning_rate,
-        config.n_epochs)
+        model_params = model_params,
+        model_static = model_static, 
+        train_data_iterator = train_data_iterator,
+        val_data_iterator = val_data_iterator,
+        learning_rate = config.learning_rate,
+        n_epochs = config.n_epochs,
+        sequential_mode = config.sequential_mode)
 
     model = eqx.combine(model_params, model_static)
 
