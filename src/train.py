@@ -59,8 +59,8 @@ def main(argv) -> None:
 
     sq_fno_hyperparams = {
         "modes" : 8,
-        "hidden_channels" : 4,
-        "n_furier_layers" : 4}
+        "hidden_channels" : 1,
+        "n_furier_layers" : 1}
 
     model_static = 0
     model_params = []
@@ -85,7 +85,7 @@ def main(argv) -> None:
     #     key=init_rng) 
 
     parameter_count = nn.count_parameters(model)
-    print(f'Number of parameters: {parameter_count}')
+    print(f'Number of parameters: {parameter_count * config.steps}')
 
     # train the model
     model_params, train_loss, val_loss, time = nn.train_model(

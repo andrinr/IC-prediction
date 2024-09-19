@@ -6,9 +6,8 @@ grid_size : 128
 learning_rate : 0.002
 n_epochs : 12
 stride : 10
-steps : 9
+steps : 2
 sequential_mode : True
-two_step_training : True
 # cosmology parameters
 # all values have to agree with the values used in the simulation
 redshift_start : 49

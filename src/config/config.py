@@ -11,7 +11,6 @@ class Config(NamedTuple):
     stride : int
     steps : int
     sequential_mode : bool
-    two_step_training : bool
     redshift_start : int
     redshift_end : int
     box_size : int 

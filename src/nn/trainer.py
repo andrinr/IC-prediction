@@ -4,7 +4,6 @@ import optax
 import equinox as eqx
 from functools import partial
 import time
-from jaxtyping import PyTree
 
 @partial(jax.jit, static_argnums=1)
 def mse_loss(
@@ -40,7 +39,7 @@ def predict_batch(
             
             total_loss += loss
 
-    return total_loss, loss
+    return total_loss
 
 @partial(jax.jit, static_argnums=[2, 4, 5])
 def learn_batch(
@@ -94,7 +93,7 @@ def train_model(
         sequential_mode : bool = True):
     
     optimizer = optax.adam(learning_rate)
-    optimizer_state = optimizer.init(model_params)
+    optimizer_state = optimizer.init(model_params[0])
 
     training_loss = []
     validation_loss = []
@@ -123,7 +122,8 @@ def train_model(
             loss = predict_batch(
                 sequence_d,
                 model_params,
-                model_static)
+                model_static,
+                sequential_mode)
             epoch_val_loss.append(loss)
         
         epoch_train_loss = jnp.array(epoch_train_loss)
