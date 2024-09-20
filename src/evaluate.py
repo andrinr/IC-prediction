@@ -15,7 +15,7 @@ def main(argv) -> None:
     model_name = argv[0]
 
     model, config, training_stats = nn.load(
-        model_name, nn.FNO, jax.nn.relu)
+        model_name, nn.SequentialFNO, jax.nn.relu)
     
     config = Config(**config)
     
