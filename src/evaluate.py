@@ -35,15 +35,24 @@ def main(argv) -> None:
     data = next(data_iterator)
     sequence = jax.device_put(data['data'], jax.devices('gpu')[0])[3]
     pred = model(sequence, False)
+    pred_sequential = model(sequence, True)
 
     timeline = data["steps"][0]
     means = data["means"][0]
 
     visualize.sequence(
-        "img/seq.jpg", 
+        "img/prediction_stepwise.jpg", 
         sequence = sequence, 
         config = config,
         sequence_prediction = pred,
+        timeline = timeline,
+        means = means)
+    
+    visualize.sequence(
+        "img/prediction_sequential.jpg", 
+        sequence = sequence, 
+        config = config,
+        sequence_prediction = pred_sequential,
         timeline = timeline,
         means = means)
 

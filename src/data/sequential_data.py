@@ -1,6 +1,5 @@
 # from __future__ import annotations, type
 import jax.numpy as jnp
-from random import shuffle
 import os 
 # NVIDIA Dali
 from nvidia.dali import pipeline_def

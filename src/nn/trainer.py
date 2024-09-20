@@ -5,11 +5,12 @@ import equinox as eqx
 from functools import partial
 import time
 
-@partial(jax.jit, static_argnums=[1])
+@partial(jax.jit, static_argnums=[1, 3])
 def mse_loss(
         model_params : list,
         model_static : eqx.Module,
-        sequence : jax.Array):
+        sequence : jax.Array,
+        sequential_mode = bool):
     
     """
     Prediction and MSE error. 
@@ -18,32 +19,35 @@ def mse_loss(
     [Batch, Frames, Channels, Depth, Height, Width]
     """
     model = eqx.combine(model_params, model_static)
-    model_fn = lambda x : model(x, False)
+    model_fn = lambda x : model(x, sequential_mode)
     pred = jax.vmap(model_fn)(sequence)
     mse = jnp.mean((pred[1:] - sequence[1:]) ** 2)
 
     return mse
 
-@partial(jax.jit, static_argnums=[2])
+@partial(jax.jit, static_argnums=[2, 3])
 def get_batch_loss(
         sequence : jax.Array,
         model_params,
-        model_static : eqx.Module):
+        model_static : eqx.Module,
+        sequential_mode : bool):
     
     loss = mse_loss(
         model_params,
         model_static, 
-        sequence)
+        sequence,
+        sequential_mode)
     
     return loss
 
-# @partial(jax.jit, static_argnums=[2, 4])
+@partial(jax.jit, static_argnums=[2, 4, 5])
 def learn_batch(
         sequence : jax.Array,
         model_params,
         model_static : eqx.Module,
         optimizer_state : optax.OptState,
-        optimizer_static):
+        optimizer_static,
+        sequential_mode = bool):
     """
     Learn model on batch of sequences.
 
@@ -56,7 +60,8 @@ def learn_batch(
     loss, grad = value_and_grad(
         model_params,
         model_static, 
-        sequence)
+        sequence,
+        sequential_mode)
     
     updates, optimizer_state = optimizer_static.update(grad, optimizer_state)
 
@@ -72,7 +77,8 @@ def train_model(
         train_data_iterator,
         val_data_iterator,
         learning_rate : float,
-        n_epochs : int):
+        n_epochs : int,
+        sequential_mode : bool):
     
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(model_params)
@@ -93,7 +99,8 @@ def train_model(
                 model_params,
                 model_static,
                 optimizer_state,
-                optimizer)
+                optimizer,
+                sequential_mode = sequential_mode)
             epoch_train_loss.append(loss)
 
         for _, data in enumerate(val_data_iterator):
@@ -101,7 +108,8 @@ def train_model(
             loss = get_batch_loss(
                 data_d,
                 model_params,
-                model_static)
+                model_static,
+                sequential_mode = sequential_mode)
             epoch_val_loss.append(loss)
         
         epoch_train_loss = jnp.array(epoch_train_loss)

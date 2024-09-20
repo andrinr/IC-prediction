@@ -58,11 +58,11 @@ def main(argv) -> None:
 
     sq_fno_hyperparams = {
         "sequence_length" : config.steps,
-        "modes" : 8,
+        "modes" : 32,
         "input_channels" : 1,
-        "hidden_channels" : 4,
+        "hidden_channels" : 8,
         "output_channels" : 1,
-        "n_fourier_layers" : 2}
+        "n_fourier_layers" : 4}
 
     model = nn.SequentialFNO(
         activation = jax.nn.relu,
@@ -82,20 +82,35 @@ def main(argv) -> None:
     parameter_count = nn.count_parameters(model)
     print(f'Number of parameters: {parameter_count * config.steps}')
 
-    # train the model
+    # train the model in stepwise mode
+    print(f"Stepwise mode training for {config.n_epochs} epochs")
     model_params, train_loss, val_loss, time = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
-        n_epochs = config.n_epochs)
+        n_epochs = config.n_epochs,
+        sequential_mode = False)
+    
+    # train the model in sequential mode
+    print(f"Sequential mode training for {config.n_epochs} epochs")
+    model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
+        model_params = model_params,
+        model_static = model_static, 
+        train_data_iterator = train_data_iterator,
+        val_data_iterator = val_data_iterator,
+        learning_rate = config.learning_rate,
+        n_epochs = config.n_epochs,
+        sequential_mode = True)
 
     model = eqx.combine(model_params, model_static)
 
     training_stats = {
         "train_loss" : train_loss,
         "val_loss" : val_loss,
+        "train_loss_seq" : train_loss_sequential,
+        "val_loss_seq" : val_loss_sequential,
         "time" : time}
 
     now = datetime.now()

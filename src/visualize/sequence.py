@@ -23,11 +23,11 @@ def sequence(
         sequence_prediction, (frames, grid_size, grid_size, grid_size, 1))
 
     fig = plt.figure(figsize=(10, 6), layout="constrained")
-    grid = fig.add_gridspec(nrows=2, ncols=frames)
+    grid = fig.add_gridspec(nrows=3, ncols=frames)
 
     power_spectrum = PowerSpectrum(grid_size, 30)
 
-    ax_power = fig.add_subplot(grid[1, 0])
+    ax_power = fig.add_subplot(grid[2, :])
 
     for frame in range(frames):
 
@@ -35,8 +35,8 @@ def sequence(
         mean = jax.device_put(mean, device=jax.devices("gpu")[0])
         print(mean)
 
-        k, power = power_spectrum(sequence[frame, :, :, :, 0])
-        ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
+        # k, power = power_spectrum(sequence[frame, :, :, :, 0])
+        # ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
 
         if frame > 0:
             k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
@@ -54,15 +54,15 @@ def sequence(
             ax_pred = fig.add_subplot(grid[1, frame])
             ax_pred.axis('off')   
             ax_pred.set_title(f"pred t: {timeline[frame]}")
-            ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
+            ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], cmap='inferno') #vmin=min, vmax=max)
 
         ax_seq.axis('off')   
         ax_seq.set_title(f"sim t: {timeline[frame]}")
-        ax_seq.imshow(sequence[frame, grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
+        ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno') # vmin=min, vmax=max)
 
-    ax_power.set_yscale('log')
-    ax_power.set_xscale('log')
-    ax_power.legend()
+    # ax_power.set_yscale('log')
+    # ax_power.set_xscale('log')
+    # ax_power.legend()
 
     # ax_power.set_xticks(jnp.linspace(0, config.box_size, 5))
     # ax_power.set_yticks(jnp.linspace(0, 0.1, 5))

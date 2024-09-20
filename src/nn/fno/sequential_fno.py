@@ -46,8 +46,9 @@ class SequentialFNO(eqx.Module):
         [Frames, Channels, Depth, Height, Width]
         """
         y = jnp.zeros_like(x)
-        carry = x[0]
+
         if sequential_mode:
+            carry = x[0]
             for i, operator in enumerate(self.fno_operators):
                 carry = operator(carry)
                 y = y.at[i].set(carry)
