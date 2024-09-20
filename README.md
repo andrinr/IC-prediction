@@ -51,6 +51,8 @@ conda update -c bccp --all
 
 ### Power Spectrum Plots
 
+We need a different environment for the nbodykit library due to python compatbility issues.
+
 ```
 conda create --name nbodykit-env python=3.8
 conda install -c bccp nbodykit

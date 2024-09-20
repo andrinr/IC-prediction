@@ -56,25 +56,19 @@ def main(argv) -> None:
     #     **unet_hyperparams,	
     #     key=init_rng)
 
-
     sq_fno_hyperparams = {
-        "modes" : 8,
-        "hidden_channels" : 1,
-        "n_furier_layers" : 1}
+        "modes" : 16,
+        "input_channels" : 1,
+        "hidden_channels" : 4,
+        "output_channels" : 1,
+        "n_furier_layers" : 4}
 
-    model_static = 0
-    model_params = []
-    for i in range(config.steps):
-        model = nn.FNO(
-            activation = jax.nn.relu,
-            key = init_rng,
-            **sq_fno_hyperparams)
+    model = nn.FNO(
+        activation = jax.nn.relu,
+        key = init_rng,
+        **sq_fno_hyperparams)
 
-        model_params_i, model_static = eqx.partition(model, eqx.is_array)
-        model_params.append(model_params_i)
-
-    if not config.sequential_mode:
-        model_params = model_params[0]
+    model_params, model_static = eqx.partition(model, eqx.is_array)
 
     # model = nn.Dummy(
     #     num_spatial_dims=3,
@@ -94,8 +88,7 @@ def main(argv) -> None:
         train_data_iterator = train_data_iterator,
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
-        n_epochs = config.n_epochs,
-        sequential_mode = config.sequential_mode)
+        n_epochs = config.n_epochs)
 
     model = eqx.combine(model_params, model_static)
 

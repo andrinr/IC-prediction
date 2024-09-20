@@ -24,7 +24,7 @@ def main(argv) -> None:
         grid_size = config.input_grid_size,
         directory = config.data_dir,
         start = 0,
-        steps = config.stride,
+        steps = config.steps,
         stride = config.stride,
         flip=True,        
         type = "val")

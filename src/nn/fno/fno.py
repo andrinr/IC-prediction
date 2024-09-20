@@ -24,7 +24,9 @@ class FNO(eqx.Module):
     def __init__(
             self,
             modes : int,
+            input_channels : int,
             hidden_channels : int,
+            output_channels : int,
             activation: Callable,
             n_furier_layers : int,
             key):
@@ -33,7 +35,7 @@ class FNO(eqx.Module):
 
         self.lift = eqx.nn.Conv(
             num_spatial_dims = 3,
-            in_channels = 1,
+            in_channels = input_channels,
             out_channels = hidden_channels, 
             kernel_size = 3,
             padding = 'SAME',
@@ -53,7 +55,7 @@ class FNO(eqx.Module):
         self.project = eqx.nn.Conv(
             num_spatial_dims = 3,
             in_channels = hidden_channels,
-            out_channels = 1,
+            out_channels = output_channels,
             kernel_size = 3,
             padding = 'SAME',
             padding_mode = 'CIRCULAR',

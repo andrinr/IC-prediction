@@ -18,37 +18,34 @@ def mse_loss(
 
     return mse, next_pred
 
-@partial(jax.jit, static_argnums=[2, 3])
+@partial(jax.jit, static_argnums=[2])
 def predict_batch(
         sequence : jax.Array,
         model_params,
-        model_static : eqx.Module,
-        sequential_mode : bool):
+        model_static : eqx.Module):
     
     n_frames = sequence.shape[1]
 
     total_loss = 0
 
-    if sequential_mode:
-        for i in range(n_frames-1):
-            loss, pred = mse_loss(
-                model_params[i] if sequential_mode else model_params,
-                model_static, 
-                sequence[:, i],
-                sequence[:, i+1])
-            
-            total_loss += loss
+    for i in range(n_frames-1):
+        loss, pred = mse_loss(
+            model_params,
+            model_static, 
+            sequence[:, i],
+            sequence[:, i+1])
+        
+        total_loss += loss
 
     return total_loss
 
-@partial(jax.jit, static_argnums=[2, 4, 5])
+@partial(jax.jit, static_argnums=[2, 4])
 def learn_batch(
         sequence : jax.Array,
         model_params,
         model_static : eqx.Module,
         optimizer_state : optax.OptState,
-        optimizer_static,
-        sequential_mode : bool):
+        optimizer_static):
     """
     Learn model on batch of sequences.
 
@@ -63,23 +60,18 @@ def learn_batch(
 
     for i in range(n_frames-1):
         (loss, pred), grad = value_and_grad(
-            model_params[i] if sequential_mode else model_params,
+            model_params,
             model_static, 
             sequence[:, i],
             sequence[:, i+1])
         
         updates, optimizer_state = optimizer_static.update(grad, optimizer_state)
 
-        model = eqx.combine(model_params[i] if sequential_mode else model_params, model_static)
+        model = eqx.combine(model_params, model_static)
         model = eqx.apply_updates(model, updates)
-        model_params_i, model_static = eqx.partition(model, eqx.is_array)
+        model_params, model_static = eqx.partition(model, eqx.is_array)
 
         total_loss += loss
-
-        if sequential_mode:
-            model_params[i] = model_params_i
-        else:
-            model_params = model_params_i
 
     return model_params, optimizer_state, total_loss
 
@@ -89,11 +81,10 @@ def train_model(
         train_data_iterator,
         val_data_iterator,
         learning_rate : float,
-        n_epochs : int,
-        sequential_mode : bool = True):
+        n_epochs : int):
     
     optimizer = optax.adam(learning_rate)
-    optimizer_state = optimizer.init(model_params[0])
+    optimizer_state = optimizer.init(model_params)
 
     training_loss = []
     validation_loss = []
@@ -112,8 +103,7 @@ def train_model(
                 model_params,
                 model_static,
                 optimizer_state,
-                optimizer,
-                sequential_mode)
+                optimizer)
             epoch_train_loss.append(loss)
 
         for _, data in enumerate(val_data_iterator):
@@ -122,8 +112,7 @@ def train_model(
             loss = predict_batch(
                 sequence_d,
                 model_params,
-                model_static,
-                sequential_mode)
+                model_static)
             epoch_val_loss.append(loss)
         
         epoch_train_loss = jnp.array(epoch_train_loss)
