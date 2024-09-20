@@ -32,13 +32,13 @@ def main(argv) -> None:
     
     train_dataset = data.VolumetricSequence(**dataset_params)
     train_data_pipeline = data.volumetric_sequence_pipe(train_dataset, config.grid_size)
-    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "parameters", "step", "mean"])
+    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
 
     dataset_params["type"] = "val"
 
     val_dataset = data.VolumetricSequence(**dataset_params)
     val_data_pipeline = data.volumetric_sequence_pipe(val_dataset, config.grid_size)
-    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "parameters", "step", "mean"])
+    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
@@ -57,13 +57,14 @@ def main(argv) -> None:
     #     key=init_rng)
 
     sq_fno_hyperparams = {
-        "modes" : 16,
-        "input_channels" : 2,
+        "sequence_length" : config.steps,
+        "modes" : 8,
+        "input_channels" : 1,
         "hidden_channels" : 4,
         "output_channels" : 1,
-        "n_furier_layers" : 4}
+        "n_fourier_layers" : 2}
 
-    model = nn.FNO(
+    model = nn.SequentialFNO(
         activation = jax.nn.relu,
         key = init_rng,
         **sq_fno_hyperparams)

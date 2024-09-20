@@ -5,40 +5,55 @@ from typing import Callable
 import jax
 from typing import Callable
 from .fno import FNO
+import jax.numpy as jnp
 
 class SequentialFNO(eqx.Module):
     """
-    Paper by Li et. al:
-    FOURIER NEURAL OPERATOR FOR PARAMETRIC PARTIAL DIFFERENTIAL EQUATIONS
-
-    Implementation inspired by:
-    Felix Köhler : https://github.com/Ceyron/machine-learning-and-simulation/
-    NeuralOperator: https://github.com/neuraloperator/neuraloperator
+    Sequential Fourier Neural Operator
     """
 
-    fno : list[FNO]
+    fno_operators : list[FNO]
 
     def __init__(
             self,
-            modes : int,
-            hidden_channels : int,
-            activation: Callable,
-            n_furier_layers : int,
             sequence_length : int,
+            modes : int,
+            input_channels : int,
+            hidden_channels : int,
+            output_channels : int,
+            activation: Callable,
+            n_fourier_layers : int,
             key):
         
         keys = jax.random.split(key, sequence_length)
 
-        self.fno = []
+        self.fno_operators = []
 
         for i in range(sequence_length):
-            self.fno.append(
+            self.fno_operators.append(
                 FNO(modes = modes,
+                    input_channels = input_channels,
                     hidden_channels = hidden_channels,
+                    output_channels = output_channels,
                     activation = activation,
-                    n_furier_layers=n_furier_layers,
+                    n_fourier_layers=n_fourier_layers,
                     key=keys[i]))
         return
 
-    def __call__(self, x : jax.Array, sequence_index : int):
-        return self.fno[sequence_index](x)
+    def __call__(self, x : jax.Array, sequential_mode : bool):
+        """
+        shape of x:
+        [Frames, Channels, Depth, Height, Width]
+        """
+        y = jnp.zeros_like(x)
+        carry = x[0]
+        if sequential_mode:
+            for i, operator in enumerate(self.fno_operators):
+                carry = operator(carry)
+                y = y.at[i].set(carry)
+
+        else:
+            for i, operator in enumerate(self.fno_operators):
+                y = y.at[i].set(operator(x[i]))
+
+        return y

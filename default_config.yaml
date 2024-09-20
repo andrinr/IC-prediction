@@ -4,9 +4,9 @@ output_tipsy_file : "particles.tipsy"
 input_grid_size : 128
 grid_size : 64
 learning_rate : 0.002
-n_epochs : 12
+n_epochs : 50
 stride : 10
-steps : 4
+steps : 3
 sequential_mode : True
 # cosmology parameters
 # all values have to agree with the values used in the simulation

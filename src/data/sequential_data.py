@@ -22,9 +22,9 @@ VAL_SIZE = 0.05
     py_start_method="spawn")
 def volumetric_sequence_pipe(external_iterator, grid_size):
     
-    [sequence, parameters, steps, means] = fn.external_source(
+    [sequence, steps, means] = fn.external_source(
         source=external_iterator,
-        num_outputs=4,
+        num_outputs=3,
         batch=False,
         dtype=types.FLOAT)
 
@@ -36,7 +36,7 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
         antialias=False,
         size=(grid_size, grid_size, grid_size))
     
-    return resize_fn(reshape_fn(sequence)), resize_fn(reshape_fn(parameters)), steps, means
+    return resize_fn(reshape_fn(sequence)), steps, means
 
 class VolumetricSequence:
     def __init__(
@@ -50,7 +50,6 @@ class VolumetricSequence:
             flip : bool = True):
         
         """
-
         Loads all folder in a directory, 
         where each folder contains a sequence of 3D arrays, each stored as a binary.
         All sequences should have the same length. 
@@ -80,10 +79,7 @@ class VolumetricSequence:
     def __call__(self, sample_info : types.SampleInfo):
         sequence = jnp.zeros(
             (self.steps, 1, self.grid_size, self.grid_size, self.grid_size))
-        parameters = jnp.zeros(
-            (self.steps, 1, self.grid_size, self.grid_size, self.grid_size))
-        
-        
+
         sample_idx = sample_info.idx_in_epoch
 
         if sample_idx >= len(self.folders):
@@ -107,13 +103,10 @@ class VolumetricSequence:
                 delta, mean = compute_overdensity(rho)
                 density_means = density_means.at[i].set(mean)
                 sequence = sequence.at[i].set(delta)
-                parameters = parameters.at[i].set(
-                    jnp.ones((1, self.grid_size, self.grid_size, self.grid_size)) * time)
-
+            
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
-            parameters = jnp.flip(sequence, axis=0)
             timeline = jnp.flip(timeline, axis=0)
             density_means = jnp.flip(density_means, axis=0)
 
-        return list([sequence, parameters, timeline, density_means])
+        return list([sequence, timeline, density_means])

@@ -18,7 +18,7 @@ class FNO(eqx.Module):
     """
     
     lift : eqx.nn.Conv
-    furier_layers : list[FourierLayer]
+    fourier_layers : list[FourierLayer]
     project : eqx.nn.Conv
 
     def __init__(
@@ -28,7 +28,7 @@ class FNO(eqx.Module):
             hidden_channels : int,
             output_channels : int,
             activation: Callable,
-            n_furier_layers : int,
+            n_fourier_layers : int,
             key):
          
         k1, k2, k3 = jax.random.split(key, 3)
@@ -42,11 +42,11 @@ class FNO(eqx.Module):
             padding_mode = 'CIRCULAR',
             key=k1)
         
-        self.furier_layers = []
-        furier_keys = jax.random.split(k2, n_furier_layers)
+        self.fourier_layers = []
+        furier_keys = jax.random.split(k2, n_fourier_layers)
 
-        for i in range(n_furier_layers):
-            self.furier_layers.append(FourierLayer(
+        for i in range(n_fourier_layers):
+            self.fourier_layers.append(FourierLayer(
                 modes = modes,
                 n_channels = hidden_channels,
                 activation = activation,
@@ -67,7 +67,7 @@ class FNO(eqx.Module):
             
         x = self.lift(x)
 
-        for layer in self.furier_layers:
+        for layer in self.fourier_layers:
             x = layer(x)
 
         x = self.project(x)
