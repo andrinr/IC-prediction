@@ -9,10 +9,10 @@ import nvidia.dali.types as types
 # local
 from cosmos import compute_overdensity
 
-BATCH_SIZE = 8
+BATCH_SIZE = 4
 TRAIN_SIZE = 0.8
-TEST_SIZE = 0.1
-VAL_SIZE = 0.1
+TEST_SIZE = 0.05
+VAL_SIZE = 0.05
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -50,7 +50,6 @@ class VolumetricSequence:
             flip : bool = True):
         
         """
-
         Loads all folder in a directory, 
         where each folder contains a sequence of 3D arrays, each stored as a binary.
         All sequences should have the same length. 
@@ -78,10 +77,9 @@ class VolumetricSequence:
             self.folders = self.folders[c : -1]
 
     def __call__(self, sample_info : types.SampleInfo):
-        sequence_length = self.steps // self.stride + 1
         sequence = jnp.zeros(
-            (sequence_length, 1, self.grid_size, self.grid_size, self.grid_size))
-        
+            (self.steps, 1, self.grid_size, self.grid_size, self.grid_size))
+
         sample_idx = sample_info.idx_in_epoch
 
         if sample_idx >= len(self.folders):
@@ -90,10 +88,10 @@ class VolumetricSequence:
         files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
         files.sort()
 
-        timeline = jnp.zeros(sequence_length)
-        density_means = jnp.zeros(sequence_length)
+        timeline = jnp.zeros(self.steps)
+        density_means = jnp.zeros(self.steps)
 
-        for i in range(sequence_length):
+        for i in range(self.steps):
             time = self.start + i * self.stride
             timeline = timeline.at[i].set(time)
             file_dir = os.path.join(
@@ -105,7 +103,7 @@ class VolumetricSequence:
                 delta, mean = compute_overdensity(rho)
                 density_means = density_means.at[i].set(mean)
                 sequence = sequence.at[i].set(delta)
-
+            
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
             timeline = jnp.flip(timeline, axis=0)

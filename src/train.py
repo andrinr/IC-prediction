@@ -25,46 +25,49 @@ def main(argv) -> None:
         "grid_size" : config.input_grid_size,
         "directory" : config.data_dir,
         "start" : 0,
-        "steps" : config.stride,
+        "steps" : config.steps,
         "stride" : config.stride,
         "flip" : True,
         "type" : "train"}
     
     train_dataset = data.VolumetricSequence(**dataset_params)
     train_data_pipeline = data.volumetric_sequence_pipe(train_dataset, config.grid_size)
-    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["sequence", "step", "mean"])
+    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
 
     dataset_params["type"] = "val"
 
     val_dataset = data.VolumetricSequence(**dataset_params)
     val_data_pipeline = data.volumetric_sequence_pipe(val_dataset, config.grid_size)
-    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["sequence", "step", "mean"])
+    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
-    unet_hyperparams = {
-        "num_spatial_dims" : 3,
-        "in_channels" : 1,
-        "out_channels" : 1,
-        "hidden_channels" : 8,
-        "num_levels" : 4,
-        "padding" : 'SAME',
-        "padding_mode" : 'CIRCULAR'}
+    # unet_hyperparams = {
+    #     "num_spatial_dims" : 3,
+    #     "in_channels" : 1,
+    #     "out_channels" : 1,
+    #     "hidden_channels" : 8,
+    #     "num_levels" : 4,
+    #     "padding" : 'SAME',
+    #     "padding_mode" : 'CIRCULAR'}
 
-    model = nn.UNet(
-        activation=jax.nn.relu,
-        **unet_hyperparams,	
-        key=init_rng)
+    # model = nn.UNet(
+    #     activation=jax.nn.relu,
+    #     **unet_hyperparams,	
+    #     key=init_rng)
 
-    # sq_fno_hyperparams = {
-    #     "modes" : 20,
-    #     "hidden_channels" : 16,
-    #     "n_furier_layers" : 4}
+    sq_fno_hyperparams = {
+        "sequence_length" : config.steps,
+        "modes" : 8,
+        "input_channels" : 1,
+        "hidden_channels" : 4,
+        "output_channels" : 1,
+        "n_fourier_layers" : 2}
 
-    # model = nn.FNO(
-    #     activation = jax.nn.relu,
-    #     key = init_rng,
-    #     **sq_fno_hyperparams)
+    model = nn.SequentialFNO(
+        activation = jax.nn.relu,
+        key = init_rng,
+        **sq_fno_hyperparams)
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
 
@@ -77,16 +80,16 @@ def main(argv) -> None:
     #     key=init_rng) 
 
     parameter_count = nn.count_parameters(model)
-    print(f'Number of parameters: {parameter_count}')
+    print(f'Number of parameters: {parameter_count * config.steps}')
 
     # train the model
     model_params, train_loss, val_loss, time = nn.train_model(
-        model_params,
-        model_static, 
-        train_data_iterator,
-        val_data_iterator,
-        config.learning_rate,
-        config.n_epochs)
+        model_params = model_params,
+        model_static = model_static, 
+        train_data_iterator = train_data_iterator,
+        val_data_iterator = val_data_iterator,
+        learning_rate = config.learning_rate,
+        n_epochs = config.n_epochs)
 
     model = eqx.combine(model_params, model_static)
 

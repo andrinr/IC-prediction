@@ -42,8 +42,8 @@ def sequence(
             k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
             ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
         
-        min = jnp.min(sequence[frame, grid_size // 2])
-        max = jnp.max(sequence[frame, grid_size // 2])
+        min = jnp.percentile(sequence[frame, grid_size // 2], 90)
+        max = jnp.percentile(sequence[frame, grid_size // 2], 10)
         if frame > 0:
             min = jnp.min(jnp.array([sequence_prediction[frame, grid_size // 2], sequence[frame, grid_size // 2]]))
             max = jnp.max(jnp.array([sequence_prediction[frame, grid_size // 2], sequence[frame, grid_size // 2]]))

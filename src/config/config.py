@@ -9,6 +9,8 @@ class Config(NamedTuple):
     learning_rate : float
     n_epochs : int
     stride : int
+    steps : int
+    sequential_mode : bool
     redshift_start : int
     redshift_end : int
     box_size : int 

@@ -4,7 +4,7 @@ from typing import Callable
 import jax
 from .spectral_convolution import SpectralConvolution
 
-class FurierLayer(eqx.Module):
+class FourierLayer(eqx.Module):
     """
     Paper by Li et. al:
     FOURIER NEURAL OPERATOR FOR PARAMETRIC PARTIAL DIFFERENTIAL EQUATIONS

@@ -55,13 +55,13 @@ def main(argv) -> None:
         400)
     
     #euelerian_position = lagrangian_position + dspls * m_Dplus;
-    D_plus = cosmos.compute_growth_factor(time, config.Omega_M, config.Omega_L)
+    D_plus = cosmos.growth_factor_approx(time, config.Omega_M, config.Omega_L)
     
     displacement = (euelerian_position - lagrangian_position) / D_plus
 
-    v_fact = cosmos.compute_v_factor(time, config.Omega_M, config.Omega_L)
+    D_plus_da = cosmos.growth_factor_approx_deriv(config.Omega_M, config.Omega_L)
 
-    velocity = displacement * D_plus * v_fact
+    velocity = displacement * D_plus_da
 
     generate_tipsy(
         config.output_tipsy_file,

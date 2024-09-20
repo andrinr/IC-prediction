@@ -1,5 +1,5 @@
 from nn import SpectralConvolution
-from nn import FurierLayer
+from nn import FourierLayer
 from nn import FNO
 import jax
 import jax.numpy as jnp
@@ -25,7 +25,7 @@ def test_fno():
     # Check the output shape
     assert y.shape == (16, 32, 32, 32)
 
-    furier_layer = FurierLayer(
+    furier_layer = FourierLayer(
         modes=6,
         n_channels=16,
         activation=jnp.tanh,
@@ -42,7 +42,7 @@ def test_fno():
         modes=6,
         hidden_channels=16,
         activation=jnp.tanh,
-        n_furier_layers=2,
+        n_fourier_layers=2,
         key=k2)
     
     y = fno(x)
