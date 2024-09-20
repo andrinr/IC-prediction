@@ -36,7 +36,12 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
         antialias=False,
         size=(grid_size, grid_size, grid_size))
     
-    return resize_fn(reshape_fn(sequence)), steps, means
+    resized = resize_fn(reshape_fn(sequence))
+    steps = resized.shape[0]
+    times = jnp.ones((steps, 1, grid_size, grid_size, grid_size))
+    times = jnp.einsum('abcde, a -> abcde', times, steps)
+    
+    return resize_fn(reshape_fn(sequence)), times, steps, means
 
 class VolumetricSequence:
     def __init__(

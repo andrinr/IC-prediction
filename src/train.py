@@ -32,13 +32,13 @@ def main(argv) -> None:
     
     train_dataset = data.VolumetricSequence(**dataset_params)
     train_data_pipeline = data.volumetric_sequence_pipe(train_dataset, config.grid_size)
-    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["sequence", "step", "mean"])
+    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "parameters", "step", "mean"])
 
     dataset_params["type"] = "val"
 
     val_dataset = data.VolumetricSequence(**dataset_params)
     val_data_pipeline = data.volumetric_sequence_pipe(val_dataset, config.grid_size)
-    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["sequence", "step", "mean"])
+    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "parameters", "step", "mean"])
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)

@@ -9,8 +9,11 @@ import time
 def mse_loss(
         model_params : list,
         model_static : eqx.Module,
+        parameters : jax.Array,
         state : jax.Array,
         next_state : jax.Array):
+
+    
     
     model = eqx.combine(model_params, model_static)
     next_pred = jax.vmap(model)(state)
@@ -21,6 +24,7 @@ def mse_loss(
 @partial(jax.jit, static_argnums=[2])
 def predict_batch(
         sequence : jax.Array,
+        parameters : jax.Array,
         model_params,
         model_static : eqx.Module):
     
@@ -32,6 +36,7 @@ def predict_batch(
         loss, pred = mse_loss(
             model_params,
             model_static, 
+            parameters[:, i],
             sequence[:, i],
             sequence[:, i+1])
         
@@ -42,6 +47,7 @@ def predict_batch(
 @partial(jax.jit, static_argnums=[2, 4])
 def learn_batch(
         sequence : jax.Array,
+        parameters : jax.Array,
         model_params,
         model_static : eqx.Module,
         optimizer_state : optax.OptState,
@@ -62,6 +68,7 @@ def learn_batch(
         (loss, pred), grad = value_and_grad(
             model_params,
             model_static, 
+            parameters[:, i],
             sequence[:, i],
             sequence[:, i+1])
         
@@ -96,10 +103,12 @@ def train_model(
         epoch_val_loss = []
 
         for _, data in enumerate(train_data_iterator):
-            sequence_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
+            data_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
+            parameters_d = jax.device_put(data['parameteres'], jax.devices('gpu')[0])
 
             model_params, optimizer_state, loss = learn_batch(
-                sequence_d,
+                data_d,
+                parameters_d,
                 model_params,
                 model_static,
                 optimizer_state,
@@ -107,10 +116,12 @@ def train_model(
             epoch_train_loss.append(loss)
 
         for _, data in enumerate(val_data_iterator):
-            sequence_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
+            data_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
+            parameters_d = jax.device_put(data['parameteres'], jax.devices('gpu')[0])
 
             loss = predict_batch(
-                sequence_d,
+                data_d,
+                parameters_d,
                 model_params,
                 model_static)
             epoch_val_loss.append(loss)
