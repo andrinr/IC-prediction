@@ -58,7 +58,7 @@ def main(argv) -> None:
 
     sq_fno_hyperparams = {
         "modes" : 16,
-        "input_channels" : 1,
+        "input_channels" : 2,
         "hidden_channels" : 4,
         "output_channels" : 1,
         "n_furier_layers" : 4}

@@ -12,16 +12,22 @@ def mse_loss(
         parameters : jax.Array,
         state : jax.Array,
         next_state : jax.Array):
-
     
+    """
+    Prediction and MSE error. 
+
+    shape of sequence:
+    [Channels, Depth, Height, Width]
+    """
     
     model = eqx.combine(model_params, model_static)
-    next_pred = jax.vmap(model)(state)
+    state_and_params = jnp.concatenate((state, parameters))
+    next_pred = jax.vmap(model)(state_and_params)
     mse = jnp.mean((next_state - next_pred) ** 2)
 
     return mse, next_pred
 
-@partial(jax.jit, static_argnums=[2])
+@partial(jax.jit, static_argnums=[3])
 def predict_batch(
         sequence : jax.Array,
         parameters : jax.Array,
@@ -44,7 +50,7 @@ def predict_batch(
 
     return total_loss
 
-@partial(jax.jit, static_argnums=[2, 4])
+@partial(jax.jit, static_argnums=[3, 5])
 def learn_batch(
         sequence : jax.Array,
         parameters : jax.Array,
@@ -103,8 +109,8 @@ def train_model(
         epoch_val_loss = []
 
         for _, data in enumerate(train_data_iterator):
-            data_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
-            parameters_d = jax.device_put(data['parameteres'], jax.devices('gpu')[0])
+            data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
+            parameters_d = jax.device_put(data['parameters'], jax.devices('gpu')[0])
 
             model_params, optimizer_state, loss = learn_batch(
                 data_d,
@@ -116,8 +122,8 @@ def train_model(
             epoch_train_loss.append(loss)
 
         for _, data in enumerate(val_data_iterator):
-            data_d = jax.device_put(data['sequence'], jax.devices('gpu')[0])
-            parameters_d = jax.device_put(data['parameteres'], jax.devices('gpu')[0])
+            data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
+            parameters_d = jax.device_put(data['parameters'], jax.devices('gpu')[0])
 
             loss = predict_batch(
                 data_d,
