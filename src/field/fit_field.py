@@ -42,6 +42,7 @@ def fit_field(
     pos_lag = jnp.reshape(pos_lag, (3, num_particles))
 
     pos = pos_lag
+    pos += jax.random.uniform(key, (3, num_particles), minval=-0.1, maxval=0.1)
 
     # pos = jax.random.uniform(key, (3, num_particles))
     mass = jnp.ones(num_particles) * total_mass / num_particles
@@ -54,13 +55,14 @@ def fit_field(
     @jax.jit
     def step(pos, opt_state):
         grad = grad_f(pos, mass, field)
+        print(grad)
         updates, opt_state = optimizer.update(grad, opt_state)
         pos = optax.apply_updates(pos, updates)
         return pos, opt_state
     
     for i in range(iterations):
         pos, opt_state = step(pos, opt_state)
-        if i % 10 == 0:
+        if i % 100 == 0:
             print(f"Loss: {loss(pos, mass, field)}")
 
     return pos_lag, pos, mass

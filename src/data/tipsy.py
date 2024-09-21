@@ -13,12 +13,12 @@ def generate_tipsy(
         pos : np.ndarray,
         vel : np.ndarray,
         mass : np.ndarray,
-        time : float = 0.0):
+        time : float):
     """
     Generate a tipsy file.
     """
 
-    N = pos.shape[0]
+    N = pos.shape[1]
 
     header = np.zeros(1, dtype=header_type)
     header['time'] = time
@@ -34,13 +34,13 @@ def generate_tipsy(
     star = np.zeros(0, dtype=star_type)
 
     # fill dark matter
-    dark['mass'] = mass
     dark['x'] = pos[0, :]
     dark['y'] = pos[1, :]
     dark['z'] = pos[2, :]
     dark['vx'] = vel[0, :]
     dark['vy'] = vel[1, :]
     dark['vz'] = vel[2, :]
+    dark['mass'] = mass
 
     dark['eps'] = np.zeros(N) * 1 / (N * 50)
     # phi stays zero
