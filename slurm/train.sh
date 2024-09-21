@@ -5,6 +5,7 @@
 #SBATCH --time=03:00:00
 #SBATCH --output=job.out
 
-module load anaconda3
-conda activate ml-env
-python src/train.py --config default-config.yaml
+# module load conda
+# module load cuda/12.5.82
+source activate ml-env
+python src/train.py default_config.yaml

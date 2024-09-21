@@ -40,7 +40,9 @@ def test_fno():
 
     fno = FNO(
         modes=6,
+        input_channels=1,
         hidden_channels=16,
+        output_channels=1,
         activation=jnp.tanh,
         n_fourier_layers=2,
         key=k2)

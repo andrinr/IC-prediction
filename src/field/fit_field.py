@@ -4,10 +4,6 @@ import optax
 from .mass_assigment import cic_ma
 from typing import Tuple, NamedTuple
 
-class Particles(NamedTuple):
-    pos : jax.Array
-    mass : jax.Array
-
 def loss(
         pos : jax.Array,
         mass : jax.Array,
@@ -22,7 +18,7 @@ def loss(
 
 def fit_field(
         key : jax.Array,
-        num_particles : int,
+        N : int,
         field : jax.Array,
         total_mass : float,
         iterations : float = 400,
@@ -35,13 +31,15 @@ def fit_field(
     The function returns the position and mass of the particles.
     """
 
+    num_particles = N**3
+
     # equispaced particles in grid
     pos_lag = jnp.array(jnp.meshgrid(
-        jnp.linspace(0, 1, num_particles),
-        jnp.linspace(0, 1, num_particles),
-        jnp.linspace(0, 1, num_particles)))
-    
-    pos_lag = jnp.moveaxis(pos_lag, 0, -1)
+        jnp.linspace(0, 1, N),
+        jnp.linspace(0, 1, N),
+        jnp.linspace(0, 1, N)))
+
+    pos_lag = jnp.reshape(pos_lag, (3, num_particles))
 
     pos = pos_lag
 
