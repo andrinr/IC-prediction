@@ -1,4 +1,5 @@
 import numpy as np
+import struct
 
 header_type = np.dtype([('time', '>f8'),('N', '>i4'), ('Dims', '>i4'), ('Ngas', '>i4'), ('Ndark', '>i4'), ('Nstar', '>i4'), ('pad', '>i4')])
 gas_type  = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
@@ -8,17 +9,18 @@ dark_type = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('
 star_type = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
 	                ('metals','>f4'), ('tform','>f4'), ('eps','>f4'), ('phi','>f4')])
 
+# od --endian=big -j 0 _N 8 -t f8 / d4
 def generate_tipsy(
         file_name : str,
         pos : np.ndarray,
         vel : np.ndarray,
         mass : np.ndarray,
-        time : float = 0.0):
+        time : float):
     """
     Generate a tipsy file.
     """
 
-    N = pos.shape[0]
+    N = pos.shape[1]
 
     header = np.zeros(1, dtype=header_type)
     header['time'] = time
@@ -34,13 +36,13 @@ def generate_tipsy(
     star = np.zeros(0, dtype=star_type)
 
     # fill dark matter
-    dark['mass'] = mass
     dark['x'] = pos[0, :]
     dark['y'] = pos[1, :]
     dark['z'] = pos[2, :]
     dark['vx'] = vel[0, :]
     dark['vy'] = vel[1, :]
     dark['vz'] = vel[2, :]
+    dark['mass'] = mass
 
     dark['eps'] = np.zeros(N) * 1 / (N * 50)
     # phi stays zero
@@ -48,4 +50,6 @@ def generate_tipsy(
     with open(file_name, 'wb') as ofile:
         header.tofile(ofile)
         gas.tofile(ofile)
+        dark.tofile(ofile)
         star.tofile(ofile)
+    

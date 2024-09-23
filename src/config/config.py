@@ -4,12 +4,14 @@ class Config(NamedTuple):
     data_dir : str
     model_dir : str
     output_tipsy_file : str
+    model_type : str
     input_grid_size : int
     grid_size : int
     learning_rate : float
     n_epochs : int
     stride : int
     steps : int
+    start : int
     sequential_mode : bool
     redshift_start : int
     redshift_end : int

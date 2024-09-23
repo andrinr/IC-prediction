@@ -3,7 +3,6 @@ import jax.numpy as jnp
 import matplotlib.pyplot as plt
 from config import Config
 from cosmos import PowerSpectrum
-from cosmos import compute_rho
 
 def sequence(
         ouput_file : str,
@@ -20,14 +19,14 @@ def sequence(
     sequence = jnp.reshape(
         sequence, (frames, grid_size, grid_size, grid_size, 1))
     sequence_prediction = jnp.reshape(
-        sequence_prediction, (frames, grid_size, grid_size, grid_size, 1))
+        sequence_prediction, (frames-1, grid_size, grid_size, grid_size, 1))
 
     fig = plt.figure(figsize=(10, 6), layout="constrained")
-    grid = fig.add_gridspec(nrows=2, ncols=frames)
+    grid = fig.add_gridspec(nrows=3, ncols=frames)
 
     power_spectrum = PowerSpectrum(grid_size, 30)
 
-    ax_power = fig.add_subplot(grid[1, 0])
+    ax_power = fig.add_subplot(grid[2, :])
 
     for frame in range(frames):
 
@@ -38,13 +37,13 @@ def sequence(
         k, power = power_spectrum(sequence[frame, :, :, :, 0])
         ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
 
-        if frame > 0:
+        if frame < frames - 1:
             k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
             ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
         
-        min = jnp.percentile(sequence[frame, grid_size // 2], 90)
-        max = jnp.percentile(sequence[frame, grid_size // 2], 10)
-        if frame > 0:
+        min = jnp.min(sequence[frame, grid_size // 2])
+        max = jnp.max(sequence[frame, grid_size // 2])
+        if frame < frames - 1:
             min = jnp.min(jnp.array([sequence_prediction[frame, grid_size // 2], sequence[frame, grid_size // 2]]))
             max = jnp.max(jnp.array([sequence_prediction[frame, grid_size // 2], sequence[frame, grid_size // 2]]))
 
@@ -54,15 +53,18 @@ def sequence(
             ax_pred = fig.add_subplot(grid[1, frame])
             ax_pred.axis('off')   
             ax_pred.set_title(f"pred t: {timeline[frame]}")
-            ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
+            ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], cmap='inferno') #vmin=min, vmax=max)
 
         ax_seq.axis('off')   
         ax_seq.set_title(f"sim t: {timeline[frame]}")
-        ax_seq.imshow(sequence[frame, grid_size // 2, : , :], vmin=min, vmax=max, cmap='inferno')
+        ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno')
+                    #   vmin=jnp.percentile(sequence[frame, grid_size // 2, : , :], 10),
+                    # vmax = jnp.percentile(sequence[frame, grid_size // 2, : , :], 90))
 
-    ax_power.set_yscale('log')
-    ax_power.set_xscale('log')
-    ax_power.legend()
+
+    # ax_power.set_yscale('log')
+    # ax_power.set_xscale('log')
+    # ax_power.legend()
 
     # ax_power.set_xticks(jnp.linspace(0, config.box_size, 5))
     # ax_power.set_yticks(jnp.linspace(0, 0.1, 5))

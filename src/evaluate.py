@@ -14,16 +14,14 @@ def main(argv) -> None:
    
     model_name = argv[0]
 
-    model, config, training_stats = nn.load(
-        model_name, nn.FNO, jax.nn.relu)
-    
-    config = Config(**config)
+    model, config, training_stats = nn.load_sequential_model(
+        model_name, jax.nn.relu)
     
     # Data Pipeline
     dataset = VolumetricSequence(
         grid_size = config.input_grid_size,
         directory = config.data_dir,
-        start = 0,
+        start = config.start,
         steps = config.steps,
         stride = config.stride,
         flip=True,        
@@ -35,15 +33,24 @@ def main(argv) -> None:
     data = next(data_iterator)
     sequence = jax.device_put(data['data'], jax.devices('gpu')[0])[3]
     pred = model(sequence, False)
+    pred_sequential = model(sequence, True)
 
     timeline = data["steps"][0]
     means = data["means"][0]
 
     visualize.sequence(
-        "img/seq.jpg", 
+        "img/prediction_stepwise.jpg", 
         sequence = sequence, 
         config = config,
         sequence_prediction = pred,
+        timeline = timeline,
+        means = means)
+    
+    visualize.sequence(
+        "img/prediction_sequential.jpg", 
+        sequence = sequence, 
+        config = config,
+        sequence_prediction = pred_sequential,
         timeline = timeline,
         means = means)
 

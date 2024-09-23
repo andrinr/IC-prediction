@@ -1,6 +1,5 @@
 # from __future__ import annotations, type
 import jax.numpy as jnp
-from random import shuffle
 import os 
 # NVIDIA Dali
 from nvidia.dali import pipeline_def
@@ -78,7 +77,7 @@ class VolumetricSequence:
 
     def __call__(self, sample_info : types.SampleInfo):
         sequence = jnp.zeros(
-            (self.steps, 1, self.grid_size, self.grid_size, self.grid_size))
+            (self.steps + 1, 1, self.grid_size, self.grid_size, self.grid_size))
 
         sample_idx = sample_info.idx_in_epoch
 
@@ -88,10 +87,10 @@ class VolumetricSequence:
         files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
         files.sort()
 
-        timeline = jnp.zeros(self.steps)
-        density_means = jnp.zeros(self.steps)
+        timeline = jnp.zeros(self.steps + 1)
+        density_means = jnp.zeros(self.steps + 1)
 
-        for i in range(self.steps):
+        for i in range(self.steps + 1):
             time = self.start + i * self.stride
             timeline = timeline.at[i].set(time)
             file_dir = os.path.join(

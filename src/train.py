@@ -24,7 +24,7 @@ def main(argv) -> None:
     dataset_params = {
         "grid_size" : config.input_grid_size,
         "directory" : config.data_dir,
-        "start" : 0,
+        "start" : config.start,
         "steps" : config.steps,
         "stride" : config.stride,
         "flip" : True,
@@ -42,32 +42,28 @@ def main(argv) -> None:
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
-    # unet_hyperparams = {
-    #     "num_spatial_dims" : 3,
-    #     "in_channels" : 1,
-    #     "out_channels" : 1,
-    #     "hidden_channels" : 8,
-    #     "num_levels" : 4,
-    #     "padding" : 'SAME',
-    #     "padding_mode" : 'CIRCULAR'}
+    unet_hyperparams = {
+        "num_spatial_dims" : 3,
+        "in_channels" : 1,
+        "out_channels" : 1,
+        "hidden_channels" : 8,
+        "num_levels" : 4,
+        "padding" : 'SAME',
+        "padding_mode" : 'CIRCULAR'}
 
-    # model = nn.UNet(
-    #     activation=jax.nn.relu,
-    #     **unet_hyperparams,	
-    #     key=init_rng)
-
-    sq_fno_hyperparams = {
-        "sequence_length" : config.steps,
-        "modes" : 8,
+    fno_hyperparams = {
+        "modes" : 16,
         "input_channels" : 1,
-        "hidden_channels" : 4,
+        "hidden_channels" : 16,
         "output_channels" : 1,
-        "n_fourier_layers" : 2}
+        "n_fourier_layers" : 4}
 
-    model = nn.SequentialFNO(
+    model = nn.SequentialModel(
+        sequence_length = config.steps,
+        constructor = nn.UNet if config.model_type == "UNet" else nn.FNO,
+        parameters = unet_hyperparams if config.model_type == "UNet" else fno_hyperparams,
         activation = jax.nn.relu,
-        key = init_rng,
-        **sq_fno_hyperparams)
+        key = init_rng)
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
 
@@ -82,26 +78,46 @@ def main(argv) -> None:
     parameter_count = nn.count_parameters(model)
     print(f'Number of parameters: {parameter_count * config.steps}')
 
-    # train the model
+    # train the model in stepwise mode
+    print(f"Stepwise mode training for {config.n_epochs} epochs")
     model_params, train_loss, val_loss, time = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
-        n_epochs = config.n_epochs)
+        n_epochs = config.n_epochs,
+        sequential_mode = False)
+    
+    # # train the model in sequential mode
+    # print(f"Sequential mode training for {config.n_epochs} epochs")
+    # model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
+    #     model_params = model_params,
+    #     model_static = model_static, 
+    #     train_data_iterator = train_data_iterator,
+    #     val_data_iterator = val_data_iterator,
+    #     learning_rate = config.learning_rate,
+    #     n_epochs = config.n_epochs,
+    #     sequential_mode = True)
 
     model = eqx.combine(model_params, model_static)
 
     training_stats = {
         "train_loss" : train_loss,
         "val_loss" : val_loss,
+        # "train_loss_seq" : train_loss_sequential,
+        # "val_loss_seq" : val_loss_sequential,
         "time" : time}
 
     now = datetime.now()
     datetime_str = now.strftime("%Y%m%d_%H%M%S")
     filename =f"{config.model_dir}/model_{datetime_str}.eqx"
-    nn.save(filename, config._asdict(), training_stats, sq_fno_hyperparams, model)
+    nn.save_sequential_model(
+        filename, 
+        config._asdict(), 
+        training_stats, 
+        unet_hyperparams if config.model_type == "UNet" else fno_hyperparams, 
+        model)
 
     # Delete Data Pipeline
     del val_data_pipeline
