@@ -16,19 +16,18 @@ def main(argv) -> None:
     model_name = argv[0]
 
     model, config, training_stats = nn.load_sequential_model(
-        model_name, nn.SequentialFNO, jax.nn.relu)
-    
-    config = Config(**config)
+        model_name, jax.nn.relu)
     
     # Data Pipeline
     dataset = VolumetricSequence(
         grid_size = config.input_grid_size,
         directory = config.data_dir,
-        start = 0,
+        start = config.start,
         steps = config.steps,
         stride = config.stride,
         flip=True,        
         type = "test")
+
 
     data_pipeline = volumetric_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["data", "steps", "means"])

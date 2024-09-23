@@ -9,6 +9,7 @@ dark_type = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('
 star_type = np.dtype([('mass','>f4'), ('x', '>f4'),('y', '>f4'),('z', '>f4'), ('vx', '>f4'),('vy', '>f4'),('vz', '>f4'),
 	                ('metals','>f4'), ('tform','>f4'), ('eps','>f4'), ('phi','>f4')])
 
+# od --endian=big -j 0 _N 8 -t f8 / d4
 def generate_tipsy(
         file_name : str,
         pos : np.ndarray,
@@ -49,4 +50,6 @@ def generate_tipsy(
     with open(file_name, 'wb') as ofile:
         header.tofile(ofile)
         gas.tofile(ofile)
+        dark.tofile(ofile)
         star.tofile(ofile)
+    
