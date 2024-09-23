@@ -21,7 +21,7 @@ def main(argv) -> None:
     dataset = VolumetricSequence(
         grid_size = config.input_grid_size,
         directory = config.data_dir,
-        start = 0,
+        start = config.start,
         steps = config.steps,
         stride = config.stride,
         flip=True,        

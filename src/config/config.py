@@ -11,6 +11,7 @@ class Config(NamedTuple):
     n_epochs : int
     stride : int
     steps : int
+    start : int
     sequential_mode : bool
     redshift_start : int
     redshift_end : int

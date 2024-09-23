@@ -3,7 +3,6 @@ import jax.numpy as jnp
 import matplotlib.pyplot as plt
 from config import Config
 from cosmos import PowerSpectrum
-from cosmos import compute_rho
 
 def sequence(
         ouput_file : str,
@@ -35,10 +34,10 @@ def sequence(
         mean = jax.device_put(mean, device=jax.devices("gpu")[0])
         print(mean)
 
-        # k, power = power_spectrum(sequence[frame, :, :, :, 0])
-        # ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
+        k, power = power_spectrum(sequence[frame, :, :, :, 0])
+        ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
 
-        if frame > 0:
+        if frame < frames - 1:
             k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
             ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
         
@@ -58,7 +57,10 @@ def sequence(
 
         ax_seq.axis('off')   
         ax_seq.set_title(f"sim t: {timeline[frame]}")
-        ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno') # vmin=min, vmax=max)
+        ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno')
+                    #   vmin=jnp.percentile(sequence[frame, grid_size // 2, : , :], 10),
+                    # vmax = jnp.percentile(sequence[frame, grid_size // 2, : , :], 90))
+
 
     # ax_power.set_yscale('log')
     # ax_power.set_xscale('log')

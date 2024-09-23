@@ -24,7 +24,7 @@ def main(argv) -> None:
     dataset_params = {
         "grid_size" : config.input_grid_size,
         "directory" : config.data_dir,
-        "start" : 0,
+        "start" : config.start,
         "steps" : config.steps,
         "stride" : config.stride,
         "flip" : True,
@@ -52,9 +52,9 @@ def main(argv) -> None:
         "padding_mode" : 'CIRCULAR'}
 
     fno_hyperparams = {
-        "modes" : 32,
+        "modes" : 16,
         "input_channels" : 1,
-        "hidden_channels" : 8,
+        "hidden_channels" : 16,
         "output_channels" : 1,
         "n_fourier_layers" : 4}
 
