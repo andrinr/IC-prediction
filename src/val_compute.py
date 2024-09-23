@@ -15,6 +15,8 @@ def main(argv) -> None:
         folder = "models/fno_layers"
     if param == "channels":
         folder = "models/fno_channels"
+    if param == "stride":
+        folder = "models/stride"
 
     files = os.listdir(folder)
     files.sort()
@@ -22,32 +24,47 @@ def main(argv) -> None:
     for i, file in enumerate(files):
         print(file)
         filename = os.path.join(folder, file)
-        model, config, training_stats = nn.load(
-            filename, nn.FNO, jax.nn.relu)
+        model, config, training_stats = nn.load_sequential_model(
+            filename, nn.SequentialFNO, jax.nn.relu)
         
         parameter_count = nn.count_parameters(model)
         print(f'Number of parameters: {parameter_count}')
 
         m_params = int(jnp.log2(parameter_count))
-        
+
         validation_loss = training_stats['val_loss']
-        times = training_stats['time']
+        n = len(training_stats['val_loss'])
+        if param == "stride":
+            times = jnp.linspace(0, n-1,  n)
+            print(times)
+        else:
+            times = training_stats['time']
 
         if param == "layers":
             plt.plot(times, validation_loss, label=f"{2**i} layers; 2^{m_params} params")
         if param == "channels":
             plt.plot(times, validation_loss, label=f"{2**i} channels; 2^{m_params} params")
+        if param == "stride":
+            plt.plot(times, validation_loss, label=f"{2**(2+i)} stride; 2^{m_params} params")
         
-    plt.xlabel("Compute (seconds)")
+    if param == "stride":
+        plt.xlabel("Epoch")
+    else:
+        plt.xlabel("Compute (seconds)")
+    
     plt.ylabel("Validation Loss")
-    plt.yscale("log")
-    plt.xscale("log")
+
+    if param == "layers" or param == "channels":
+        plt.yscale("log")
+        plt.xscale("log")
     plt.legend()
 
     if param == "layers":
         plt.savefig("img/layer_compute.png")
     if param == "channels":
         plt.savefig("img/channels_compute.png")
+    if param == "stride":
+        plt.savefig("img/stride.png")
 
 if __name__ == "__main__":
     main(sys.argv[1:])

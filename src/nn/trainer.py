@@ -21,7 +21,9 @@ def mse_loss(
     model = eqx.combine(model_params, model_static)
     model_fn = lambda x : model(x, sequential_mode)
     pred = jax.vmap(model_fn)(sequence)
-    mse = jnp.mean((pred[1:] - sequence[1:]) ** 2)
+    print(pred.shape)
+    print(sequence.shape)
+    mse = jnp.mean((pred - sequence[:, 1:]) ** 2)
 
     return mse
 

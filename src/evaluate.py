@@ -14,10 +14,8 @@ def main(argv) -> None:
    
     model_name = argv[0]
 
-    model, config, training_stats = nn.load(
-        model_name, nn.SequentialFNO, jax.nn.relu)
-    
-    config = Config(**config)
+    model, config, training_stats = nn.load_sequential_model(
+        model_name, jax.nn.relu)
     
     # Data Pipeline
     dataset = VolumetricSequence(
