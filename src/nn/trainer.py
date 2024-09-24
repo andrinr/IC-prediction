@@ -5,8 +5,41 @@ import equinox as eqx
 from functools import partial
 import time
 
+
+# @partial(jax.jit)
+# def mse(prediction : jax.Array, truth : jax.Array):
+#     return jnp.mean((jax.nn.sigmoid(prediction) - jax.nn.sigmoid(truth))**2)
+
+@partial(jax.jit)
+def mse(prediction : jax.Array, truth : jax.Array):
+    return jnp.mean((prediction - truth) ** 2)
+
+@partial(jax.jit)
+def baseline_loss(
+        sequence : jax.Array):
+    
+    """
+    Prediction and MSE error. 
+
+    shape of sequence:
+    [Batch, Frames, Channels, Depth, Height, Width]
+    """
+    a = sequence[:, :-1]
+    a_mean = a.mean()
+    a_var = a.var()
+    b = sequence[:, 1:]
+    b_mean = b.mean()
+    b_var= b.var()
+
+    # normalize a
+    a = (a - a_mean) / a_var
+    # fit it to b distribution
+    a = (a * b_var) + b_mean
+
+    return mse(b, a)
+
 @partial(jax.jit, static_argnums=[1, 3])
-def mse_loss(
+def prediction_loss(
         model_params : list,
         model_static : eqx.Module,
         sequence : jax.Array,
@@ -21,11 +54,8 @@ def mse_loss(
     model = eqx.combine(model_params, model_static)
     model_fn = lambda x : model(x, sequential_mode)
     pred = jax.vmap(model_fn)(sequence)
-    print(pred.shape)
-    print(sequence.shape)
-    mse = jnp.mean((pred - sequence[:, 1:]) ** 2)
 
-    return mse
+    return mse(pred, sequence[:, 1:])
 
 @partial(jax.jit, static_argnums=[2, 3])
 def get_batch_loss(
@@ -34,13 +64,15 @@ def get_batch_loss(
         model_static : eqx.Module,
         sequential_mode : bool):
     
-    loss = mse_loss(
+    loss = prediction_loss(
         model_params,
         model_static, 
         sequence,
         sequential_mode)
     
-    return loss
+    baseline = baseline_loss(sequence)
+    
+    return loss, baseline
 
 @partial(jax.jit, static_argnums=[2, 4, 5])
 def learn_batch(
@@ -57,7 +89,7 @@ def learn_batch(
     [Batch, Frames, Channels, Depth, Height, Width]
     """
 
-    value_and_grad = eqx.filter_value_and_grad(mse_loss, has_aux=False)
+    value_and_grad = eqx.filter_value_and_grad(prediction_loss, has_aux=False)
 
     loss, grad = value_and_grad(
         model_params,
@@ -87,12 +119,14 @@ def train_model(
 
     training_loss = []
     validation_loss = []
+    baseline_loss = []
     timestamps = []
 
     start = time.time()
     for epoch in range(n_epochs):
         epoch_train_loss = []
         epoch_val_loss = []
+        epoch_baseline_loss = []
 
         for _, data in enumerate(train_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
@@ -107,19 +141,24 @@ def train_model(
 
         for _, data in enumerate(val_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
-            loss = get_batch_loss(
+            loss, baseline = get_batch_loss(
                 data_d,
                 model_params,
                 model_static,
                 sequential_mode = sequential_mode)
             epoch_val_loss.append(loss)
+            epoch_baseline_loss.append(baseline)
         
         epoch_train_loss = jnp.array(epoch_train_loss)
         epoch_val_loss = jnp.array(epoch_val_loss)
+        epoch_baseline_loss = jnp.array(epoch_baseline_loss)
         print(f"epoch {epoch}, train loss {epoch_train_loss.mean()}")
         print(f"epoch {epoch}, val loss {epoch_val_loss.mean()}")
+        print(f"epoch {epoch}, baseline loss {epoch_baseline_loss.mean()}")
+        
         training_loss.append(epoch_train_loss.mean())
         validation_loss.append(epoch_val_loss.mean())
+        baseline_loss.append(epoch_baseline_loss.mean())
         timestamps.append(time.time() - start)
 
-    return model_params, jnp.array(training_loss), jnp.array(validation_loss), jnp.array(timestamps)
+    return model_params, jnp.array(training_loss), jnp.array(validation_loss), jnp.array(baseline_loss), jnp.array(timestamps)

@@ -92,6 +92,7 @@ class VolumetricSequence:
 
         for i in range(self.steps + 1):
             time = self.start + i * self.stride
+
             timeline = timeline.at[i].set(time)
             file_dir = os.path.join(
                 self.dir, self.folders[sample_idx], files[time])
