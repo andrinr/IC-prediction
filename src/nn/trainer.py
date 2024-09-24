@@ -5,14 +5,13 @@ import equinox as eqx
 from functools import partial
 import time
 
+@partial(jax.jit)
+def mse(prediction : jax.Array, truth : jax.Array):
+    return jnp.mean((jax.nn.sigmoid(prediction) - jax.nn.sigmoid(truth))**2)
 
 # @partial(jax.jit)
 # def mse(prediction : jax.Array, truth : jax.Array):
-#     return jnp.mean((jax.nn.sigmoid(prediction) - jax.nn.sigmoid(truth))**2)
-
-@partial(jax.jit)
-def mse(prediction : jax.Array, truth : jax.Array):
-    return jnp.mean((prediction - truth) ** 2)
+#     return jnp.mean((prediction - truth) ** 2)
 
 @partial(jax.jit)
 def baseline_loss(

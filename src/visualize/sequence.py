@@ -37,9 +37,9 @@ def sequence(
         k, power = power_spectrum(sequence[frame, :, :, :, 0])
         ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
 
-        if frame < frames - 1:
-            k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
-            ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
+        # if frame < frames - 1:
+        #     k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
+        #     ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
         
         if frame > 0:
             ax_pred = grid[1, frame]
@@ -47,11 +47,17 @@ def sequence(
             im_pred = ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], cmap='inferno')
             fig.colorbar(im_pred, ax=ax_pred, orientation='vertical', location='right')
 
+            k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
+            ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
+
         ax_seq = grid[0, frame]
         ax_seq.set_title(f"sim t: {timeline[frame]}")
         im_seq = ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno')
         fig.colorbar(im_seq, ax=ax_seq, orientation='vertical', location='right')
 
+    ax_power.set_yscale('log')
+    ax_power.set_xscale('log')
+    ax_power.legend()
     
 
     plt.savefig(ouput_file)
