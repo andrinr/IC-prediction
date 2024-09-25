@@ -5,13 +5,15 @@ from typing import Callable
 import jax
 from typing import Callable
 import jax.numpy as jnp
+import cosmos
 
 class SequentialModel(eqx.Module):
     """
     Sequential Fourier Neural Operator
     """
 
-    models : list[eqx.Module]
+    model : eqx.Module
+    sequence_length : int
 
     def __init__(
             self,
@@ -21,13 +23,9 @@ class SequentialModel(eqx.Module):
             activation: Callable,
             key):
         
-        keys = jax.random.split(key, sequence_length)
+        self.sequence_length = sequence_length
 
-        self.models = []
-
-        for i in range(sequence_length):
-            self.models.append(
-                constructor(key=keys[i], activation=activation, **parameters))
+        self.model = constructor(key=key, activation=activation, **parameters)
                 
         return
 
@@ -39,14 +37,21 @@ class SequentialModel(eqx.Module):
         f, c, d, h, w = x.shape
         y = jnp.zeros((f-1, c, d, h, w))
 
+        potential_fn = cosmos.Potential(d)
+        time_grid = jnp.ones((1, d, w, h))
+
         if sequential_mode:
             carry = x[0]
-            for i, model in enumerate(self.models):
-                carry = model(carry)
+            for i in range(self.sequence_length):
+                potential = potential_fn(carry)
+                x_ = jnp.concatenate([carry, potential, time_grid * i/self.sequence_length], axis=0)
+                carry = carry - self.model(x_)
                 y = y.at[i].set(carry)
 
         else:
-            for i, model in enumerate(self.models):
-                y = y.at[i].set(model(x[i]))
+            for i in range(self.sequence_length):
+                potential = potential_fn(x[i])
+                x_ = jnp.concatenate([x[i], potential, time_grid * i/self.sequence_length], axis=0)
+                y = y.at[i].set(x[i] - self.model(x_))
 
         return y

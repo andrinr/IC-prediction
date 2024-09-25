@@ -35,7 +35,12 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
         antialias=False,
         size=(grid_size, grid_size, grid_size))
     
-    return resize_fn(reshape_fn(sequence)), steps, means
+    normalize_fn = lambda x : fn.normalize(
+        x,
+        axes=[2, 3, 4],
+        batch=True)
+    
+    return normalize_fn(resize_fn(reshape_fn(sequence))), steps, means
 
 class VolumetricSequence:
     def __init__(
@@ -102,7 +107,7 @@ class VolumetricSequence:
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
                 delta, mean = compute_overdensity(rho)
                 density_means = density_means.at[i].set(mean)
-                sequence = sequence.at[i].set(delta)
+                sequence = sequence.at[i].set(rho)
             
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)

@@ -5,13 +5,13 @@ import equinox as eqx
 from functools import partial
 import time
 
-@partial(jax.jit)
-def mse(prediction : jax.Array, truth : jax.Array):
-    return jnp.mean((jax.nn.sigmoid(prediction) - jax.nn.sigmoid(truth))**2)
-
 # @partial(jax.jit)
 # def mse(prediction : jax.Array, truth : jax.Array):
-#     return jnp.mean((prediction - truth) ** 2)
+#     return jnp.mean((jax.nn.sigmoid(prediction) - jax.nn.sigmoid(truth))**2)
+
+@partial(jax.jit)
+def mse(prediction : jax.Array, truth : jax.Array):
+    return jnp.mean((prediction - truth) ** 2)
 
 @partial(jax.jit)
 def baseline_loss(
@@ -24,16 +24,16 @@ def baseline_loss(
     [Batch, Frames, Channels, Depth, Height, Width]
     """
     a = sequence[:, :-1]
-    a_mean = a.mean()
-    a_var = a.var()
+    # a_mean = a.mean()
+    # a_var = a.var()
     b = sequence[:, 1:]
-    b_mean = b.mean()
-    b_var= b.var()
+    # b_mean = b.mean()
+    # b_var= b.var()
 
     # normalize a
-    a = (a - a_mean) / a_var
+    # a = (a - a_mean) / a_var
     # fit it to b distribution
-    a = (a * b_var) + b_mean
+    # a = (a * b_var) + b_mean
 
     return mse(b, a)
 

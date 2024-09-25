@@ -22,7 +22,7 @@ def sequence(
     sequence_prediction = jnp.reshape(
         sequence_prediction, (frames-1, grid_size, grid_size, grid_size, 1))
 
-    fig = plt.figure(figsize=(8, 6), layout="constrained")
+    fig = plt.figure(figsize=(4+2*frames, 6), layout="constrained")
     grid = fig.subplots(nrows=2, ncols=frames)
 
     power_spectrum = PowerSpectrum(grid_size, 30)

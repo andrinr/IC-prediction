@@ -69,11 +69,11 @@ def main(argv) -> None:
         "padding_mode" : 'CIRCULAR'}
 
     fno_hyperparams = {
-        "modes" : 16,
-        "input_channels" : 1,
-        "hidden_channels" : 16,
+        "modes" : 32,
+        "input_channels" : 3,
+        "hidden_channels" : 3,
         "output_channels" : 1,
-        "n_fourier_layers" : 4}
+        "n_fourier_layers" : 2}
 
     model = nn.SequentialModel(
         sequence_length = config.steps,
@@ -93,7 +93,7 @@ def main(argv) -> None:
     #     key=init_rng) 
 
     parameter_count = nn.count_parameters(model)
-    print(f'Number of parameters: {parameter_count * config.steps}')
+    print(f'Number of parameters: {parameter_count}')
 
     # train the model in stepwise mode
     print(f"Stepwise mode training for {config.n_epochs} epochs")
