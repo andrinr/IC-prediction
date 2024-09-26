@@ -1,4 +1,5 @@
-data_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+tipsy_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/raw/"
 model_dir : "models/"
 output_tipsy_file : "particles.tipsy"
 model_type : "FNO" # UNet, FNO

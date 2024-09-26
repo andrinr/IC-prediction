@@ -7,6 +7,7 @@ import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 # local
 from cosmos import compute_overdensity
+from .tipsy import read_tipsy
 
 BATCH_SIZE = 4
 TRAIN_SIZE = 0.8
@@ -47,7 +48,8 @@ class DirectorySequence:
             self, 
             type : str,
             grid_size : int, 
-            directory : str,
+            grid_directory : str,
+            tipsy_directory : str,
             start : int,
             steps : int,
             stride : int = None,
@@ -60,25 +62,33 @@ class DirectorySequence:
         Train, test and validation splits are not shuffled.
         """
 
-        self.dir = os.path.abspath(directory)
+        self.grid_dir = os.path.abspath(grid_directory)
+        self.tipsy_dir = os.path.abspath(grid_directory)
         self.grid_size = grid_size
         self.start = start
         self.steps = steps
         self.stride = steps if stride is None else stride
         self.flip = flip
-        self.folders = os.listdir(self.dir)
+        self.grid_folders = os.listdir(self.grid_dir)
+        self.tipsy_folders = os.listdir(self.tipsy_dir)
 
-        b = int(TRAIN_SIZE * len(self.folders))
-        c = b + int(VAL_SIZE * len(self.folders))
+        self.grid_folders.sort()
+        self.tipsy_folders.sort()
+
+        b = int(TRAIN_SIZE * len(self.grid_folders))
+        c = b + int(VAL_SIZE * len(self.grid_folders))
 
         if type == 'train':
-            self.folders = self.folders[0 : b]
-        
+            self.grid_folders = self.grid_folders[0 : b]
+            self.tipsy_folders = self.tipsy_folders[0 : b]
+
         if type == 'val':
-            self.folders = self.folders[b : c]
+            self.grid_folders = self.grid_folders[b : c]
+            self.tipsy_folders = self.tipsy_folders[0 : b]
 
         if type == 'test':
-            self.folders = self.folders[c : -1]
+            self.grid_folders = self.grid_folders[c : -1]
+            self.tipsy_folders = self.tipsy_folders[0 : b]
 
     def __call__(self, sample_info : types.SampleInfo):
         sequence = jnp.zeros(
@@ -86,11 +96,14 @@ class DirectorySequence:
 
         sample_idx = sample_info.idx_in_epoch
 
-        if sample_idx >= len(self.folders):
+        if sample_idx >= len(self.grid_folders):
             raise StopIteration()
 
-        files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
-        files.sort()
+        grid_files = os.listdir(os.path.join(self.grid_dir, self.grid_folders[sample_idx]))
+        grid_files.sort()
+
+        tipsy_files = os.listdir(os.path.join(self.tipsy_dir, self.tipsy_folders[sample_idx]))
+        tipsy_files.sort()
 
         timeline = jnp.zeros(self.steps + 1)
         density_means = jnp.zeros(self.steps + 1)
@@ -99,14 +112,22 @@ class DirectorySequence:
             time = self.start + i * self.stride
 
             timeline = timeline.at[i].set(time)
-            file_dir = os.path.join(
-                self.dir, self.folders[sample_idx], files[time])
-        
-            with open(file_dir, 'rb') as f:
+            grid_file = os.path.join(
+                self.grid_dir, self.grid_folders[sample_idx], grid_files[time])
+            
+            tipsy_file = os.path.join(
+                self.tipsy_dir, self.grid_folders[sample_idx], grid_files[time])
+            
+            header, dark = read_tipsy(tipsy_file)
+            print(header)
+
+            timeline = timeline.at[i].set(header["time"])
+
+            with open(grid_file, 'rb') as f:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
                 delta, mean = compute_overdensity(rho)
-                density_means = density_means.at[i].set(0)
+                density_means = density_means.at[i].set(mean)
                 sequence = sequence.at[i].set(jnp.log(delta+2))
             
         if self.flip:

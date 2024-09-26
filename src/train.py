@@ -23,7 +23,8 @@ def main(argv) -> None:
 
     dataset_params = {
         "grid_size" : config.input_grid_size,
-        "directory" : config.data_dir,
+        "grid_directory" : config.grid_dir,
+        "tipsy_directory" : config.tipsy_dir,
         "start" : config.start,
         "steps" : config.steps,
         "stride" : config.stride,
