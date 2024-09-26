@@ -44,7 +44,7 @@ python -m venv ml-env
 source .env/bin/activate
 pip install -U "jax[cuda12]"
 pip install nvidia-dali-cuda120
-pip install optax equinox matplotlib
+pip install optax equinox matplotlib phiflow
 conda install -c bccp nbodykit
 conda update -c bccp --all
 ```
@@ -138,7 +138,6 @@ Make sure pytest is installed and run ```python -m pytest``` from the root direc
 
 ## Sources
 
-
 ### IC Generation
 
 - *Initial Conditions for large Comological Simulations* https://arxiv.org/pdf/0804.3536
@@ -154,3 +153,5 @@ Make sure pytest is installed and run ```python -m pytest``` from the root direc
 - Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
 - How to get velocities from density fields: https://arxiv.org/pdf/astro-ph/9506070
 - zeldovhich: https://iopscience.iop.org/article/10.1086/498496/pdf
+
+Structural Similarity Index

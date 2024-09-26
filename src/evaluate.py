@@ -6,7 +6,7 @@ import jax.numpy as jnp
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
-from data import VolumetricSequence, volumetric_sequence_pipe
+import data
 import visualize
 from config import Config
 
@@ -18,7 +18,7 @@ def main(argv) -> None:
         model_name, jax.nn.relu)
     
     # Data Pipeline
-    dataset = VolumetricSequence(
+    dataset = data.DirectorySequence(
         grid_size = config.input_grid_size,
         directory = config.data_dir,
         start = config.start,
@@ -27,16 +27,23 @@ def main(argv) -> None:
         flip=True,        
         type = "test")
 
-    data_pipeline = volumetric_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["data", "steps", "means"])
+    data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
+    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
 
-    data = next(data_iterator)
-    sequence = jax.device_put(data['data'], jax.devices('gpu')[0])[3]
+    # dummy_val_dataset = data.DummyData(
+    #     batch_size=10,
+    #     steps = config.steps,
+    #     grid_size=config.input_grid_size)
+    # data_pipeline = data.dummy_sequence_pipe(dummy_val_dataset, config.grid_size)
+    # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
+
+    sample = next(data_iterator)
+    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[3]
     pred = model(sequence, False)
     pred_sequential = model(sequence, True)
 
-    timeline = data["steps"][0]
-    means = data["means"][0]
+    timeline = sample["step"][0]
+    means = sample["mean"][0]
 
     visualize.sequence(
         "img/prediction_stepwise.jpg", 

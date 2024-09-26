@@ -6,7 +6,7 @@ import jax.numpy as jnp
 from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
-from data import VolumetricSequence, volumetric_sequence_pipe, generate_tipsy
+from data import DirectorySequence, directory_sequence_pipe, generate_tipsy
 import cosmos
 from config import Config
 import field
@@ -19,7 +19,7 @@ def main(argv) -> None:
         model_name, jax.nn.relu)
     
     # Data Pipeline
-    dataset = VolumetricSequence(
+    dataset = DirectorySequence(
         grid_size = config.input_grid_size,
         directory = config.data_dir,
         start = config.start,
@@ -29,7 +29,7 @@ def main(argv) -> None:
         type = "test")
 
 
-    data_pipeline = volumetric_sequence_pipe(dataset, config.grid_size)
+    data_pipeline = directory_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["data", "steps", "means"])
 
     data = next(data_iterator)
