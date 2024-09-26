@@ -18,7 +18,7 @@ def main(argv) -> None:
         model_name, jax.nn.relu)
     
     # Data Pipeline
-    dataset = data.VolumetricSequence(
+    dataset = data.DirectorySequence(
         grid_size = config.input_grid_size,
         directory = config.data_dir,
         start = config.start,
@@ -27,7 +27,7 @@ def main(argv) -> None:
         flip=True,        
         type = "test")
 
-    data_pipeline = data.volumetric_sequence_pipe(dataset, config.grid_size)
+    data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
 
     # dummy_val_dataset = data.DummyData(

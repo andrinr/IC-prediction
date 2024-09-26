@@ -6,8 +6,8 @@ input_grid_size : 128
 grid_size : 64
 learning_rate : 0.002
 n_epochs : 30
-stride : 1
-steps : 10
+stride : 30
+steps : 1
 start : 0
 sequential_mode : True
 # cosmology parameters

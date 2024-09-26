@@ -65,7 +65,7 @@ def get_batch_loss(
     
     loss = prediction_loss(
         model_params,
-        model_static, 
+        model_static,
         sequence,
         sequential_mode)
     
@@ -89,6 +89,8 @@ def learn_batch(
     """
 
     value_and_grad = eqx.filter_value_and_grad(prediction_loss, has_aux=False)
+
+    print(sequence.shape)
 
     loss, grad = value_and_grad(
         model_params,

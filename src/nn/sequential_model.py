@@ -43,15 +43,15 @@ class SequentialModel(eqx.Module):
         if sequential_mode:
             carry = x[0]
             for i in range(self.sequence_length):
-                potential = potential_fn(carry)
-                x_ = jnp.concatenate([carry, potential, time_grid * i/self.sequence_length], axis=0)
-                carry = carry - self.model(x_)
+                # potential = potential_fn(carry)
+                # x_ = jnp.concatenate([carry, time_grid * i/self.sequence_length], axis=0)
+                carry = self.model(carry)
                 y = y.at[i].set(carry)
 
         else:
             for i in range(self.sequence_length):
-                potential = potential_fn(x[i])
-                x_ = jnp.concatenate([x[i], potential, time_grid * i/self.sequence_length], axis=0)
-                y = y.at[i].set(x[i] - self.model(x_))
+                # potential = potential_fn(x[i])
+                # x_ = jnp.concatenate([x[i], time_grid * i/self.sequence_length], axis=0)
+                y = y.at[i].set(self.model(x[i]))
 
         return y

@@ -19,7 +19,7 @@ VAL_SIZE = 0.05
     device_id=0,
     py_num_workers=16,
     py_start_method="spawn")
-def volumetric_sequence_pipe(external_iterator, grid_size):
+def directory_sequence_pipe(external_iterator, grid_size):
     
     [sequence, steps, means] = fn.external_source(
         source=external_iterator,
@@ -42,7 +42,7 @@ def volumetric_sequence_pipe(external_iterator, grid_size):
     
     return normalize_fn(resize_fn(reshape_fn(sequence))), steps, means
 
-class VolumetricSequence:
+class DirectorySequence:
     def __init__(
             self, 
             type : str,
@@ -106,8 +106,8 @@ class VolumetricSequence:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
                 delta, mean = compute_overdensity(rho)
-                density_means = density_means.at[i].set(mean)
-                sequence = sequence.at[i].set(rho)
+                density_means = density_means.at[i].set(0)
+                sequence = sequence.at[i].set(jnp.log(delta+2))
             
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)

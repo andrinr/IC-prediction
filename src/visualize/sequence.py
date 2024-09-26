@@ -28,14 +28,15 @@ def sequence(
     power_spectrum = PowerSpectrum(grid_size, 30)
 
     ax_power = grid[1, 0]
+    ax_power.axis('off')
 
     for frame in range(frames):
 
         mean = means[frame]
         mean = jax.device_put(mean, device=jax.devices("gpu")[0])
 
-        k, power = power_spectrum(sequence[frame, :, :, :, 0])
-        ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
+        # k, power = power_spectrum(sequence[frame, :, :, :, 0])
+        # ax_power.plot(k, power, label=f"sim t: {timeline[frame]}")
 
         # if frame < frames - 1:
         #     k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
@@ -45,15 +46,15 @@ def sequence(
             ax_pred = grid[1, frame]
             ax_pred.set_title(f"pred t: {timeline[frame]}")
             im_pred = ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], cmap='inferno')
-            fig.colorbar(im_pred, ax=ax_pred, orientation='vertical', location='right')
+            fig.colorbar(im_pred, ax=ax_pred, orientation='horizontal', location='bottom')
 
-            k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
-            ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
+            # k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
+            # ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
 
         ax_seq = grid[0, frame]
         ax_seq.set_title(f"sim t: {timeline[frame]}")
         im_seq = ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno')
-        fig.colorbar(im_seq, ax=ax_seq, orientation='vertical', location='right')
+        fig.colorbar(im_seq, ax=ax_seq, orientation='horizontal', location='bottom')
 
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
