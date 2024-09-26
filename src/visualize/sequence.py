@@ -51,13 +51,13 @@ def sequence(
             im_pred = ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], cmap='inferno')
             fig.colorbar(im_pred, ax=ax_pred, orientation='horizontal', location='bottom')
  
-            ax_cdf.hist(sequence_prediction[frame].flatten(), 100, density=True, histtype="step",
+            ax_cdf.hist(sequence_prediction[frame].flatten(), 100, density=True, log=True, histtype="step",
                                cumulative=False, label=f"pred t: {timeline[frame]}")
             
             # ax_cdf_rho.hist((jnp.power(10, sequence_prediction[frame])-2).flatten(), 100, density=True, histtype="step",
             #                    cumulative=False, label=f"pred t: {timeline[frame]}")
 
-            p,k = get_power(jnp.power(10, sequence_prediction[frame])-2, config.box_size)
+            p,k = get_power(sequence_prediction[frame], config.box_size)
             ax_power.plot(k, p, label=f"pred t: {timeline[frame]}")
 
         ax_seq = grid[0, frame + 1]
@@ -65,14 +65,14 @@ def sequence(
         im_seq = ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno')
         fig.colorbar(im_seq, ax=ax_seq, orientation='horizontal', location='bottom')
 
-        ax_cdf.hist(sequence[frame].flatten(), 100, density=True, histtype="step",
+        ax_cdf.hist(sequence[frame].flatten(), 100, density=True, log=True, histtype="step",
                                cumulative=False, label=f"sim t: {timeline[frame]}")
         
         # ax_cdf_rho.hist((jnp.power(10, sequence[frame])-2).flatten(), 100, density=True, histtype="step",
         #                         cumulative=False, label=f"pred t: {timeline[frame]}")
         
-        p,k = get_power(jnp.power(10, sequence[frame, :, :, :, 0])-2, config.box_size)
-        ax_power.plot(k, p, label=f"pred t: {timeline[frame]}")
+        p,k = get_power(sequence[frame, :, :, :, 0], config.box_size)
+        ax_power.plot(k, p, label=f"sim t: {timeline[frame]}")
 
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
@@ -84,7 +84,7 @@ def sequence(
     # ax_cdf_rho.set_title(r'cdf of $\rho$')
 
     ax_cdf.legend()
-    ax_cdf.set_xlim(0, 1)
+    # ax_cdf.set_xlim(0, 1)
     
 
     plt.savefig(ouput_file)

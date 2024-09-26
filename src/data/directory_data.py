@@ -141,13 +141,28 @@ class DirectorySequence:
             # field_vz = cic_ma(pos, vz, self.grid_size)
 
             # timeline = timeline.at[i].set(header["time"])
+            # timeline = timeline.at[i].set(header["time"])
 
             with open(grid_file, 'rb') as f:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
+                rho *= 2.777 * 10**11
+                # rho += 0.001
                 delta, mean = compute_overdensity(rho)
                 density_means = density_means.at[i].set(mean)
-                sequence = sequence.at[i].set(jnp.log10(delta+2))
+
+                if i == 0:
+                    # print(rho.min())
+                    # print(rho.max())
+                    mean = rho.mean()
+                    rho -= mean
+                    std = rho.std()
+                    rho /= std
+                    # print(std)
+                    sequence = sequence.at[i].set(rho)
+                else:
+                    rho += 0.001
+                    sequence = sequence.at[i].set(jnp.log10(rho / 10**4+ 1)/4)
             
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)

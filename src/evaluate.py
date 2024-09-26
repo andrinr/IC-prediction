@@ -39,7 +39,7 @@ def main(argv) -> None:
     # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
 
     sample = next(data_iterator)
-    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[3]
+    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
     pred = model(sequence, False)
     pred_sequential = model(sequence, True)
 

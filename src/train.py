@@ -72,7 +72,7 @@ def main(argv) -> None:
     fno_hyperparams = {
         "modes" : 32,
         "input_channels" : 1,
-        "hidden_channels" : 8,
+        "hidden_channels" : 4,
         "output_channels" : 1,
         "n_fourier_layers" : 4}
 
@@ -107,7 +107,7 @@ def main(argv) -> None:
         n_epochs = config.n_epochs,
         sequential_mode = False)
     
-    # # train the model in sequential mode
+    # # # train the model in sequential mode
     # print(f"Sequential mode training for {config.n_epochs} epochs")
     # model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
     #     model_params = model_params,
