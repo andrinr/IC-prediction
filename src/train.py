@@ -70,9 +70,9 @@ def main(argv) -> None:
         "padding_mode" : 'CIRCULAR'}
 
     fno_hyperparams = {
-        "modes" : 16,
+        "modes" : 32,
         "input_channels" : 1,
-        "hidden_channels" : 3,
+        "hidden_channels" : 8,
         "output_channels" : 1,
         "n_fourier_layers" : 4}
 

@@ -20,7 +20,8 @@ def main(argv) -> None:
     # Data Pipeline
     dataset = data.DirectorySequence(
         grid_size = config.input_grid_size,
-        directory = config.data_dir,
+        grid_directory = config.grid_dir,
+        tipsy_directory = config.tipsy_dir,
         start = config.start,
         steps = config.steps,
         stride = config.stride,

@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from config import Config
 from cosmos import PowerSpectrum
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from powerbox import PowerBox, get_power
 
 def sequence(
         ouput_file : str,
@@ -22,14 +23,16 @@ def sequence(
     sequence_prediction = jnp.reshape(
         sequence_prediction, (frames-1, grid_size, grid_size, grid_size, 1))
 
-    fig = plt.figure(figsize=(4+2*frames, 6), layout="constrained")
-    grid = fig.subplots(nrows=2, ncols=frames)
+    fig = plt.figure(figsize=(4+3*frames, 8), layout="constrained")
+    grid = fig.subplots(nrows=2, ncols=frames+1)
 
     power_spectrum = PowerSpectrum(grid_size, 30)
 
-    ax_power = grid[1, 0]
-    ax_power.axis('off')
+    ax_cdf = grid[1, 0]
+    ax_cdf_rho =  grid[1, 1]
+    ax_power = grid[0, 0]
 
+    ax_cdf_rho.axis('off')
     for frame in range(frames):
 
         mean = means[frame]
@@ -43,22 +46,45 @@ def sequence(
         #     ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
         
         if frame > 0:
-            ax_pred = grid[1, frame]
+            ax_pred = grid[1, frame + 1]
             ax_pred.set_title(f"pred t: {timeline[frame]}")
             im_pred = ax_pred.imshow(sequence_prediction[frame, grid_size // 2, : , :], cmap='inferno')
             fig.colorbar(im_pred, ax=ax_pred, orientation='horizontal', location='bottom')
+ 
+            ax_cdf.hist(sequence_prediction[frame].flatten(), 100, density=True, histtype="step",
+                               cumulative=False, label=f"pred t: {timeline[frame]}")
+            
+            # ax_cdf_rho.hist((jnp.power(10, sequence_prediction[frame])-2).flatten(), 100, density=True, histtype="step",
+            #                    cumulative=False, label=f"pred t: {timeline[frame]}")
 
-            # k, power = power_spectrum(sequence_prediction[frame, :, :, :, 0])
-            # ax_power.plot(k, power, label=f"pred t: {timeline[frame]}")
+            p,k = get_power(jnp.power(10, sequence_prediction[frame])-2, config.box_size)
+            ax_power.plot(k, p, label=f"pred t: {timeline[frame]}")
 
-        ax_seq = grid[0, frame]
+        ax_seq = grid[0, frame + 1]
         ax_seq.set_title(f"sim t: {timeline[frame]}")
         im_seq = ax_seq.imshow(sequence[frame, grid_size // 2, : , :], cmap='inferno')
         fig.colorbar(im_seq, ax=ax_seq, orientation='horizontal', location='bottom')
 
+        ax_cdf.hist(sequence[frame].flatten(), 100, density=True, histtype="step",
+                               cumulative=False, label=f"sim t: {timeline[frame]}")
+        
+        # ax_cdf_rho.hist((jnp.power(10, sequence[frame])-2).flatten(), 100, density=True, histtype="step",
+        #                         cumulative=False, label=f"pred t: {timeline[frame]}")
+        
+        p,k = get_power(jnp.power(10, sequence[frame, :, :, :, 0])-2, config.box_size)
+        ax_power.plot(k, p, label=f"pred t: {timeline[frame]}")
+
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
     ax_power.legend()
+    ax_power.set_xlabel(r'$k$ [$h \ \mathrm{Mpc}^{-1}$]')
+    ax_power.set_ylabel(r'$P(k)$ [$h^{-3} \ \mathrm{Mpc}^3$]')
+
+    ax_cdf.set_title(r'cdf of $\log_{10} \rho$')
+    # ax_cdf_rho.set_title(r'cdf of $\rho$')
+
+    ax_cdf.legend()
+    ax_cdf.set_xlim(0, 1)
     
 
     plt.savefig(ouput_file)
