@@ -53,6 +53,14 @@ def main(argv) -> None:
         sequence_prediction = pred,
         timeline = timeline,
         attributes = attributes)
+
+    visualize.sequence_examine_prediction(
+        "img/prediction_sequential.jpg", 
+        sequence = sequence, 
+        config = config,
+        sequence_prediction = pred_sequential,
+        timeline = timeline,
+        attributes = attributes)
     
     # visualize.sequence(
     #     "img/prediction_sequential.jpg", 

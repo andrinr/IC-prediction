@@ -70,8 +70,8 @@ def main(argv) -> None:
 
     fno_hyperparams = {
         "modes" : 32,
-        "input_channels" : 1,
-        "hidden_channels" : 4,
+        "input_channels" : 2,
+        "hidden_channels" : 8,
         "output_channels" : 1,
         "n_fourier_layers" : 4}
 
@@ -106,25 +106,24 @@ def main(argv) -> None:
         n_epochs = config.n_epochs,
         sequential_mode = False)
     
-    # # # train the model in sequential mode
-    # print(f"Sequential mode training for {config.n_epochs} epochs")
-    # model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
-    #     model_params = model_params,
-    #     model_static = model_static, 
-    #     train_data_iterator = train_data_iterator,
-    #     val_data_iterator = val_data_iterator,
-    #     learning_rate = config.learning_rate,
-    #     n_epochs = config.n_epochs,
-    #     sequential_mode = True)
+    # train the model in sequential mode
+    print(f"Sequential mode training for {config.n_epochs} epochs")
+    model_params, train_loss_sequential, val_loss_sequential, baseline_loss_sequential, time = nn.train_model(
+        model_params = model_params,
+        model_static = model_static, 
+        train_data_iterator = train_data_iterator,
+        val_data_iterator = val_data_iterator,
+        learning_rate = config.learning_rate,
+        n_epochs = config.n_epochs,
+        sequential_mode = True)
 
     model = eqx.combine(model_params, model_static)
 
     training_stats = {
         "train_loss" : train_loss,
         "val_loss" : val_loss,
-        "baseline_loss" : baseline_loss,
-        # "train_loss_seq" : train_loss_sequential,
-        # "val_loss_seq" : val_loss_sequential,
+        "train_loss_seq" : train_loss_sequential,
+        "val_loss_seq" : val_loss_sequential,
         "time" : time}
 
     now = datetime.now()
