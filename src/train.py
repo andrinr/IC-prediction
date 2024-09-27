@@ -33,14 +33,13 @@ def main(argv) -> None:
     
     train_dataset = data.DirectorySequence(**dataset_params)
     train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
-    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
-    
+    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "attributes"])
 
     dataset_params["type"] = "val"
 
     val_dataset = data.DirectorySequence(**dataset_params)
     val_data_pipeline = data.directory_sequence_pipe(val_dataset, config.grid_size)
-    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
+    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "attributes"])
 
 
     # dummy_train_dataset = data.DummyData(

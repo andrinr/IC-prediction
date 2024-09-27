@@ -11,6 +11,7 @@ from nvidia.dali.auto_aug import rand_augment
 from cosmos import compute_overdensity
 from .tipsy import read_tipsy
 from field import cic_ma
+from .normalize import normalize
 
 BATCH_SIZE = 4
 TRAIN_SIZE = 0.8
@@ -30,7 +31,7 @@ def rotate_aug(data, angle, fill_value=128, rotate_keep_size=True):
     enable_conditionals=True)
 def directory_sequence_pipe(external_iterator, grid_size):
     
-    [sequence, steps, means] = fn.external_source(
+    [sequence, steps, attributes] = fn.external_source(
         source=external_iterator,
         num_outputs=3,
         batch=False,
@@ -44,15 +45,10 @@ def directory_sequence_pipe(external_iterator, grid_size):
         antialias=False,
         size=(grid_size, grid_size, grid_size))
     
-    normalize_fn = lambda x : fn.normalize(
-        x,
-        axes=[2, 3, 4],
-        batch=True)
-    
     # shapes = fn.peek_image_shape(sequence)
     # sequence = rand_augment.rand_augment(sequence, shape=shapes, n=3, m=17)
     
-    return resize_fn(reshape_fn(sequence)), steps, means
+    return resize_fn(reshape_fn(sequence)), steps, attributes
 
 class DirectorySequence:
     def __init__(
@@ -117,7 +113,7 @@ class DirectorySequence:
         # tipsy_files.sort()
 
         timeline = jnp.zeros(self.steps + 1)
-        density_means = jnp.zeros(self.steps + 1)
+        attributes = jnp.zeros((self.steps + 1, 2)) # min, max
 
         for i in range(self.steps + 1):
             time = self.start + i * self.stride
@@ -147,26 +143,18 @@ class DirectorySequence:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
                 rho *= 2.777 * 10**11
-                # rho += 0.001
-                delta, mean = compute_overdensity(rho)
-                density_means = density_means.at[i].set(mean)
+                rho += 0.0001
 
-                if i == 0:
-                    # print(rho.min())
-                    # print(rho.max())
-                    mean = rho.mean()
-                    rho -= mean
-                    std = rho.std()
-                    rho /= std
-                    # print(std)
-                    sequence = sequence.at[i].set(rho)
-                else:
-                    rho += 0.001
-                    sequence = sequence.at[i].set(jnp.log10(rho / 10**4+ 1)/4)
+                rho, min, max = normalize(rho)
+
+                attributes = attributes.at[i, 0].set(min)
+                attributes = attributes.at[i, 1].set(max)
+
+                sequence = sequence.at[i].set(rho)
             
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
             timeline = jnp.flip(timeline, axis=0)
-            density_means = jnp.flip(density_means, axis=0)
+            attributes = jnp.flip(attributes, axis=0)
 
-        return list([sequence, timeline, density_means])
+        return list([sequence, timeline, attributes])
