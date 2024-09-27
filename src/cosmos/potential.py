@@ -11,6 +11,8 @@ class Potential(FrequencyOperation):
             self, 
             field : jax.Array, 
             G : float = 6.6743 * 10**(-11)):
+        
+        print(f"field shape{field.shape}")
 
         potential = jnp.fft.rfftn(
             field,  
@@ -19,7 +21,7 @@ class Potential(FrequencyOperation):
         
         potential = -4 * jnp.pi * potential * G * self.k
 
-        potential = jnp.fft.ifftn(
+        potential = jnp.fft.irfftn(
             field,  
             s=(self.n_grid, self.n_grid, self.n_grid), 
             axes=(1, 2, 3))

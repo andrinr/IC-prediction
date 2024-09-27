@@ -23,22 +23,40 @@ def main(argv) -> None:
 
     dataset_params = {
         "grid_size" : config.input_grid_size,
-        "directory" : config.data_dir,
+        "grid_directory" : config.grid_dir,
+        "tipsy_directory" : config.tipsy_dir,
         "start" : config.start,
         "steps" : config.steps,
         "stride" : config.stride,
         "flip" : True,
         "type" : "train"}
     
-    train_dataset = data.VolumetricSequence(**dataset_params)
-    train_data_pipeline = data.volumetric_sequence_pipe(train_dataset, config.grid_size)
+    train_dataset = data.DirectorySequence(**dataset_params)
+    train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
     train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
+    
 
     dataset_params["type"] = "val"
 
-    val_dataset = data.VolumetricSequence(**dataset_params)
-    val_data_pipeline = data.volumetric_sequence_pipe(val_dataset, config.grid_size)
+    val_dataset = data.DirectorySequence(**dataset_params)
+    val_data_pipeline = data.directory_sequence_pipe(val_dataset, config.grid_size)
     val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
+
+
+    # dummy_train_dataset = data.DummyData(
+    #     batch_size=100,
+    #     steps = config.steps,
+    #     grid_size=config.input_grid_size)
+    # train_data_pipeline = data.dummy_sequence_pipe(dummy_train_dataset, config.grid_size)
+    # train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
+
+    # dummy_val_dataset = data.DummyData(
+    #     batch_size=10,
+    #     steps = config.steps,
+    #     grid_size=config.input_grid_size)
+    # val_data_pipeline = data.dummy_sequence_pipe(dummy_val_dataset, config.grid_size)
+    # val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
+
 
     # Initialize Neural Network
     init_rng = jax.random.key(0)
@@ -52,9 +70,9 @@ def main(argv) -> None:
         "padding_mode" : 'CIRCULAR'}
 
     fno_hyperparams = {
-        "modes" : 16,
+        "modes" : 32,
         "input_channels" : 1,
-        "hidden_channels" : 16,
+        "hidden_channels" : 4,
         "output_channels" : 1,
         "n_fourier_layers" : 4}
 
@@ -76,11 +94,11 @@ def main(argv) -> None:
     #     key=init_rng) 
 
     parameter_count = nn.count_parameters(model)
-    print(f'Number of parameters: {parameter_count * config.steps}')
+    print(f'Number of parameters: {parameter_count}')
 
     # train the model in stepwise mode
     print(f"Stepwise mode training for {config.n_epochs} epochs")
-    model_params, train_loss, val_loss, time = nn.train_model(
+    model_params, train_loss, val_loss, baseline_loss, time = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -89,7 +107,7 @@ def main(argv) -> None:
         n_epochs = config.n_epochs,
         sequential_mode = False)
     
-    # # train the model in sequential mode
+    # # # train the model in sequential mode
     # print(f"Sequential mode training for {config.n_epochs} epochs")
     # model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
     #     model_params = model_params,
@@ -105,6 +123,7 @@ def main(argv) -> None:
     training_stats = {
         "train_loss" : train_loss,
         "val_loss" : val_loss,
+        "baseline_loss" : baseline_loss,
         # "train_loss_seq" : train_loss_sequential,
         # "val_loss_seq" : val_loss_sequential,
         "time" : time}

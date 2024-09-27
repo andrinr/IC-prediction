@@ -1,7 +1,8 @@
 from typing import NamedTuple
 
 class Config(NamedTuple):
-    data_dir : str
+    grid_dir : str
+    tipsy_dir : str
     model_dir : str
     output_tipsy_file : str
     model_type : str

@@ -1,3 +1,4 @@
-from .sequential_data import *
-from .dummy_data import *
+from .directory_data import *
+from .cube_data import *
+from .directory_data import *
 from .tipsy import *

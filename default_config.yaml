@@ -1,4 +1,5 @@
-data_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+tipsy_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/raw/"
 model_dir : "models/"
 output_tipsy_file : "particles.tipsy"
 model_type : "FNO" # UNet, FNO
@@ -6,9 +7,9 @@ input_grid_size : 128
 grid_size : 64
 learning_rate : 0.002
 n_epochs : 20
-stride : 16
+stride : 50
 steps : 1
-start : 50
+start : 0
 sequential_mode : True
 # cosmology parameters
 # all values have to agree with the values used in the simulation
