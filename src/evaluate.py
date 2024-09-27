@@ -39,14 +39,14 @@ def main(argv) -> None:
     # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
 
     sample = next(data_iterator)
-    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
+    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
     pred = model(sequence, False)
     pred_sequential = model(sequence, True)
 
     timeline = sample["step"][0]
     attributes = sample["attributes"][0]
 
-    visualize.sequence_examine_prediction(
+    visualize.sequence(
         "img/prediction_stepwise.jpg", 
         sequence = sequence, 
         config = config,
@@ -54,7 +54,7 @@ def main(argv) -> None:
         timeline = timeline,
         attributes = attributes)
 
-    visualize.sequence_examine_prediction(
+    visualize.sequence(
         "img/prediction_sequential.jpg", 
         sequence = sequence, 
         config = config,

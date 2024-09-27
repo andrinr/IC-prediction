@@ -18,22 +18,13 @@ def baseline_loss(
         sequence : jax.Array):
     
     """
-    Prediction and MSE error. 
+    Prediction and MSE error.   
 
     shape of sequence:
     [Batch, Frames, Channels, Depth, Height, Width]
     """
     a = sequence[:, :-1]
-    # a_mean = a.mean()
-    # a_var = a.var()
     b = sequence[:, 1:]
-    # b_mean = b.mean()
-    # b_var= b.var()
-
-    # normalize a
-    # a = (a - a_mean) / a_var
-    # fit it to b distribution
-    # a = (a * b_var) + b_mean
 
     return mse(b, a)
 

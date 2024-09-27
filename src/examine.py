@@ -37,9 +37,10 @@ def main(argv) -> None:
     timeline = sample["step"][0]
     attributes = sample["attributes"][0]
 
-    visualize.sequence_examine(
+    visualize.sequence(
         "img/data_distr.jpg", 
         sequence = sequence, 
+        sequence_prediction=None,
         config = config,
         timeline = timeline,
         attributes = attributes)
