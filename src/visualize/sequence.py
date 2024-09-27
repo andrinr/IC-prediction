@@ -21,6 +21,7 @@ def sequence(
     grid_size = sequence.shape[2]
 
     pred = sequence_prediction is not None
+    long = frames > 3
 
     # transform to shape for matplotlib
     sequence = jnp.reshape(
@@ -32,17 +33,17 @@ def sequence(
     fig = plt.figure(layout='constrained', figsize=(4+3*frames, 10 if pred else 7))
     subfigs = fig.subfigures(2, 1, wspace=0.07, height_ratios=[2, 1])
 
-    spec_sequence = subfigs[0].add_gridspec(2 if pred else 1, frames)
-    spec_stats = subfigs[1].add_gridspec(1, 4 if pred else 2)
+    spec_sequence = subfigs[0].add_gridspec(2 if pred else 1, frames,  wspace=0.3, hspace=0.1)
+    spec_stats = subfigs[1].add_gridspec(1, 4 if pred and long else 2)
 
     ax_cdf = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
-    ax_power = fig.add_subplot(spec_stats[2 if pred else 1],  adjustable='box', aspect=0.1)
-    if pred:
+    ax_power = fig.add_subplot(spec_stats[2 if pred and long else 1],  adjustable='box', aspect=0.1)
+    if pred and long:
         ax_cdf_pred = fig.add_subplot(spec_stats[1], adjustable='box', aspect=0.1)
         ax_power_pred = fig.add_subplot(spec_stats[3], adjustable='box', aspect=0.1)
 
-    cmap = get_cmap('viridis') 
-    colors = cmap(jnp.linspace(0, 1, frames))
+    cmap = get_cmap('viridis') if long else get_cmap('Accent')
+    colors = cmap(jnp.linspace(0, 1, frames if long else 6))
 
     for frame in range(frames):
 
@@ -58,6 +59,7 @@ def sequence(
 
         ax_seq = fig.add_subplot(spec_sequence[0, frame])
         ax_seq.set_title(f"sim t: {timeline[frame]}")
+        ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
 
         im_seq = ax_seq.imshow(rho_normalized[grid_size // 2, : , :], cmap='inferno')
         divider = make_axes_locatable(ax_seq)
@@ -70,6 +72,7 @@ def sequence(
             delta_pred, mean_pred = compute_overdensity(rho_pred)
 
             ax_seq = fig.add_subplot(spec_sequence[1, frame+1])
+            ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
             ax_seq.set_title(f"pred t: {timeline[frame+1]}")
 
             im_seq = ax_seq.imshow(rho_pred_normalized[grid_size // 2, : , :], cmap='inferno')
@@ -77,7 +80,8 @@ def sequence(
             cax = divider.append_axes('right', size='5%', pad=0.05)
             fig.colorbar(im_seq, cax=cax, orientation='vertical')
 
-            ax_cdf_pred.hist(
+            axis = ax_cdf_pred if long else ax_cdf
+            axis.hist(
                 rho_pred_normalized.flatten(),
                 100, 
                 density=True, 
@@ -85,13 +89,14 @@ def sequence(
                 histtype="step",
                 cumulative=False, 
                 label=f"pred t: {timeline[frame+1]}", 
-                color=colors[frame+1])
+                color=colors[frame+1 if long else 3 + frame])
             
+            axis = ax_power_pred if long else ax_power
             p,k = get_power(delta_pred[:, :, :, 0], config.box_size)
-            ax_power_pred.plot(
+            axis.plot(
                 k, p, 
                 label=f"pred t: {timeline[frame+1]}",  
-                color=colors[frame+1])
+                color=colors[frame+1 if long else 3 + frame])
 
         ax_cdf.hist(
             rho_normalized.flatten(), 
@@ -113,24 +118,24 @@ def sequence(
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
     ax_power.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-    ax_power.set_title(r'Power Spectrum simulated $\delta$')
+    ax_power.set_title(r'Power Spectrum of $\delta$')
     ax_power.set_xlabel(r'$k$ [$h \ \mathrm{Mpc}^{-1}$]')
     ax_power.set_ylabel(r'$P(k)$ [$h^{-3} \ \mathrm{Mpc}^3$]')
 
-    if pred:
+    if pred and long:
         ax_power_pred.set_yscale('log')
         ax_power_pred.set_xscale('log')
         ax_power_pred.legend(loc='center left', bbox_to_anchor=(1, 0.5))
-        ax_power_pred.set_title(r'Power Spectrum predicted $\delta$')
+        ax_power_pred.set_title(r'Power Spectrum pred $\delta$')
         ax_power_pred.set_xlabel(r'$k$ [$h \ \mathrm{Mpc}^{-1}$]')
         ax_power_pred.set_ylabel(r'$P(k)$ [$h^{-3} \ \mathrm{Mpc}^3$]')
 
-        ax_cdf_pred.set_title(r'cdf of normalized predicted $\rho$')
+        ax_cdf_pred.set_title(r'pdf $\rho_{norm}$')
         ax_cdf_pred.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    ax_cdf.set_title(r'cdf of normalized $\rho$')
+    ax_cdf.set_title(r'pdf $\rho_{norm}$')
     ax_cdf.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    # subfigs[0].tight_layout(pad=5.0, w_pad=2.0, h_pad=2.0)
+    # plt.tight_layout(rect=[0.03, 0.03, 0.97, 0.97], pad=3.0, w_pad=2.0, h_pad=2.0)
 
     plt.savefig(ouput_file)

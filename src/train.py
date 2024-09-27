@@ -28,33 +28,33 @@ def main(argv) -> None:
         "start" : config.start,
         "steps" : config.steps,
         "stride" : config.stride,
-        "flip" : True,
+        "flip" : False,
         "type" : "train"}
     
-    train_dataset = data.DirectorySequence(**dataset_params)
-    train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
-    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "attributes"])
+    # train_dataset = data.DirectorySequence(**dataset_params)
+    # train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
+    # train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "attributes"])
 
-    dataset_params["type"] = "val"
+    # dataset_params["type"] = "val"
 
-    val_dataset = data.DirectorySequence(**dataset_params)
-    val_data_pipeline = data.directory_sequence_pipe(val_dataset, config.grid_size)
-    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "attributes"])
+    # val_dataset = data.DirectorySequence(**dataset_params)
+    # val_data_pipeline = data.directory_sequence_pipe(val_dataset, config.grid_size)
+    # val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "attributes"])
 
 
-    # dummy_train_dataset = data.DummyData(
-    #     batch_size=100,
-    #     steps = config.steps,
-    #     grid_size=config.input_grid_size)
-    # train_data_pipeline = data.dummy_sequence_pipe(dummy_train_dataset, config.grid_size)
-    # train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
+    dummy_train_dataset = data.CubeData(
+        batch_size=100,
+        steps = config.steps,
+        grid_size=config.input_grid_size)
+    train_data_pipeline = data.cube_sequence_pipe(dummy_train_dataset, config.grid_size)
+    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
 
-    # dummy_val_dataset = data.DummyData(
-    #     batch_size=10,
-    #     steps = config.steps,
-    #     grid_size=config.input_grid_size)
-    # val_data_pipeline = data.dummy_sequence_pipe(dummy_val_dataset, config.grid_size)
-    # val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
+    dummy_val_dataset = data.CubeData(
+        batch_size=10,
+        steps = config.steps,
+        grid_size=config.input_grid_size)
+    val_data_pipeline = data.cube_sequence_pipe(dummy_val_dataset, config.grid_size)
+    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
 
 
     # Initialize Neural Network
@@ -106,24 +106,24 @@ def main(argv) -> None:
         n_epochs = config.n_epochs,
         sequential_mode = False)
     
-    # train the model in sequential mode
-    print(f"Sequential mode training for {config.n_epochs} epochs")
-    model_params, train_loss_sequential, val_loss_sequential, baseline_loss_sequential, time = nn.train_model(
-        model_params = model_params,
-        model_static = model_static, 
-        train_data_iterator = train_data_iterator,
-        val_data_iterator = val_data_iterator,
-        learning_rate = config.learning_rate,
-        n_epochs = config.n_epochs,
-        sequential_mode = True)
+    # # train the model in sequential mode
+    # print(f"Sequential mode training for {config.n_epochs} epochs")
+    # model_params, train_loss_sequential, val_loss_sequential, baseline_loss_sequential, time = nn.train_model(
+    #     model_params = model_params,
+    #     model_static = model_static, 
+    #     train_data_iterator = train_data_iterator,
+    #     val_data_iterator = val_data_iterator,
+    #     learning_rate = config.learning_rate,
+    #     n_epochs = config.n_epochs,
+    #     sequential_mode = True)
 
     model = eqx.combine(model_params, model_static)
 
     training_stats = {
         "train_loss" : train_loss,
         "val_loss" : val_loss,
-        "train_loss_seq" : train_loss_sequential,
-        "val_loss_seq" : val_loss_sequential,
+        # "train_loss_seq" : train_loss_sequential,
+        # "val_loss_seq" : val_loss_sequential,
         "time" : time}
 
     now = datetime.now()

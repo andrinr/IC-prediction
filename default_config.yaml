@@ -6,9 +6,9 @@ model_type : "FNO" # UNet, FNO
 input_grid_size : 128
 grid_size : 64
 learning_rate : 0.002
-n_epochs : 20
+n_epochs : 3
 stride : 20
-steps : 5
+steps : 1
 start : 0
 sequential_mode : True
 # cosmology parameters

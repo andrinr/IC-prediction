@@ -31,12 +31,12 @@ def main(argv) -> None:
     data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
 
-    # dummy_val_dataset = data.DummyData(
-    #     batch_size=10,
-    #     steps = config.steps,
-    #     grid_size=config.input_grid_size)
-    # data_pipeline = data.dummy_sequence_pipe(dummy_val_dataset, config.grid_size)
-    # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
+    dataset = data.CubeData(
+        batch_size=10,
+        steps = config.steps,
+        grid_size=config.input_grid_size)
+    data_pipeline = data.cube_sequence_pipe(dataset, config.grid_size)
+    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
 
     sample = next(data_iterator)
     sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
