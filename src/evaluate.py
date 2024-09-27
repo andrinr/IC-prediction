@@ -29,7 +29,7 @@ def main(argv) -> None:
         type = "test")
 
     data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
+    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
 
     # dummy_val_dataset = data.DummyData(
     #     batch_size=10,
@@ -44,23 +44,23 @@ def main(argv) -> None:
     pred_sequential = model(sequence, True)
 
     timeline = sample["step"][0]
-    means = sample["mean"][0]
+    attributes = sample["attributes"][0]
 
-    visualize.sequence(
+    visualize.sequence_examine_prediction(
         "img/prediction_stepwise.jpg", 
         sequence = sequence, 
         config = config,
         sequence_prediction = pred,
         timeline = timeline,
-        means = means)
+        attributes = attributes)
     
-    visualize.sequence(
-        "img/prediction_sequential.jpg", 
-        sequence = sequence, 
-        config = config,
-        sequence_prediction = pred_sequential,
-        timeline = timeline,
-        means = means)
+    # visualize.sequence(
+    #     "img/prediction_sequential.jpg", 
+    #     sequence = sequence, 
+    #     config = config,
+    #     sequence_prediction = pred_sequential,
+    #     timeline = timeline,
+    #     attributes = attributes)
 
     # Delete Data Pipeline
     del data_pipeline
