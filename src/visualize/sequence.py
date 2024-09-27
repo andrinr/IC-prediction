@@ -35,11 +35,11 @@ def sequence(
     spec_sequence = subfigs[0].add_gridspec(2 if pred else 1, frames)
     spec_stats = subfigs[1].add_gridspec(1, 4 if pred else 2)
 
-    ax_cdf = fig.add_subplot(spec_stats[0])
-    ax_power = fig.add_subplot(spec_stats[2 if pred else 1])
+    ax_cdf = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
+    ax_power = fig.add_subplot(spec_stats[2 if pred else 1],  adjustable='box', aspect=0.1)
     if pred:
-        ax_cdf_pred = fig.add_subplot(spec_stats[1])
-        ax_power_pred = fig.add_subplot(spec_stats[3])
+        ax_cdf_pred = fig.add_subplot(spec_stats[1], adjustable='box', aspect=0.1)
+        ax_power_pred = fig.add_subplot(spec_stats[3], adjustable='box', aspect=0.1)
 
     cmap = get_cmap('viridis') 
     colors = cmap(jnp.linspace(0, 1, frames))
