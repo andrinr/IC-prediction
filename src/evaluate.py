@@ -26,17 +26,17 @@ def main(argv) -> None:
         steps = config.steps,
         stride = config.stride,
         flip=True,        
-        type = "test")
+        type = "test")  
 
     data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
 
-    dataset = data.CubeData(
-        batch_size=10,
-        steps = config.steps,
-        grid_size=config.input_grid_size)
-    data_pipeline = data.cube_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
+    # dataset = data.CubeData(
+    #     batch_size=10,
+    #     steps = config.steps,
+    #     grid_size=config.input_grid_size)
+    # data_pipeline = data.cube_sequence_pipe(dataset, config.grid_size)
+    # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
 
     sample = next(data_iterator)
     sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
@@ -45,6 +45,9 @@ def main(argv) -> None:
 
     timeline = sample["step"][0]
     attributes = sample["attributes"][0]
+
+    print(timeline.shape)
+    print(attributes.shape)
 
     visualize.sequence(
         "img/prediction_stepwise.jpg", 

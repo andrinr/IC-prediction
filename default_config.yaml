@@ -1,13 +1,14 @@
 grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
-tipsy_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/raw/"
+# grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
+tipsy_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
 model_dir : "models/"
 output_tipsy_file : "particles.tipsy"
 model_type : "FNO" # UNet, FNO
 input_grid_size : 128
-grid_size : 64
+grid_size : 128
 learning_rate : 0.002
-n_epochs : 3
-stride : 20
+n_epochs : 40
+stride : 10
 steps : 1
 start : 0
 sequential_mode : True

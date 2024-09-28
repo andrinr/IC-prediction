@@ -4,6 +4,8 @@ import optax
 import equinox as eqx
 from functools import partial
 import time
+from data import normalize_inv
+from cosmos import PowerSpectrum, compute_overdensity
 
 # @partial(jax.jit)
 # def mse(prediction : jax.Array, truth : jax.Array):
@@ -12,6 +14,63 @@ import time
 @partial(jax.jit)
 def mse(prediction : jax.Array, truth : jax.Array):
     return jnp.mean((prediction - truth) ** 2)
+
+@partial(jax.jit)
+def mass_conservation_loss(prediction : jax.Array, truth : jax.Array):
+    # [Batch, Frames, Channels, Depth, Height, Width]
+    pred_mass = jnp.sum(prediction, axis=[3, 4, 5])
+    true_mass = jnp.sum(truth, axis=[3, 4, 5])
+    return jnp.mean((pred_mass - true_mass)**2)
+
+@partial(jax.jit)
+def power_spectrum_loss(prediction : jax.Array, truth : jax.Array):
+    power_spectrum = PowerSpectrum(
+        64, 20)
+    print(prediction.shape)
+    p_pred, k = power_spectrum(prediction)
+    p_true, k = power_spectrum(truth)
+
+    return mse(jnp.log(p_pred), jnp.log(p_true))
+
+@partial(jax.jit, static_argnums=[3])
+def total_loss(
+    prediction : jax.Array, 
+    truth : jax.Array,
+    attributes : jax.Array,
+    only_end : bool = False):
+
+    # truth / prediction: [Batch, Frames, Channels, Depth, Height, Width]
+    # attributes: [Batch, Frames, 2] where 0 min 1 max
+
+    # b, f, c, d, w, h = prediction.shape
+    # power_spectrum = PowerSpectrum(
+    #     d, 20)
+
+    # normalize_map = jax.vmap(jax.vmap(normalize_inv))
+    # power_map = jax.vmap(jax.vmap(power_spectrum))
+
+    # rho_truth = normalize_map(truth, attributes[:, :, 0], attributes[:, :, 1])
+    # rho_pred = normalize_map(prediction, attributes[:, :, 0], attributes[:, :, 1])
+
+    # delta_truth, mean = compute_overdensity(rho_truth[0])
+    # delta_pred, mean = compute_overdensity(rho_pred[0])
+
+    # # mass_loss = mass_conservation_loss(rho_pred, rho_truth)
+    # p_truth, k = power_map(delta_truth)
+    # p_pred, k = power_map(delta_pred)
+
+    # power_loss = mse(jnp.log(p_truth), jnp.log(p_pred))
+
+    if only_end:
+        mse_loss = mse(truth[:, -1], prediction[:, -1])
+    else:
+        mse_loss = mse(truth, prediction)
+
+    print(mse_loss)
+    #print(power_loss)
+
+    return  mse_loss #+ power_loss
+
 
 @partial(jax.jit)
 def baseline_loss(
@@ -28,11 +87,12 @@ def baseline_loss(
 
     return mse(b, a)
 
-@partial(jax.jit, static_argnums=[1, 3])
+@partial(jax.jit, static_argnums=[1, 4])
 def prediction_loss(
         model_params : list,
         model_static : eqx.Module,
         sequence : jax.Array,
+        attributes : jax.Array,
         sequential_mode = bool):
     
     """
@@ -45,11 +105,12 @@ def prediction_loss(
     model_fn = lambda x : model(x, sequential_mode)
     pred = jax.vmap(model_fn)(sequence)
 
-    return mse(pred, sequence[:, 1:])
+    return total_loss(pred, sequence[:, 1:], attributes[:, 1:], sequential_mode)
 
-@partial(jax.jit, static_argnums=[2, 3])
+@partial(jax.jit, static_argnums=[3, 4])
 def get_batch_loss(
         sequence : jax.Array,
+        attributes : jax.Array,
         model_params,
         model_static : eqx.Module,
         sequential_mode : bool):
@@ -58,15 +119,17 @@ def get_batch_loss(
         model_params,
         model_static,
         sequence,
+        attributes,
         sequential_mode)
     
     baseline = baseline_loss(sequence)
     
     return loss, baseline
 
-@partial(jax.jit, static_argnums=[2, 4, 5])
+@partial(jax.jit, static_argnums=[3, 5, 6])
 def learn_batch(
         sequence : jax.Array,
+        attributes : jax.Array,
         model_params,
         model_static : eqx.Module,
         optimizer_state : optax.OptState,
@@ -87,6 +150,7 @@ def learn_batch(
         model_params,
         model_static, 
         sequence,
+        attributes,
         sequential_mode)
     
     updates, optimizer_state = optimizer_static.update(grad, optimizer_state)
@@ -120,10 +184,12 @@ def train_model(
         epoch_val_loss = []
         epoch_baseline_loss = []
 
-        for _, data in enumerate(train_data_iterator):
+        for i, data in enumerate(train_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
+            attributes_d = jax.device_put(data['attributes'], jax.devices('gpu')[0])
             model_params, optimizer_state, loss = learn_batch(
                 data_d,
+                attributes_d,
                 model_params,
                 model_static,
                 optimizer_state,
@@ -133,8 +199,10 @@ def train_model(
 
         for _, data in enumerate(val_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
+            attributes_d = jax.device_put(data['attributes'], jax.devices('gpu')[0])
             loss, baseline = get_batch_loss(
                 data_d,
+                attributes_d,
                 model_params,
                 model_static,
                 sequential_mode = sequential_mode)

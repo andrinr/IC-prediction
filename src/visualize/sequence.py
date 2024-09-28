@@ -23,6 +23,8 @@ def sequence(
     pred = sequence_prediction is not None
     long = frames > 3
 
+    print(attributes.shape)
+
     # transform to shape for matplotlib
     sequence = jnp.reshape(
         sequence, (frames, grid_size, grid_size, grid_size, 1))
@@ -63,8 +65,8 @@ def sequence(
 
         im_seq = ax_seq.imshow(rho_normalized[grid_size // 2, : , :], cmap='inferno')
         divider = make_axes_locatable(ax_seq)
-        cax = divider.append_axes('right', size='5%', pad=0.05)
-        fig.colorbar(im_seq, cax=cax, orientation='vertical')
+        cax = divider.append_axes('bottom', size='5%', pad=0.03)
+        fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
         if pred and frame < frames-1:
             rho_pred_normalized = sequence_prediction[frame]
@@ -77,8 +79,8 @@ def sequence(
 
             im_seq = ax_seq.imshow(rho_pred_normalized[grid_size // 2, : , :], cmap='inferno')
             divider = make_axes_locatable(ax_seq)
-            cax = divider.append_axes('right', size='5%', pad=0.05)
-            fig.colorbar(im_seq, cax=cax, orientation='vertical')
+            cax = divider.append_axes('bottom', size='5%', pad=0.03)
+            fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
             axis = ax_cdf_pred if long else ax_cdf
             axis.hist(

@@ -3,7 +3,7 @@ import jax
 
 def normalize(rho : jax.Array):
 
-    rho /= 10**4
+    rho /= 10**3.5
     rho += 1
     rho = jnp.log10(rho)
     min = rho.min()
@@ -21,6 +21,6 @@ def normalize_inv(rho_normalized : jax.Array, min : float, max : float):
 
     rho = jnp.power(10, rho)
     rho -= 1
-    rho *= 10**4
+    rho *= 10**3.5
 
     return rho
