@@ -13,7 +13,7 @@ from .tipsy import read_tipsy
 from field import cic_ma
 from .normalize import normalize
 
-BATCH_SIZE = 4
+BATCH_SIZE = 2
 TRAIN_SIZE = 0.8
 TEST_SIZE = 0.05
 VAL_SIZE = 0.05

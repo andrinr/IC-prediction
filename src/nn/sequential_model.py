@@ -52,18 +52,26 @@ class SequentialModel(eqx.Module):
         # potential_fn = cosmos.Potential(d)
         # time_grid = jnp.ones((1, d, w, h))
 
+        secondary_carry = jnp.ones((1, d, w, h))
+
         if sequential_mode:
-            carry = x[0]
+            carry = jnp.concatenate(jnp.array([x[0], secondary_carry]))
             for i in range(self.sequence_length):
                 # potential = potential_fn(carry)
                 carry = self.model[i](carry) if self.unique_networks else self.model(carry)
-                y = y.at[i].set(carry)
+                y = y.at[i].set(carry[0:1])
+                
 
         else:
             for i in range(self.sequence_length):
                 # potential = potential_fn(x[i])
-                carry = self.model[i](x[i]) if self.unique_networks else self.model(x[i])
+                print(x[i].shape)
+                print(secondary_carry.shape)
+                carry = jnp.concatenate(jnp.array([x[i], secondary_carry]))
+                carry = self.model[i](carry) if self.unique_networks else self.model(carry)
                 
-                y = y.at[i].set(carry)
+                y = y.at[i].set(carry[0:1])
+
+                secondary_carry = carry[1:2]
 
         return y
