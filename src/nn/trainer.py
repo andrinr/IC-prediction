@@ -37,7 +37,7 @@ def total_loss(
     prediction : jax.Array, 
     truth : jax.Array,
     attributes : jax.Array,
-    only_end : bool = False):
+    single_state_loss : bool):
 
     # truth / prediction: [Batch, Frames, Channels, Depth, Height, Width]
     # attributes: [Batch, Frames, 2] where 0 min 1 max
@@ -61,7 +61,7 @@ def total_loss(
 
     # power_loss = mse(jnp.log(p_truth), jnp.log(p_pred))
 
-    if only_end:
+    if single_state_loss:
         mse_loss = mse(truth[:, -1], prediction[:, -1])
     else:
         mse_loss = mse(truth, prediction)
@@ -71,13 +71,14 @@ def total_loss(
 
     return  mse_loss #+ power_loss
 
-@partial(jax.jit, static_argnums=[1, 4])
+@partial(jax.jit, static_argnums=[1, 4, 5])
 def prediction_loss(
         model_params : list,
         model_static : eqx.Module,
         sequence : jax.Array,
         attributes : jax.Array,
-        sequential_mode = bool):
+        sequential_mode : bool,
+        single_state_loss : bool):
     
     """
     Prediction and MSE error. 
@@ -89,26 +90,28 @@ def prediction_loss(
     model_fn = lambda x : model(x, sequential_mode)
     pred = jax.vmap(model_fn)(sequence)
 
-    return total_loss(pred, sequence[:, 1:], attributes[:, 1:], sequential_mode)
+    return total_loss(pred, sequence[:, 1:], attributes[:, 1:], single_state_loss)
 
-@partial(jax.jit, static_argnums=[3, 4])
+@partial(jax.jit, static_argnums=[3, 4, 5])
 def get_batch_loss(
         sequence : jax.Array,
         attributes : jax.Array,
         model_params,
         model_static : eqx.Module,
-        sequential_mode : bool):
+        sequential_mode : bool,
+        single_state_loss : bool):
     
     loss = prediction_loss(
         model_params,
         model_static,
         sequence,
         attributes,
-        sequential_mode)
+        sequential_mode,
+        single_state_loss)
 
     return loss
 
-@partial(jax.jit, static_argnums=[3, 5, 6])
+@partial(jax.jit, static_argnums=[3, 5, 6, 7])
 def learn_batch(
         sequence : jax.Array,
         attributes : jax.Array,
@@ -116,7 +119,8 @@ def learn_batch(
         model_static : eqx.Module,
         optimizer_state : optax.OptState,
         optimizer_static,
-        sequential_mode = bool):
+        sequential_mode : bool,
+        single_state_loss : bool):
     """
     Learn model on batch of sequences.
 
@@ -131,7 +135,8 @@ def learn_batch(
         model_static, 
         sequence,
         attributes,
-        sequential_mode)
+        sequential_mode,
+        single_state_loss)
     
     updates, optimizer_state = optimizer_static.update(grad, optimizer_state)
 
@@ -148,7 +153,8 @@ def train_model(
         val_data_iterator,
         learning_rate : float,
         n_epochs : int,
-        sequential_mode : bool):
+        sequential_mode : bool,
+        single_state_loss : bool):
     
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(model_params)
@@ -162,28 +168,30 @@ def train_model(
         epoch_train_loss = []
         epoch_val_loss = []
 
-        for i, data in enumerate(train_data_iterator):
+        for _, data in enumerate(train_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
             attributes_d = jax.device_put(data['attributes'], jax.devices('gpu')[0])
             model_params, optimizer_state, loss = learn_batch(
-                data_d,
-                attributes_d,
-                model_params,
-                model_static,
-                optimizer_state,
-                optimizer,
-                sequential_mode = sequential_mode)
+                sequence = data_d,
+                attributes = attributes_d,
+                model_params = model_params,
+                model_static = model_static,
+                optimizer_state = optimizer_state,   
+                optimizer_static = optimizer,
+                sequential_mode = sequential_mode,
+                single_state_loss = single_state_loss)
             epoch_train_loss.append(loss)
 
         for _, data in enumerate(val_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
             attributes_d = jax.device_put(data['attributes'], jax.devices('gpu')[0])
             loss = get_batch_loss(
-                data_d,
-                attributes_d,
-                model_params,
-                model_static,
-                sequential_mode = sequential_mode)
+                sequence = data_d,
+                attributes = attributes_d,
+                model_params = model_params,
+                model_static= model_static,
+                sequential_mode = sequential_mode,
+                single_state_loss = single_state_loss)
             epoch_val_loss.append(loss)
         
         epoch_train_loss = jnp.array(epoch_train_loss)

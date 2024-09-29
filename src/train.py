@@ -29,7 +29,7 @@ def main(argv) -> None:
         "steps" : config.file_index_steps,
         "stride" : config.file_index_stride,
         "flip" : True,
-        "type" : "train"}
+        "type" : "Test"}
     
     train_dataset = data.DirectorySequence(**dataset_params)
     train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
@@ -104,10 +104,23 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
         n_epochs = config.stepwise_epochs,
-        sequential_mode = False)
+        sequential_mode = False,
+        single_state_loss = False)
     
     # train the model in sequential mode
-    print(f"Sequential mode training for {config.sequential_epochs} epochs")
+    print(f"Mxied mode training for {config.sequential_epochs} epochs")
+    model_params, train_loss_mixed, val_loss_mixed, time = nn.train_model(
+        model_params = model_params,
+        model_static = model_static, 
+        train_data_iterator = train_data_iterator,
+        val_data_iterator = val_data_iterator,
+        learning_rate = config.learning_rate,
+        n_epochs = config.mixed_epochs,
+        sequential_mode = True,
+        single_state_loss = False)
+    
+    # train the model in mixed mode
+    print(f"Sequential mode training for {config.mixed_epochs} epochs")
     model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
@@ -115,7 +128,8 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
         n_epochs = config.sequential_epochs,
-        sequential_mode = True)
+        sequential_mode = True,
+        single_state_loss = True)
 
     model = eqx.combine(model_params, model_static)
 

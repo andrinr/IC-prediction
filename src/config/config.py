@@ -14,6 +14,7 @@ class Config(NamedTuple):
     file_index_start : int
     redshifts : list[int]
     stepwise_epochs : int
+    mixed_epochs : int
     sequential_epochs : int
     unique_networks : bool
     flip : bool
