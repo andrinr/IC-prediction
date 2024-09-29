@@ -1,0 +1,32 @@
+# grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
+tipsy_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
+model_dir : "models/"
+output_tipsy_file : "particles.tipsy"
+model_type : "FNO" # UNet, FNO
+input_grid_size : 256
+grid_size : 128
+learning_rate : 0.002
+file_index_stride :
+- 1
+- 2
+- 7
+redshifts : # start to end [49, 4.251987, 2.331247, 1.532682, 1.072709, 0.7643640, 0.538369, 0.362698, 0.220377, 0.101529, 0]
+- 0
+- 1.532682
+- 4.251987
+- 49
+file_index_steps : 3
+file_index_start : 0
+flip : True 
+stepwise_epochs : 10
+mixed_epochs : 5
+sequential_epochs : 5
+unique_networks : True
+# cosmology parameters
+# all values have to agree with the values used in the simulation
+box_size : 60 # Mpc/h
+dt_PKDGRAV3 : 0.0012517188943844037 # Given redshift 49
+num_particles : 16777216 # 256^3
+omega_M : 0.32
+omega_L : 0.68

@@ -44,7 +44,7 @@ python -m venv ml-env
 source .env/bin/activate
 pip install -U "jax[cuda12]"
 pip install nvidia-dali-cuda120
-pip install optax equinox matplotlib phiflow
+pip install optax equinox matplotlib pyfftw powerbox
 conda install -c bccp nbodykit
 conda update -c bccp --all
 ```
@@ -154,4 +154,5 @@ Make sure pytest is installed and run ```python -m pytest``` from the root direc
 - How to get velocities from density fields: https://arxiv.org/pdf/astro-ph/9506070
 - zeldovhich: https://iopscience.iop.org/article/10.1086/498496/pdf
 
-Structural Similarity Index
+
+local transfer:  scp -r eiger:/capstor/scratch/cscs/arehmann/pairs/* C:\Users\andri\Documents

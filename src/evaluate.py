@@ -20,46 +20,54 @@ def main(argv) -> None:
     # Data Pipeline
     dataset = data.DirectorySequence(
         grid_size = config.input_grid_size,
-        directory = config.data_dir,
-        start = config.start,
-        steps = config.steps,
-        stride = config.stride,
-        flip=True,        
-        type = "test")
+        grid_directory = config.grid_dir,
+        tipsy_directory = config.tipsy_dir,
+        start = config.file_index_start,
+        steps = config.file_index_steps,
+        stride = config.file_index_stride,
+        flip = config.flip,        
+        type = "test")  
 
     data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
+    data_iterator = DALIGenericIterator(data_pipeline, ["data", "attributes"])
 
-    # dummy_val_dataset = data.DummyData(
+    # dataset = data.CubeData(
     #     batch_size=10,
     #     steps = config.steps,
     #     grid_size=config.input_grid_size)
-    # data_pipeline = data.dummy_sequence_pipe(dummy_val_dataset, config.grid_size)
-    # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "mean"])
+    # data_pipeline = data.cube_sequence_pipe(dataset, config.grid_size)
+    # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
 
     sample = next(data_iterator)
-    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[3]
+    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
     pred = model(sequence, False)
     pred_sequential = model(sequence, True)
 
-    timeline = sample["step"][0]
-    means = sample["mean"][0]
+    attributes = sample["attributes"][0]
+
+    print(attributes.shape)
 
     visualize.sequence(
         "img/prediction_stepwise.jpg", 
         sequence = sequence, 
         config = config,
         sequence_prediction = pred,
-        timeline = timeline,
-        means = means)
-    
+        attributes = attributes)
+
     visualize.sequence(
         "img/prediction_sequential.jpg", 
         sequence = sequence, 
         config = config,
         sequence_prediction = pred_sequential,
-        timeline = timeline,
-        means = means)
+        attributes = attributes)
+    
+    # visualize.sequence(
+    #     "img/prediction_sequential.jpg", 
+    #     sequence = sequence, 
+    #     config = config,
+    #     sequence_prediction = pred_sequential,
+    #     timeline = timeline,
+    #     attributes = attributes)
 
     # Delete Data Pipeline
     del data_pipeline

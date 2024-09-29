@@ -5,25 +5,35 @@ import os
 from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
+from nvidia.dali.auto_aug.core import augmentation
+from nvidia.dali.auto_aug import rand_augment
 # local
 from cosmos import compute_overdensity
+from .tipsy import read_tipsy
+from field import cic_ma
+from .normalize import normalize
 
 BATCH_SIZE = 4
 TRAIN_SIZE = 0.8
 TEST_SIZE = 0.05
 VAL_SIZE = 0.05
 
+@augmentation(mag_range=(0, 30), randomly_negate=True)
+def rotate_aug(data, angle, fill_value=128, rotate_keep_size=True):
+   return fn.rotate(data, angle=angle, fill_value=fill_value, keep_size=True)
+
 @pipeline_def(
     batch_size=BATCH_SIZE,
     num_threads=2, 
     device_id=0,
     py_num_workers=16,
-    py_start_method="spawn")
+    py_start_method="spawn",
+    enable_conditionals=True)
 def directory_sequence_pipe(external_iterator, grid_size):
     
-    [sequence, steps, means] = fn.external_source(
+    [sequence, attributes] = fn.external_source(
         source=external_iterator,
-        num_outputs=3,
+        num_outputs=2,
         batch=False,
         dtype=types.FLOAT)
 
@@ -35,22 +45,21 @@ def directory_sequence_pipe(external_iterator, grid_size):
         antialias=False,
         size=(grid_size, grid_size, grid_size))
     
-    normalize_fn = lambda x : fn.normalize(
-        x,
-        axes=[2, 3, 4],
-        batch=True)
+    # shapes = fn.peek_image_shape(sequence)
+    # sequence = rand_augment.rand_augment(sequence, shape=shapes, n=3, m=17)
     
-    return normalize_fn(resize_fn(reshape_fn(sequence))), steps, means
+    return resize_fn(reshape_fn(sequence)), attributes
 
 class DirectorySequence:
     def __init__(
             self, 
             type : str,
             grid_size : int, 
-            directory : str,
+            grid_directory : str,
+            tipsy_directory : str,
             start : int,
             steps : int,
-            stride : int = None,
+            stride : int | list[int],
             flip : bool = True):
         
         """
@@ -60,25 +69,35 @@ class DirectorySequence:
         Train, test and validation splits are not shuffled.
         """
 
-        self.dir = os.path.abspath(directory)
+        self.grid_dir = os.path.abspath(grid_directory)
+        self.tipsy_dir = os.path.abspath(tipsy_directory)
         self.grid_size = grid_size
         self.start = start
         self.steps = steps
-        self.stride = steps if stride is None else stride
+        self.stride = stride
+        if isinstance(self.stride, list): 
+            self.stride.append(0)
         self.flip = flip
-        self.folders = os.listdir(self.dir)
+        self.grid_folders = os.listdir(self.grid_dir)
+        # self.tipsy_folders = os.listdir(self.tipsy_dir)
 
-        b = int(TRAIN_SIZE * len(self.folders))
-        c = b + int(VAL_SIZE * len(self.folders))
+        self.grid_folders.sort()
+        # self.tipsy_folders.sort()
+
+        b = int(TRAIN_SIZE * len(self.grid_folders))
+        c = b + int(VAL_SIZE * len(self.grid_folders))
 
         if type == 'train':
-            self.folders = self.folders[0 : b]
-        
+            self.grid_folders = self.grid_folders[0 : b]
+            # self.tipsy_folders = self.tipsy_folders[0 : b]
+
         if type == 'val':
-            self.folders = self.folders[b : c]
+            self.grid_folders = self.grid_folders[b : c]
+            # self.tipsy_folders = self.tipsy_folders[0 : b]
 
         if type == 'test':
-            self.folders = self.folders[c : -1]
+            self.grid_folders = self.grid_folders[c : -1]
+            # self.tipsy_folders = self.tipsy_folders[0 : b]
 
     def __call__(self, sample_info : types.SampleInfo):
         sequence = jnp.zeros(
@@ -86,32 +105,60 @@ class DirectorySequence:
 
         sample_idx = sample_info.idx_in_epoch
 
-        if sample_idx >= len(self.folders):
+        if sample_idx >= len(self.grid_folders):
             raise StopIteration()
 
-        files = os.listdir(os.path.join(self.dir, self.folders[sample_idx]))
-        files.sort()
+        grid_files = os.listdir(os.path.join(self.grid_dir, self.grid_folders[sample_idx]))
+        grid_files.sort()
 
-        timeline = jnp.zeros(self.steps + 1)
-        density_means = jnp.zeros(self.steps + 1)
+        # tipsy_files = os.listdir(os.path.join(self.tipsy_dir, self.tipsy_folders[sample_idx]))
+        # tipsy_files.sort()
 
+        attributes = jnp.zeros((self.steps + 1, 2)) # min, max
+
+        time = self.start
         for i in range(self.steps + 1):
-            time = self.start + i * self.stride
+            grid_file = os.path.join(
+                self.grid_dir, self.grid_folders[sample_idx], grid_files[time])
+            
+            # tipsy_file = os.path.join(
+            #     self.tipsy_dir, self.grid_folders[sample_idx], grid_files[time])
+            
+            # header, dark = read_tipsy(tipsy_file)
+            # pos = jnp.ndarray([dark["x"], dark["y"], dark["z"]])
+            # pos = pos + 1.0
+            # vx = dark["vx"]
+            # vy = dark["vx"]
+            # vz = dark["vz"]
 
-            timeline = timeline.at[i].set(time)
-            file_dir = os.path.join(
-                self.dir, self.folders[sample_idx], files[time])
-        
-            with open(file_dir, 'rb') as f:
+            # field_vx = cic_ma(pos, vx, self.grid_size)
+            # field_vy = cic_ma(pos, vx, self.grid_size)
+            # field_vz = cic_ma(pos, vz, self.grid_size)
+
+            # timeline = timeline.at[i].set(header["time"])
+            # timeline = timeline.at[i].set(header["time"])
+
+            with open(grid_file, 'rb') as f:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
                 rho = rho.reshape(1, self.grid_size, self.grid_size, self.grid_size)
-                delta, mean = compute_overdensity(rho)
-                density_means = density_means.at[i].set(0)
-                sequence = sequence.at[i].set(jnp.log(delta+2))
+                rho *= 2.777 * 10**11
+                rho += 0.0001
+
+                rho, min, max = normalize(rho)
+
+                attributes = attributes.at[i, 0].set(min)
+                attributes = attributes.at[i, 1].set(max)
+
+                sequence = sequence.at[i].set(rho)
+
+            if isinstance(self.stride, list): 
+                time += self.stride[i]
+            else:
+                time =+ self.stride
+
             
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
-            timeline = jnp.flip(timeline, axis=0)
-            density_means = jnp.flip(density_means, axis=0)
+            attributes = jnp.flip(attributes, axis=0)
 
-        return list([sequence, timeline, density_means])
+        return list([sequence, attributes])

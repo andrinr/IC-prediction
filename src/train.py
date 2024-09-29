@@ -23,37 +23,36 @@ def main(argv) -> None:
 
     dataset_params = {
         "grid_size" : config.input_grid_size,
-        "directory" : config.data_dir,
-        "start" : config.start,
-        "steps" : config.steps,
-        "stride" : config.stride,
+        "grid_directory" : config.grid_dir,
+        "tipsy_directory" : config.tipsy_dir,
+        "start" : config.file_index_start,
+        "steps" : config.file_index_steps,
+        "stride" : config.file_index_stride,
         "flip" : True,
-        "type" : "train"}
+        "type" : "Test"}
     
     train_dataset = data.DirectorySequence(**dataset_params)
     train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
-    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
-    
+    train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "attributes"])
 
     dataset_params["type"] = "val"
 
     val_dataset = data.DirectorySequence(**dataset_params)
     val_data_pipeline = data.directory_sequence_pipe(val_dataset, config.grid_size)
-    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
+    val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "attributes"])
 
-
-    # dummy_train_dataset = data.DummyData(
+    # dummy_train_dataset = data.CubeData(
     #     batch_size=100,
     #     steps = config.steps,
     #     grid_size=config.input_grid_size)
-    # train_data_pipeline = data.dummy_sequence_pipe(dummy_train_dataset, config.grid_size)
+    # train_data_pipeline = data.cube_sequence_pipe(dummy_train_dataset, config.grid_size)
     # train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "step", "mean"])
 
-    # dummy_val_dataset = data.DummyData(
+    # dummy_val_dataset = data.CubeData(
     #     batch_size=10,
     #     steps = config.steps,
     #     grid_size=config.input_grid_size)
-    # val_data_pipeline = data.dummy_sequence_pipe(dummy_val_dataset, config.grid_size)
+    # val_data_pipeline = data.cube_sequence_pipe(dummy_val_dataset, config.grid_size)
     # val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "step", "mean"])
 
 
@@ -69,17 +68,18 @@ def main(argv) -> None:
         "padding_mode" : 'CIRCULAR'}
 
     fno_hyperparams = {
-        "modes" : 16,
+        "modes" : 32,
         "input_channels" : 1,
-        "hidden_channels" : 3,
+        "hidden_channels" : 8,
         "output_channels" : 1,
-        "n_fourier_layers" : 4}
+        "n_fourier_layers" : 5}
 
     model = nn.SequentialModel(
-        sequence_length = config.steps,
+        sequence_length = config.file_index_steps,
         constructor = nn.UNet if config.model_type == "UNet" else nn.FNO,
         parameters = unet_hyperparams if config.model_type == "UNet" else fno_hyperparams,
         activation = jax.nn.relu,
+        unique_networks = config.unique_networks,
         key = init_rng)
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
@@ -96,35 +96,48 @@ def main(argv) -> None:
     print(f'Number of parameters: {parameter_count}')
 
     # train the model in stepwise mode
-    print(f"Stepwise mode training for {config.n_epochs} epochs")
-    model_params, train_loss, val_loss, baseline_loss, time = nn.train_model(
+    print(f"Stepwise mode training for {config.stepwise_epochs} epochs")
+    model_params, train_loss, val_loss, time = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
-        n_epochs = config.n_epochs,
-        sequential_mode = False)
+        n_epochs = config.stepwise_epochs,
+        sequential_mode = False,
+        single_state_loss = False)
     
-    # # train the model in sequential mode
-    # print(f"Sequential mode training for {config.n_epochs} epochs")
-    # model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
-    #     model_params = model_params,
-    #     model_static = model_static, 
-    #     train_data_iterator = train_data_iterator,
-    #     val_data_iterator = val_data_iterator,
-    #     learning_rate = config.learning_rate,
-    #     n_epochs = config.n_epochs,
-    #     sequential_mode = True)
+    # train the model in sequential mode
+    print(f"Mxied mode training for {config.sequential_epochs} epochs")
+    model_params, train_loss_mixed, val_loss_mixed, time = nn.train_model(
+        model_params = model_params,
+        model_static = model_static, 
+        train_data_iterator = train_data_iterator,
+        val_data_iterator = val_data_iterator,
+        learning_rate = config.learning_rate,
+        n_epochs = config.mixed_epochs,
+        sequential_mode = True,
+        single_state_loss = False)
+    
+    # train the model in mixed mode
+    print(f"Sequential mode training for {config.mixed_epochs} epochs")
+    model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
+        model_params = model_params,
+        model_static = model_static, 
+        train_data_iterator = train_data_iterator,
+        val_data_iterator = val_data_iterator,
+        learning_rate = config.learning_rate,
+        n_epochs = config.sequential_epochs,
+        sequential_mode = True,
+        single_state_loss = True)
 
     model = eqx.combine(model_params, model_static)
 
     training_stats = {
-        "train_loss" : train_loss,
-        "val_loss" : val_loss,
-        "baseline_loss" : baseline_loss,
-        # "train_loss_seq" : train_loss_sequential,
-        # "val_loss_seq" : val_loss_sequential,
+        "stepwise_loss" : train_loss,
+        "stepwise_val_loss" : val_loss,
+        "sequential_loss" : train_loss_sequential,
+        "sequential_val_loss" : val_loss_sequential,
         "time" : time}
 
     now = datetime.now()

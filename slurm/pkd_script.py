@@ -63,7 +63,7 @@ class MassGrid:
         self.grid = grid
         self.order = order
     def __call__(self,msr,step,time,**kwargs):
-        if step % 1 == 0:
+        if step % 20 == 0:
             print('calculating density grid')
             msr.grid_create(self.grid)
             msr.assign_mass(order=self.order)

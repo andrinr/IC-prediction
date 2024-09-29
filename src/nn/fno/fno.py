@@ -47,7 +47,7 @@ class FNO(eqx.Module):
 
         for i in range(n_fourier_layers):
             self.fourier_layers.append(FourierLayer(
-                modes = modes,
+                modes = min(2**(i+1), modes),
                 n_channels = hidden_channels,
                 activation = activation,
                 key = furier_keys[i]))
