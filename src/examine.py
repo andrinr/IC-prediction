@@ -21,9 +21,9 @@ def main(argv) -> None:
         "grid_size" : config.input_grid_size,
         "grid_directory" : config.grid_dir,
         "tipsy_directory" : config.tipsy_dir,
-        "start" : config.start,
-        "steps" : config.steps,
-        "stride" : config.stride,
+        "start" : config.file_index_start,
+        "steps" : config.file_index_steps,
+        "stride" : config.file_index_stride,
         "flip" : True,
         "type" : "test"}
     

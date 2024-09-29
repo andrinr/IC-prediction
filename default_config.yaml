@@ -5,17 +5,23 @@ model_dir : "models/"
 output_tipsy_file : "particles.tipsy"
 model_type : "FNO" # UNet, FNO
 input_grid_size : 128
-grid_size : 128
+grid_size : 64
 learning_rate : 0.002
-n_epochs : 40
-stride : 10
-steps : 1
-start : 0
-sequential_mode : True
+file_index_stride :
+- 10
+- 90
+redshifts : # start to end
+- 0
+- 4.251987
+- 49
+file_index_steps : 2
+file_index_start : 0
+flip : False 
+stepwise_epochs : 30
+sequential_epochs : 10
+unique_networks : True
 # cosmology parameters
 # all values have to agree with the values used in the simulation
-redshift_start : 49
-redshift_end : 0
 box_size : 60 # Mpc/h
 dt_PKDGRAV3 : 0.0012517188943844037 # Given redshift 49
 num_particles : 16777216 # 256^3

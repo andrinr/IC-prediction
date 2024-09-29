@@ -33,7 +33,7 @@ def save_sequential_model(
 
 def load_sequential_model(
         filename : str, 
-        activation : Callable) -> Tuple[eqx.Module, dict, dict]:
+        activation : Callable) -> Tuple[eqx.Module, Config, dict]:
     
     with open(filename, "rb") as f:
         config = Config(**json.loads(f.readline().decode()))
@@ -41,7 +41,8 @@ def load_sequential_model(
         hyperparams = json.loads(f.readline().decode())
         model = nn.SequentialModel(
                 constructor = nn.UNet if config.model_type == "UNet" else nn.FNO,
-                sequence_length = config.steps,
+                sequence_length = config.file_index_steps,
+                unique_networks = config.unique_networks,
                 key=jax.random.PRNGKey(0), 
                 parameters = hyperparams, 
                 activation = activation)

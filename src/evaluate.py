@@ -22,14 +22,14 @@ def main(argv) -> None:
         grid_size = config.input_grid_size,
         grid_directory = config.grid_dir,
         tipsy_directory = config.tipsy_dir,
-        start = config.start,
-        steps = config.steps,
-        stride = config.stride,
-        flip=True,        
+        start = config.file_index_start,
+        steps = config.file_index_steps,
+        stride = config.file_index_stride,
+        flip = config.flip,        
         type = "test")  
 
     data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
+    data_iterator = DALIGenericIterator(data_pipeline, ["data", "attributes"])
 
     # dataset = data.CubeData(
     #     batch_size=10,
@@ -43,10 +43,8 @@ def main(argv) -> None:
     pred = model(sequence, False)
     pred_sequential = model(sequence, True)
 
-    timeline = sample["step"][0]
     attributes = sample["attributes"][0]
 
-    print(timeline.shape)
     print(attributes.shape)
 
     visualize.sequence(
@@ -54,7 +52,6 @@ def main(argv) -> None:
         sequence = sequence, 
         config = config,
         sequence_prediction = pred,
-        timeline = timeline,
         attributes = attributes)
 
     visualize.sequence(
@@ -62,7 +59,6 @@ def main(argv) -> None:
         sequence = sequence, 
         config = config,
         sequence_prediction = pred_sequential,
-        timeline = timeline,
         attributes = attributes)
     
     # visualize.sequence(

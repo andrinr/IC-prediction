@@ -14,7 +14,6 @@ def sequence(
         config : Config,
         sequence : jax.Array,
         sequence_prediction : jax.Array | None,
-        timeline : jax.Array,
         attributes : jax.Array):
     
     frames = sequence.shape[0]
@@ -22,8 +21,6 @@ def sequence(
 
     pred = sequence_prediction is not None
     long = frames > 3
-
-    print(attributes.shape)
 
     # transform to shape for matplotlib
     sequence = jnp.reshape(
@@ -33,7 +30,7 @@ def sequence(
             sequence_prediction, (frames-1, grid_size, grid_size, grid_size, 1))
     
     fig = plt.figure(layout='constrained', figsize=(4+3*frames, 10 if pred else 7))
-    subfigs = fig.subfigures(2, 1, wspace=0.07, height_ratios=[2, 1])
+    subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.1, height_ratios=[2, 1])
 
     spec_sequence = subfigs[0].add_gridspec(2 if pred else 1, frames,  wspace=0.3, hspace=0.1)
     spec_stats = subfigs[1].add_gridspec(1, 4 if pred and long else 2)
@@ -46,6 +43,11 @@ def sequence(
 
     cmap = get_cmap('viridis') if long else get_cmap('Accent')
     colors = cmap(jnp.linspace(0, 1, frames if long else 6))
+
+    redshifts = config.redshifts
+
+    if config.flip:
+        redshifts.reverse()
 
     for frame in range(frames):
 
@@ -60,7 +62,7 @@ def sequence(
         delta, mean = compute_overdensity(rho)
 
         ax_seq = fig.add_subplot(spec_sequence[0, frame])
-        ax_seq.set_title(f"sim t: {timeline[frame]}")
+        ax_seq.set_title(fr'sim $z = {redshifts[frame]:.1f}$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
 
         im_seq = ax_seq.imshow(rho_normalized[grid_size // 2, : , :], cmap='inferno')
@@ -75,7 +77,7 @@ def sequence(
 
             ax_seq = fig.add_subplot(spec_sequence[1, frame+1])
             ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-            ax_seq.set_title(f"pred t: {timeline[frame+1]}")
+            ax_seq.set_title(fr'pred $z = {redshifts[frame + 1]:.1f}$')
 
             im_seq = ax_seq.imshow(rho_pred_normalized[grid_size // 2, : , :], cmap='inferno')
             divider = make_axes_locatable(ax_seq)
@@ -90,14 +92,14 @@ def sequence(
                 log=True, 
                 histtype="step",
                 cumulative=False, 
-                label=f"pred t: {timeline[frame+1]}", 
+                label=fr'pred $z = {redshifts[frame + 1]:.1f}$',
                 color=colors[frame+1 if long else 3 + frame])
             
             axis = ax_power_pred if long else ax_power
             p,k = get_power(delta_pred[:, :, :, 0], config.box_size)
             axis.plot(
                 k, p, 
-                label=f"pred t: {timeline[frame+1]}",  
+                label=fr'pred $z = {redshifts[frame + 1]:.1f}$',
                 color=colors[frame+1 if long else 3 + frame])
 
         ax_cdf.hist(
@@ -107,14 +109,14 @@ def sequence(
             log=True, 
             histtype="step",
             cumulative=False, 
-            label=f"sim t: {timeline[frame]}", 
+            label=fr'sim $z = {redshifts[frame]:.1f}$',
             color=colors[frame])
         
         p,k = get_power(delta[:, :, :, 0], config.box_size)
         ax_power.plot(
             k, 
             p, 
-            label=f"sim t: {timeline[frame]}", 
+            label=fr'sim $z = {redshifts[frame]:.1f}$',
             color=colors[frame])
 
     ax_power.set_yscale('log')

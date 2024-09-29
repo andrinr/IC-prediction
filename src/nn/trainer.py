@@ -71,22 +71,6 @@ def total_loss(
 
     return  mse_loss #+ power_loss
 
-
-@partial(jax.jit)
-def baseline_loss(
-        sequence : jax.Array):
-    
-    """
-    Prediction and MSE error.   
-
-    shape of sequence:
-    [Batch, Frames, Channels, Depth, Height, Width]
-    """
-    a = sequence[:, :-1]
-    b = sequence[:, 1:]
-
-    return mse(b, a)
-
 @partial(jax.jit, static_argnums=[1, 4])
 def prediction_loss(
         model_params : list,
@@ -121,10 +105,8 @@ def get_batch_loss(
         sequence,
         attributes,
         sequential_mode)
-    
-    baseline = baseline_loss(sequence)
-    
-    return loss, baseline
+
+    return loss
 
 @partial(jax.jit, static_argnums=[3, 5, 6])
 def learn_batch(
@@ -143,8 +125,6 @@ def learn_batch(
     """
 
     value_and_grad = eqx.filter_value_and_grad(prediction_loss, has_aux=False)
-
-    print(sequence.shape)
 
     loss, grad = value_and_grad(
         model_params,
@@ -175,14 +155,12 @@ def train_model(
 
     training_loss = []
     validation_loss = []
-    baseline_loss = []
     timestamps = []
 
     start = time.time()
     for epoch in range(n_epochs):
         epoch_train_loss = []
         epoch_val_loss = []
-        epoch_baseline_loss = []
 
         for i, data in enumerate(train_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
@@ -200,25 +178,21 @@ def train_model(
         for _, data in enumerate(val_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
             attributes_d = jax.device_put(data['attributes'], jax.devices('gpu')[0])
-            loss, baseline = get_batch_loss(
+            loss = get_batch_loss(
                 data_d,
                 attributes_d,
                 model_params,
                 model_static,
                 sequential_mode = sequential_mode)
             epoch_val_loss.append(loss)
-            epoch_baseline_loss.append(baseline)
         
         epoch_train_loss = jnp.array(epoch_train_loss)
         epoch_val_loss = jnp.array(epoch_val_loss)
-        epoch_baseline_loss = jnp.array(epoch_baseline_loss)
         print(f"epoch {epoch}, train loss {epoch_train_loss.mean()}")
         print(f"epoch {epoch}, val loss {epoch_val_loss.mean()}")
-        print(f"epoch {epoch}, baseline loss {epoch_baseline_loss.mean()}")
         
         training_loss.append(epoch_train_loss.mean())
         validation_loss.append(epoch_val_loss.mean())
-        baseline_loss.append(epoch_baseline_loss.mean())
         timestamps.append(time.time() - start)
 
-    return model_params, jnp.array(training_loss), jnp.array(validation_loss), jnp.array(baseline_loss), jnp.array(timestamps)
+    return model_params, jnp.array(training_loss), jnp.array(validation_loss), jnp.array(timestamps)

@@ -18,8 +18,6 @@ TRAIN_SIZE = 0.8
 TEST_SIZE = 0.05
 VAL_SIZE = 0.05
 
-redshifts = [49, 4.251987, 2.331247, 1.532682, 1.072709, 0.7643640, 0.538369, 0.362698, 0.220377, 0.101529, 0]
-
 @augmentation(mag_range=(0, 30), randomly_negate=True)
 def rotate_aug(data, angle, fill_value=128, rotate_keep_size=True):
    return fn.rotate(data, angle=angle, fill_value=fill_value, keep_size=True)
@@ -33,9 +31,9 @@ def rotate_aug(data, angle, fill_value=128, rotate_keep_size=True):
     enable_conditionals=True)
 def directory_sequence_pipe(external_iterator, grid_size):
     
-    [sequence, steps, attributes] = fn.external_source(
+    [sequence, attributes] = fn.external_source(
         source=external_iterator,
-        num_outputs=3,
+        num_outputs=2,
         batch=False,
         dtype=types.FLOAT)
 
@@ -50,7 +48,7 @@ def directory_sequence_pipe(external_iterator, grid_size):
     # shapes = fn.peek_image_shape(sequence)
     # sequence = rand_augment.rand_augment(sequence, shape=shapes, n=3, m=17)
     
-    return resize_fn(reshape_fn(sequence)), steps, attributes
+    return resize_fn(reshape_fn(sequence)), attributes
 
 class DirectorySequence:
     def __init__(
@@ -61,7 +59,7 @@ class DirectorySequence:
             tipsy_directory : str,
             start : int,
             steps : int,
-            stride : int = None,
+            stride : int | list[int],
             flip : bool = True):
         
         """
@@ -76,7 +74,9 @@ class DirectorySequence:
         self.grid_size = grid_size
         self.start = start
         self.steps = steps
-        self.stride = steps if stride is None else stride
+        self.stride = stride
+        if isinstance(self.stride, list): 
+            self.stride.append(0)
         self.flip = flip
         self.grid_folders = os.listdir(self.grid_dir)
         # self.tipsy_folders = os.listdir(self.tipsy_dir)
@@ -114,13 +114,10 @@ class DirectorySequence:
         # tipsy_files = os.listdir(os.path.join(self.tipsy_dir, self.tipsy_folders[sample_idx]))
         # tipsy_files.sort()
 
-        timeline = jnp.zeros(self.steps + 1)
         attributes = jnp.zeros((self.steps + 1, 2)) # min, max
 
+        time = self.start
         for i in range(self.steps + 1):
-            time = self.start + i * self.stride
-
-            timeline = timeline.at[i].set(redshifts[i])
             grid_file = os.path.join(
                 self.grid_dir, self.grid_folders[sample_idx], grid_files[time])
             
@@ -153,10 +150,15 @@ class DirectorySequence:
                 attributes = attributes.at[i, 1].set(max)
 
                 sequence = sequence.at[i].set(rho)
+
+            if isinstance(self.stride, list): 
+                time += self.stride[i]
+            else:
+                time =+ self.stride
+
             
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
-            timeline = jnp.flip(timeline, axis=0)
             attributes = jnp.flip(attributes, axis=0)
 
-        return list([sequence, timeline, attributes])
+        return list([sequence, attributes])
