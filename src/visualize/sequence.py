@@ -30,7 +30,7 @@ def sequence(
             sequence_prediction, (frames-1, grid_size, grid_size, grid_size, 1))
     
     fig = plt.figure(layout='constrained', figsize=(4+3*frames, 10 if pred else 7))
-    subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.1, height_ratios=[2, 1])
+    subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.1, height_ratios=[2, 1] if pred else [1, 1] )
 
     spec_sequence = subfigs[0].add_gridspec(2 if pred else 1, frames,  wspace=0.3, hspace=0.1)
     spec_stats = subfigs[1].add_gridspec(1, 4 if pred and long else 2)
