@@ -87,8 +87,8 @@ def prediction_loss(
     [Batch, Frames, Channels, Depth, Height, Width]
     """
     model = eqx.combine(model_params, model_static)
-    model_fn = lambda x : model(x, sequential_mode)
-    pred = jax.vmap(model_fn)(sequence)
+    model_fn = lambda x, y : model(x, y, sequential_mode)
+    pred = jax.vmap(model_fn)(sequence, attributes)
 
     return total_loss(pred, sequence[:, 1:], attributes[:, 1:], single_state_loss)
 

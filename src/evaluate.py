@@ -40,8 +40,9 @@ def main(argv) -> None:
 
     sample = next(data_iterator)
     sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
-    pred = model(sequence, False)
-    pred_sequential = model(sequence, True)
+    attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[1]
+    pred = model(sequence, attributes, False)
+    pred_sequential = model(sequence, attributes, True)
 
     attributes = sample["attributes"][0]
 

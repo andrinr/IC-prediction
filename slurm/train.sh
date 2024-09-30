@@ -8,4 +8,4 @@
 # module load conda
 # module load cuda/12.5.82
 source activate ml-env
-python src/train.py default_config.yaml
+python src/train.py train_small_single_config.yaml
