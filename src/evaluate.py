@@ -45,8 +45,6 @@ def main(argv) -> None:
 
     attributes = sample["attributes"][0]
 
-    print(attributes.shape)
-
     visualize.sequence(
         "img/prediction_stepwise.jpg", 
         sequence = sequence, 

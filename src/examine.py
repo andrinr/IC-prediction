@@ -36,6 +36,9 @@ def main(argv) -> None:
 
     attributes = sample["attributes"][0]
 
+    
+    print(config.redshifts)
+
     visualize.sequence(
         "img/data_distr.jpg", 
         sequence = sequence, 
