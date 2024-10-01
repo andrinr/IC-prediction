@@ -6,6 +6,9 @@ from functools import partial
 import time
 from data import normalize_inv
 from cosmos import PowerSpectrum, compute_overdensity
+from typing import NamedTuple, Tuple
+from .metric import Metric
+from powerbox import get_power
 
 # @partial(jax.jit)
 # def mse(prediction : jax.Array, truth : jax.Array):
@@ -90,7 +93,9 @@ def prediction_loss(
     model_fn = lambda x, y : model(x, y, sequential_mode)
     pred = jax.vmap(model_fn)(sequence, attributes)
 
-    return total_loss(pred, sequence[:, 1:], attributes[:, 1:], single_state_loss)
+    loss = total_loss(pred, sequence[:, 1:], attributes[:, 1:], single_state_loss)
+
+    return loss, pred
 
 @partial(jax.jit, static_argnums=[3, 4, 5])
 def get_batch_loss(
@@ -101,15 +106,40 @@ def get_batch_loss(
         sequential_mode : bool,
         single_state_loss : bool):
     
-    loss = prediction_loss(
+    # [Batch, Frames, Channels, Depth, Height, Width]
+
+    N = sequence.shape[3]
+    
+    loss, pred = prediction_loss(
         model_params,
         model_static,
         sequence,
         attributes,
         sequential_mode,
         single_state_loss)
+    
+    # cross_correlation = jax.vmap(jax.vmap(jax.scipy.signal.correlate))(sequence[:, 1:], pred)
+    pred_normalized = jax.nn.standardize(pred)
+    truth_normalized = jax.nn.standardize(sequence)
+    normalized_mse = jnp.mean((pred_normalized - truth_normalized)**2)
 
-    return loss
+    # denormalize densities
+    get_power_fn = lambda x, y : jax.scipy.signal.correlate(in1=x, in2=y, mode="same", method="fft")
+
+    denormalize_map = jax.vmap(jax.vmap(normalize_inv))
+    power_map = jax.vmap(jax.vmap(get_power_fn))
+    overdensity_map = jax.vmap(jax.vmap(compute_overdensity))
+
+    rho_truth = denormalize_map(sequence[:, 1:, 0], attributes[:, 1:, 0], attributes[:, 1:, 1])
+    rho_pred = denormalize_map(pred[:, :, 0], attributes[:, 1:, 0], attributes[:, 1:, 1])
+
+    delta_truth = overdensity_map(rho_truth)
+    delta_pred = overdensity_map(rho_pred)
+
+    # remove channel dim
+    c =  power_map(delta_pred, delta_truth)
+
+    return loss, jnp.mean(c), normalized_mse
 
 @partial(jax.jit, static_argnums=[3, 5, 6, 7])
 def learn_batch(
@@ -128,9 +158,9 @@ def learn_batch(
     [Batch, Frames, Channels, Depth, Height, Width]
     """
 
-    value_and_grad = eqx.filter_value_and_grad(prediction_loss, has_aux=False)
+    value_and_grad = eqx.filter_value_and_grad(prediction_loss, has_aux=True)
 
-    loss, grad = value_and_grad(
+    (loss, _), grad = value_and_grad(
         model_params,
         model_static, 
         sequence,
@@ -154,19 +184,19 @@ def train_model(
         learning_rate : float,
         n_epochs : int,
         sequential_mode : bool,
-        single_state_loss : bool):
+        single_state_loss : bool) -> Tuple[eqx.Module, Metric]:
     
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(model_params)
-
-    training_loss = []
-    validation_loss = []
-    timestamps = []
+    
+    metric = Metric(n_epochs)
 
     start = time.time()
     for epoch in range(n_epochs):
         epoch_train_loss = []
         epoch_val_loss = []
+        epoch_cross_correlation = []
+        epoch_normalized_mse = []
 
         for _, data in enumerate(train_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
@@ -185,7 +215,7 @@ def train_model(
         for _, data in enumerate(val_data_iterator):
             data_d = jax.device_put(data['data'], jax.devices('gpu')[0])
             attributes_d = jax.device_put(data['attributes'], jax.devices('gpu')[0])
-            loss = get_batch_loss(
+            loss, cross_correlation, normalized_mse = get_batch_loss(
                 sequence = data_d,
                 attributes = attributes_d,
                 model_params = model_params,
@@ -193,14 +223,24 @@ def train_model(
                 sequential_mode = sequential_mode,
                 single_state_loss = single_state_loss)
             epoch_val_loss.append(loss)
+            epoch_cross_correlation.append(cross_correlation)
+            epoch_normalized_mse.append(normalized_mse)
         
         epoch_train_loss = jnp.array(epoch_train_loss)
         epoch_val_loss = jnp.array(epoch_val_loss)
+        epoch_cross_correlation = jnp.array(epoch_cross_correlation)
+        epoch_normalized_mse = jnp.array(epoch_normalized_mse)
         print(f"epoch {epoch}, train loss {epoch_train_loss.mean()}")
-        print(f"epoch {epoch}, val loss {epoch_val_loss.mean()}")
+        print(f"epoch {epoch}, val loss {epoch_val_loss.mean()}")        
+        print(f"epoch {epoch}, cross correlation {epoch_cross_correlation.mean()}")
+        print(f"epoch {epoch}, normalized val loss {epoch_normalized_mse.mean()}")
         
-        training_loss.append(epoch_train_loss.mean())
-        validation_loss.append(epoch_val_loss.mean())
-        timestamps.append(time.time() - start)
+        metric.update(
+            epoch,
+            epoch_train_loss.mean(),
+            epoch_val_loss.mean(),
+            epoch_normalized_mse.mean(),
+            epoch_cross_correlation.mean(),
+            time.time() - start)
 
-    return model_params, jnp.array(training_loss), jnp.array(validation_loss), jnp.array(timestamps)
+    return model_params, metric

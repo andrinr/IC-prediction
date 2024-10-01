@@ -64,7 +64,7 @@ def main(argv) -> None:
 
     cmap = get_cmap('viridis')
 
-    height = 0.2
+    height = 0.01
 
     for i in range(len(red_starts)):
         config = configs[i]
@@ -80,11 +80,11 @@ def main(argv) -> None:
         print(end_red)
 
         plt.barh(
-            y = start_index + plots_in_bin[start_index] * height,
+            y = loss,#start_index + plots_in_bin[start_index] * height,
             width = end_red - start_red,
             left = start_red,
             height = height,
-            color = cmap(loss**(1/2)),
+            #color = cmap(loss**(1/2)),
             label=i)
         
         plots_in_bin = plots_in_bin.at[start_index].add(1)
@@ -97,13 +97,13 @@ def main(argv) -> None:
     plt.xlabel("Redshift")
     plt.ylabel("Starting Index")
 
-    norm = mpl.colors.Normalize(vmin=0, vmax=1) 
+    # norm = mpl.colors.Normalize(vmin=0, vmax=1) 
     
-    # creating ScalarMappable 
-    sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm) 
-    sm.set_array([]) 
+    # # creating ScalarMappable 
+    # sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm) 
+    # sm.set_array([]) 
     
-    plt.colorbar(sm, ticks=np.linspace(0, 2, 8)) 
+    # plt.colorbar(sm, ticks=np.linspace(0, 2, 8)) 
 
     plt.yticks([])
    

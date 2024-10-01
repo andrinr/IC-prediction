@@ -97,7 +97,7 @@ def main(argv) -> None:
 
     # train the model in stepwise mode
     print(f"Stepwise mode training for {config.stepwise_epochs} epochs")
-    model_params, train_loss, val_loss, time = nn.train_model(
+    model_params, metric = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -109,7 +109,7 @@ def main(argv) -> None:
     
     # train the model in sequential mode
     print(f"Mxied mode training for {config.sequential_epochs} epochs")
-    model_params, train_loss_mixed, val_loss_mixed, time = nn.train_model(
+    model_params, metric = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -121,7 +121,7 @@ def main(argv) -> None:
     
     # train the model in mixed mode
     print(f"Sequential mode training for {config.mixed_epochs} epochs")
-    model_params, train_loss_sequential, val_loss_sequential, time = nn.train_model(
+    model_params, metric = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -133,12 +133,6 @@ def main(argv) -> None:
 
     model = eqx.combine(model_params, model_static)
 
-    training_stats = {
-        "stepwise_loss" : train_loss,
-        "stepwise_val_loss" : val_loss,
-        "sequential_loss" : train_loss_sequential,
-        "sequential_val_loss" : val_loss_sequential,
-        "time" : time}
 
     now = datetime.now()
     datetime_str = now.strftime("%Y%m%d_%H%M%S")
@@ -147,7 +141,7 @@ def main(argv) -> None:
     nn.save_sequential_model(
         filename, 
         config._asdict(), 
-        training_stats, 
+        metric, 
         unet_hyperparams if config.model_type == "UNet" else fno_hyperparams, 
         model)
 

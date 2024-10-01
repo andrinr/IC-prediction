@@ -9,13 +9,13 @@ grid_size : 64
 learning_rate : 0.002
 file_index_stride :
 - 50
-redshifts : # start to end [49, 2:13.122905, 5:7.11, 10:4.251987, 20:2.331247, 30:1.532682, 40:1.072709, 50:0.7643640, 0.538369, 0.362698, 0.220377, 0.101529, 0]
+redshifts : # start to end [49, 2:13.122905, 5:7.11, 10:4.251987, 20:2.331247, 30:2.331247, 40:1.072709, 50:0.7643640, 0.538369, 0.362698, 0.220377, 0.101529, 0]
 - 0
 - 0.7643640
 file_index_steps : 1
 file_index_start : 50
 flip : True 
-stepwise_epochs : 20
+stepwise_epochs : 3
 mixed_epochs : 0
 sequential_epochs : 0
 unique_networks : True

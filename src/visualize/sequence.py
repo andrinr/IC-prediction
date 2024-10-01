@@ -2,9 +2,8 @@ import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
 from config import Config
-from cosmos import PowerSpectrum
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from powerbox import PowerBox, get_power
+from powerbox import get_power
 from data import normalize_inv
 from cosmos import compute_overdensity
 from matplotlib.cm import get_cmap
@@ -59,7 +58,7 @@ def sequence(
 
         rho_normalized = sequence[frame]
         rho = normalize_inv(rho_normalized, min, max)
-        delta, mean = compute_overdensity(rho)
+        delta = compute_overdensity(rho)
 
         ax_seq = fig.add_subplot(spec_sequence[0, frame])
         ax_seq.set_title(fr'sim $z = {redshifts[frame]:.1f}$')
@@ -73,7 +72,7 @@ def sequence(
         if pred and frame < frames-1:
             rho_pred_normalized = sequence_prediction[frame]
             rho_pred = normalize_inv(rho_pred_normalized, min, max)
-            delta_pred, mean_pred = compute_overdensity(rho_pred)
+            delta_pred = compute_overdensity(rho_pred)
 
             ax_seq = fig.add_subplot(spec_sequence[1, frame+1])
             ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
