@@ -97,7 +97,7 @@ def main(argv) -> None:
 
     # train the model in stepwise mode
     print(f"Stepwise mode training for {config.stepwise_epochs} epochs")
-    model_params, metric = nn.train_model(
+    model_params, metric_step = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -109,7 +109,7 @@ def main(argv) -> None:
     
     # train the model in sequential mode
     print(f"Mxied mode training for {config.sequential_epochs} epochs")
-    model_params, metric = nn.train_model(
+    model_params, metric_sequential = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -121,7 +121,7 @@ def main(argv) -> None:
     
     # train the model in mixed mode
     print(f"Sequential mode training for {config.mixed_epochs} epochs")
-    model_params, metric = nn.train_model(
+    model_params, metric_mixed = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -130,18 +130,23 @@ def main(argv) -> None:
         n_epochs = config.sequential_epochs,
         sequential_mode = True,
         single_state_loss = True)
+    
+    training_stats = {
+        "metric_sequential" : metric_sequential.to_dict(),
+        "metric_mixed" : metric_mixed.to_dict(),
+        "metric_step" : metric_step.to_dict()}
 
     model = eqx.combine(model_params, model_static)
 
 
     now = datetime.now()
     datetime_str = now.strftime("%Y%m%d_%H%M%S")
-    filename =f"{config.model_dir}/model_{config.file_index_stride[0]}_{config.file_index_start}.eqx"
+    filename =f"{config.model_dir}/model_{config.file_index_stride[0]:3f}_{config.file_index_start:3f}.eqx"
     # filename =f"{config.model_dir}/model_{config.file_index_stride[0]}_{datetime_str}.eqx"
     nn.save_sequential_model(
         filename, 
         config._asdict(), 
-        metric, 
+        training_stats, 
         unet_hyperparams if config.model_type == "UNet" else fno_hyperparams, 
         model)
 

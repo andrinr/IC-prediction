@@ -3,41 +3,42 @@ import jax.numpy as jnp
 import json
 
 class Metric:
-    train_mse : jax.Array
-    val_mse : jax.Array
-    normalized_val_mse : jax.Array
-    cross_correlation : jax.Array
-    time : jax.Array
+    train_mse : list
+    val_mse : list
+    val_RSE : list
+    val_RAE : list
+    time : list
 
-    def __init__(self, n : int):
-        self.train_mse = jnp.zeros(n)
-        self.val_mse = jnp.zeros(n)
-        self.normalized_val_mse = jnp.zeros(n)
-        self.cross_correlation = jnp.zeros(n)
-        self.time = jnp.zeros(n)
+    def __init__(self):
+        self.train_mse = []
+        self.val_mse = []
+        self.val_RSE = []
+        self.val_RAE = []
+        self.time = []
 
     def update(
             self,
-            i : int,
             train_mse : float,
             val_mse : float,
-            normalized_val_mse : float,
-            cross_correlation : float,
+            val_RSE : float,
+            val_RAE : float,
             time : float):
+        
+        print(time)
 
-        self.train_mse = self.train_mse.at[i].set(train_mse)
-        self.val_mse = self.val_mse.at[i].set(val_mse)
-        self.normalized_val_mse = self.normalized_val_mse.at[i].set(normalized_val_mse)
-        self.cross_correlation = self.cross_correlation.at[i].set(cross_correlation)
-        self.time = self.time.at[i].set(time)
+        self.train_mse.append(train_mse)
+        self.val_mse.append(val_mse)
+        self.val_RSE.append(val_RSE)
+        self.val_RAE.append(val_RAE)
+        self.time.append(time)
 
     def to_dict(self):
         return {
-            "train_mse": self.train_mse.tolist(),
-            "val_mse": self.val_mse.tolist(),
-            "normalized_val_mse": self.normalized_val_mse.tolist(),
-            "cross_correlation": self.cross_correlation.tolist(),
-            "time": self.time.tolist()
+            "train_mse": self.train_mse,
+            "val_mse": self.val_mse,
+            "val_RSE": self.val_RSE,
+            "val_RAE" : self.val_RAE,
+            "time": self.time
         }
 
     def toJSON(self):
