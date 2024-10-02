@@ -6,12 +6,9 @@ from nvidia.dali import pipeline_def
 import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 from nvidia.dali.auto_aug.core import augmentation
-from nvidia.dali.auto_aug import rand_augment
 # local
-from cosmos import compute_overdensity
-from .tipsy import read_tipsy
-from field import cic_ma
-from .normalize import normalize
+from cosmos import norm_log_delta_one, to_expansion, normalize
+
 
 BATCH_SIZE = 2
 TRAIN_SIZE = 0.8
@@ -56,11 +53,12 @@ class DirectorySequence:
             type : str,
             grid_size : int, 
             grid_directory : str,
-            tipsy_directory : str,
+            normalizing_function : str,
             start : int,
             steps : int,
             stride : int | list[int],
             flip : bool = True):
+            
         
         """
         Loads all folder in a directory, 
@@ -70,11 +68,11 @@ class DirectorySequence:
         """
 
         self.grid_dir = os.path.abspath(grid_directory)
-        self.tipsy_dir = os.path.abspath(tipsy_directory)
         self.grid_size = grid_size
         self.start = start
         self.steps = steps
         self.stride = stride
+        self.normalizing_function = normalizing_function
         if isinstance(self.stride, list): 
             self.stride.append(0)
         self.flip = flip
@@ -111,32 +109,12 @@ class DirectorySequence:
         grid_files = os.listdir(os.path.join(self.grid_dir, self.grid_folders[sample_idx]))
         grid_files.sort()
 
-        # tipsy_files = os.listdir(os.path.join(self.tipsy_dir, self.tipsy_folders[sample_idx]))
-        # tipsy_files.sort()
-
-        attributes = jnp.zeros((self.steps + 1, 2)) # min, max
+        attributes = []
 
         time = self.start
         for i in range(self.steps + 1):
             grid_file = os.path.join(
                 self.grid_dir, self.grid_folders[sample_idx], grid_files[time])
-            
-            # tipsy_file = os.path.join(
-            #     self.tipsy_dir, self.grid_folders[sample_idx], grid_files[time])
-            
-            # header, dark = read_tipsy(tipsy_file)
-            # pos = jnp.ndarray([dark["x"], dark["y"], dark["z"]])
-            # pos = pos + 1.0
-            # vx = dark["vx"]
-            # vy = dark["vx"]
-            # vz = dark["vz"]
-
-            # field_vx = cic_ma(pos, vx, self.grid_size)
-            # field_vy = cic_ma(pos, vx, self.grid_size)
-            # field_vz = cic_ma(pos, vz, self.grid_size)
-
-            # timeline = timeline.at[i].set(header["time"])
-            # timeline = timeline.at[i].set(header["time"])
 
             with open(grid_file, 'rb') as f:
                 rho = jnp.frombuffer(f.read(), dtype=jnp.float32)
@@ -144,21 +122,23 @@ class DirectorySequence:
                 rho *= 2.777 * 10**11
                 rho += 0.0001
 
-                rho, min, max = normalize(rho)
+                a = to_expansion(time/len(grid_files))
 
-                attributes = attributes.at[i, 0].set(min)
-                attributes = attributes.at[i, 1].set(max)
+                print(a)
 
-                sequence = sequence.at[i].set(rho)
+                normalized, attributes_ = normalize(rho, a, self.normalizing_function)
+
+                attributes.append(attributes_)
+
+                sequence = sequence.at[i].set(normalized)
 
             if isinstance(self.stride, list): 
                 time += self.stride[i]
             else:
                 time =+ self.stride
 
-            
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)
-            attributes = jnp.flip(attributes, axis=0)
+            attributes = jnp.flip(jnp.array(attributes), axis=0)
 
         return list([sequence, attributes])

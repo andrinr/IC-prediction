@@ -4,3 +4,4 @@ from .power_spectrum import *
 from .potential import *
 from .growth_factor import *
 from .growth_factor_approx import *
+from .pkd import *

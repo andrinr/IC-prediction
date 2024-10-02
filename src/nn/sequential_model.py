@@ -6,7 +6,6 @@ import jax
 from typing import Callable
 import jax.numpy as jnp
 from cosmos import compute_overdensity
-from data import normalize_inv
 
 class SequentialModel(eqx.Module):
     """
@@ -64,8 +63,8 @@ class SequentialModel(eqx.Module):
                 
         else:
             
-            normalize_inv_map = jax.vmap(normalize_inv)
-            rho_sim = normalize_inv_map(x, attributes[:, 0], attributes[:, 0])
+            # normalize_inv_map = jax.vmap(normalize_inv)
+            # rho_sim = normalize_inv_map(x, attributes[:, 0], attributes[:, 0])
             # delta_sim = 
 
             for i in range(self.sequence_length):

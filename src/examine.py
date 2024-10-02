@@ -20,10 +20,10 @@ def main(argv) -> None:
     dataset_params = {
         "grid_size" : config.input_grid_size,
         "grid_directory" : config.grid_dir,
-        "tipsy_directory" : config.tipsy_dir,
         "start" : config.file_index_start,
         "steps" : config.file_index_steps,
         "stride" : config.file_index_stride,
+        "normalizing_function" : config.normalizing_function,
         "flip" : config.flip,
         "type" : "test"}
     
@@ -35,9 +35,6 @@ def main(argv) -> None:
     sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
 
     attributes = sample["attributes"][0]
-
-    
-    print(config.redshifts)
 
     visualize.sequence(
         "img/data_distr.jpg", 

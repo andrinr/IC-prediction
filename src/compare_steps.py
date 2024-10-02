@@ -7,24 +7,11 @@ import nn
 import jax
 from matplotlib.cm import get_cmap
 import matplotlib as mpl
+from cosmos import to_redshift
 
 def main(argv) -> None:
-    index_to_redshift = {
-        0: 49,
-        3: 13.122905,
-        2: 13.122905,
-        5: 7.11,
-        10: 4.251987,
-        20: 2.331247,
-        30: 2.331247,
-        40: 1.072709,
-        50: 0.7643640,
-        60: 0.538369,
-        70: 0.362698,
-        80: 0.220377,
-        90: 0.101529,
-        100: 0
-    }
+
+
 
     folder = "models/ranges"
     files = os.listdir(folder)
@@ -42,7 +29,7 @@ def main(argv) -> None:
         validation_loss = training_stats['metric_step']['val_RSE']
         configs.append(config)
         losses.append(jnp.array(validation_loss).min())
-        redshift = index_to_redshift[config.file_index_start]
+        redshift = to_redshift(config.file_index_start / 100)
         red_starts.append(redshift)
 
     combined = list(zip(losses, configs, red_starts))
@@ -64,8 +51,8 @@ def main(argv) -> None:
         config = configs[i]
         loss = losses[i]
         start_index = start_indices[i]
-        start_red = index_to_redshift[config.file_index_start]
-        end_red = index_to_redshift[config.file_index_start + config.file_index_stride[0]]
+        start_red = to_redshift(config.file_index_start / 100)
+        end_red = to_redshift((config.file_index_start + config.file_index_stride[0])/100)
         norm_loss = (loss - min_loss) / (max_loss - min_loss)  # Normalize loss
         color = cmap(norm_loss)
         

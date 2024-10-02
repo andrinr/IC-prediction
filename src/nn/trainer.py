@@ -4,7 +4,6 @@ import optax
 import equinox as eqx
 from functools import partial
 import time
-from data import normalize_inv
 from cosmos import PowerSpectrum, compute_overdensity
 from typing import NamedTuple, Tuple
 from .metric import Metric
@@ -119,8 +118,6 @@ def get_batch_loss(
         single_state_loss)
     
     # cross_correlation = jax.vmap(jax.vmap(jax.scipy.signal.correlate))(sequence[:, 1:], pred)
-
-
     mean_sequence = jnp.mean(sequence[:, 1:], axis=[2, 3, 4, 5], keepdims=True)
 
     mse = jnp.mean((pred - sequence[:, 1:])**2, axis=[2, 3, 4, 5])

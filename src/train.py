@@ -15,6 +15,7 @@ from datetime import datetime
 def main(argv) -> None:
    
     config = load_config(argv[0])
+    print(config)
 
     # JAX Settings / Device Info
     print("Jax is using %s" % xla_bridge.get_backend().platform)
@@ -24,11 +25,11 @@ def main(argv) -> None:
     dataset_params = {
         "grid_size" : config.input_grid_size,
         "grid_directory" : config.grid_dir,
-        "tipsy_directory" : config.tipsy_dir,
         "start" : config.file_index_start,
         "steps" : config.file_index_steps,
         "stride" : config.file_index_stride,
-        "flip" : True,
+        "normalizing_function" : config.normalizing_function,
+        "flip" : config.flip,
         "type" : "Test"}
     
     train_dataset = data.DirectorySequence(**dataset_params)
@@ -138,10 +139,9 @@ def main(argv) -> None:
 
     model = eqx.combine(model_params, model_static)
 
-
     now = datetime.now()
     datetime_str = now.strftime("%Y%m%d_%H%M%S")
-    filename =f"{config.model_dir}/model_{config.file_index_stride[0]:3f}_{config.file_index_start:3f}.eqx"
+    filename =f"{config.model_dir}/model_{config.file_index_stride[0]:03d}_{config.file_index_start:03d}.eqx"
     # filename =f"{config.model_dir}/model_{config.file_index_stride[0]}_{datetime_str}.eqx"
     nn.save_sequential_model(
         filename, 
