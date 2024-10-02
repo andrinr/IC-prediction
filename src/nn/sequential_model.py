@@ -65,7 +65,7 @@ class SequentialModel(eqx.Module):
 
         if sequential_mode:
             if self.sequential_skip_channels > 0:
-                carry = jnp.concatenate(jnp.array([x[0], secondary_carry]), axis=0)
+                carry = jnp.concatenate((x[0], secondary_carry), axis=0)
             else:
                 carry = x[0]
 
@@ -84,7 +84,9 @@ class SequentialModel(eqx.Module):
                 # potential = potential_fn(x[i])
 
                 if self.sequential_skip_channels > 0:
-                    carry = jnp.concatenate(jnp.array([x[i], secondary_carry]), axis=0)
+                    print(x[i].shape)
+                    print(secondary_carry.shape)
+                    carry = jnp.concatenate((x[i], secondary_carry), axis=0)
                 else:
                     carry = x[i]
 
@@ -92,6 +94,6 @@ class SequentialModel(eqx.Module):
                 
                 y = y.at[i].set(carry[0:1])
 
-                secondary_carry = carry[1:2]
+                secondary_carry = carry[1:]
 
         return y

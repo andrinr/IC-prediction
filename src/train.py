@@ -70,9 +70,9 @@ def main(argv) -> None:
 
     fno_hyperparams = {
         "modes" : 32,
-        "input_channels" : 1,
-        "hidden_channels" : 8,
-        "output_channels" : 1,
+        "input_channels" : 3,
+        "hidden_channels" : 3,
+        "output_channels" : 3,
         "n_fourier_layers" : 5}
 
     model = nn.SequentialModel(
