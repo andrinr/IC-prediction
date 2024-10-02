@@ -22,9 +22,9 @@ normalizing_function : "norm_log_delta_one"
 learning_rate : 0.002
 include_potential : True
 sequential_skip_channels : 0
-stepwise_epochs : 30
-mixed_epochs : 10
-sequential_epochs : 10
+stepwise_epochs : 40
+mixed_epochs : 30
+sequential_epochs : 0
 unique_networks : True
 
 # cosmology parameters

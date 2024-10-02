@@ -70,9 +70,9 @@ def main(argv) -> None:
 
     fno_hyperparams = {
         "modes" : 32,
-        "input_channels" : 2,
+        "input_channels" : 1,
         "hidden_channels" : 8,
-        "output_channels" : 2,
+        "output_channels" : 1,
         "n_fourier_layers" : 5}
 
     model = nn.SequentialModel(
@@ -81,6 +81,7 @@ def main(argv) -> None:
         parameters = unet_hyperparams if config.model_type == "UNet" else fno_hyperparams,
         activation = jax.nn.relu,
         unique_networks = config.unique_networks,
+        sequential_skip_channels=config.sequential_skip_channels,
         key = init_rng)
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
@@ -103,8 +104,8 @@ def main(argv) -> None:
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
         val_data_iterator = val_data_iterator,
-        learning_rate = config.learning_rate,
-        n_epochs = config.stepwise_epochs,
+        learning_rate = config.learning_rate,        
+        n_epochs = config.mixed_epochs,
         sequential_mode = False,
         single_state_loss = False)
     
