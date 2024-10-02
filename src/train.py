@@ -141,7 +141,10 @@ def main(argv) -> None:
 
     now = datetime.now()
     datetime_str = now.strftime("%Y%m%d_%H%M%S")
-    filename =f"{config.model_dir}/model_{config.file_index_stride[0]:03d}_{config.file_index_start:03d}.eqx"
+    if isinstance(config.file_index_stride, list): 
+        filename =f"{config.model_dir}/model_{config.file_index_stride[0]:03d}_{config.file_index_start:03d}.eqx"
+    else:
+        filename =f"{config.model_dir}/model_{config.file_index_stride:03d}_{config.file_index_start:03d}.eqx"
     # filename =f"{config.model_dir}/model_{config.file_index_stride[0]}_{datetime_str}.eqx"
     nn.save_sequential_model(
         filename, 

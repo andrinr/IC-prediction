@@ -44,7 +44,14 @@ def norm_log_delta_one(rho : jax.Array, a : float) -> Tuple[jax.Array, jax.Array
 
     delta, mean = compute_overdensity_mean(rho)
 
-    normalized = jnp.log10((delta / a) + 1)
+    # print(delta.min())
+    # print(delta.max())
+    # print(a)
+
+    normalized = rho/10**2
+    normalized += 1.5
+    normalized /= a
+    normalized = jnp.log10(normalized)
 
     attributes = jnp.array([mean, a])
 
@@ -54,8 +61,11 @@ def norm_log_delta_one_inv(normalized : jax.Array, attributes : jax.Array) -> ja
     mean = attributes[0]
     a = attributes[1]
 
-    rho = jnp.power(10, (normalized - 1) * a)
+    rho = jnp.power(10, normalized)
+    rho *= a
+    rho -= 1.5
+    rho *= 10**2
 
-    rho = compute_rho(rho, mean)
+    # rho = compute_rho(rho, mean)
 
     return rho

@@ -74,6 +74,7 @@ class DirectorySequence:
         self.stride = stride
         self.normalizing_function = normalizing_function
         if isinstance(self.stride, list): 
+            self.stride = stride.copy()
             self.stride.append(0)
         self.flip = flip
         self.grid_folders = os.listdir(self.grid_dir)
@@ -123,8 +124,6 @@ class DirectorySequence:
                 rho += 0.0001
 
                 a = to_expansion(time/len(grid_files))
-
-                print(a)
 
                 normalized, attributes_ = normalize(rho, a, self.normalizing_function)
 

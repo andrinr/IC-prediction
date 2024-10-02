@@ -1,0 +1,28 @@
+# dataset
+grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+# grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
+model_dir : "models/ranges"
+model_type : "FNO" # UNet, FNO
+input_grid_size : 128
+grid_size : 128
+file_index_stride : 100
+file_index_steps : 1
+file_index_start : 0
+total_index_steps : 100
+flip : True 
+normalizing_function : "norm_log_delta_one"
+
+# Training parameters
+learning_rate : 0.002
+include_potential : True
+sequential_skip_channels : 0
+stepwise_epochs : 30
+mixed_epochs : 0
+sequential_epochs : 0
+unique_networks : True
+
+# cosmology parameters
+box_size : 60 # Mpc/h
+num_particles : 16777216 # 256^3
+omega_M : 0.32
+omega_L : 0.68

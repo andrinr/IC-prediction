@@ -21,10 +21,10 @@ def main(argv) -> None:
     dataset = data.DirectorySequence(
         grid_size = config.input_grid_size,
         grid_directory = config.grid_dir,
-        tipsy_directory = config.tipsy_dir,
         start = config.file_index_start,
         steps = config.file_index_steps,
         stride = config.file_index_stride,
+        normalizing_function = config.normalizing_function,
         flip = config.flip,        
         type = "test")  
 
