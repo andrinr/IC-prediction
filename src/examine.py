@@ -20,21 +20,20 @@ def main(argv) -> None:
     dataset_params = {
         "grid_size" : config.input_grid_size,
         "grid_directory" : config.grid_dir,
-        "tipsy_directory" : config.tipsy_dir,
         "start" : config.file_index_start,
         "steps" : config.file_index_steps,
         "stride" : config.file_index_stride,
-        "flip" : True,
+        "normalizing_function" : config.normalizing_function,
+        "flip" : config.flip,
         "type" : "test"}
     
     dataset = data.DirectorySequence(**dataset_params)
     data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
+    data_iterator = DALIGenericIterator(data_pipeline, ["data", "attributes"])
 
     sample = next(data_iterator)
     sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
-   
-    timeline = sample["step"][0]
+
     attributes = sample["attributes"][0]
 
     visualize.sequence(
@@ -42,7 +41,6 @@ def main(argv) -> None:
         sequence = sequence, 
         sequence_prediction=None,
         config = config,
-        timeline = timeline,
         attributes = attributes)
     
     # Delete Data Pipeline

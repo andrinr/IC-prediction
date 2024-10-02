@@ -5,7 +5,7 @@ from typing import Callable
 import jax
 from typing import Callable
 import jax.numpy as jnp
-import cosmos
+from cosmos import compute_overdensity
 
 class SequentialModel(eqx.Module):
     """
@@ -41,7 +41,7 @@ class SequentialModel(eqx.Module):
         # return jnp.log10(x / (self.normalization_params[0]*10**4) + self.normalization_params[1])
         return x
 
-    def __call__(self, x : jax.Array, sequential_mode : bool):
+    def __call__(self, x : jax.Array, attributes : jax.Array, sequential_mode : bool):
         """
         shape of x:
         [Frames, Channels, Depth, Height, Width]
@@ -52,18 +52,30 @@ class SequentialModel(eqx.Module):
         # potential_fn = cosmos.Potential(d)
         # time_grid = jnp.ones((1, d, w, h))
 
+        secondary_carry = jnp.ones((1, d, w, h))
+
         if sequential_mode:
-            carry = x[0]
+            carry = jnp.concatenate(jnp.array([x[0], secondary_carry]))
             for i in range(self.sequence_length):
                 # potential = potential_fn(carry)
                 carry = self.model[i](carry) if self.unique_networks else self.model(carry)
-                y = y.at[i].set(carry)
-
+                y = y.at[i].set(carry[0:1])
+                
         else:
+            
+            # normalize_inv_map = jax.vmap(normalize_inv)
+            # rho_sim = normalize_inv_map(x, attributes[:, 0], attributes[:, 0])
+            # delta_sim = 
+
             for i in range(self.sequence_length):
                 # potential = potential_fn(x[i])
-                carry = self.model[i](x[i]) if self.unique_networks else self.model(x[i])
+                print(x[i].shape)
+                print(secondary_carry.shape)
+                carry = jnp.concatenate(jnp.array([x[i], secondary_carry]))
+                carry = self.model[i](carry) if self.unique_networks else self.model(carry)
                 
-                y = y.at[i].set(carry)
+                y = y.at[i].set(carry[0:1])
+
+                secondary_carry = carry[1:2]
 
         return y

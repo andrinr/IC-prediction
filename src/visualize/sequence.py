@@ -2,11 +2,9 @@ import jax
 import jax.numpy as jnp
 import matplotlib.pyplot as plt
 from config import Config
-from cosmos import PowerSpectrum
 from mpl_toolkits.axes_grid1 import make_axes_locatable
-from powerbox import PowerBox, get_power
-from data import normalize_inv
-from cosmos import compute_overdensity
+from powerbox import get_power
+from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv
 from matplotlib.cm import get_cmap
 
 def sequence(
@@ -30,7 +28,7 @@ def sequence(
             sequence_prediction, (frames-1, grid_size, grid_size, grid_size, 1))
     
     fig = plt.figure(layout='constrained', figsize=(4+3*frames, 10 if pred else 7))
-    subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.1, height_ratios=[2, 1])
+    subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.1, height_ratios=[2, 1] if pred else [1, 1] )
 
     spec_sequence = subfigs[0].add_gridspec(2 if pred else 1, frames,  wspace=0.3, hspace=0.1)
     spec_stats = subfigs[1].add_gridspec(1, 4 if pred and long else 2)
@@ -44,40 +42,63 @@ def sequence(
     cmap = get_cmap('viridis') if long else get_cmap('Accent')
     colors = cmap(jnp.linspace(0, 1, frames if long else 6))
 
-    redshifts = config.redshifts
+    file_index_stride = config.file_index_stride
 
-    if config.flip:
-        redshifts.reverse()
+    if config.flip and isinstance(file_index_stride, list): 
+        step = jnp.sum(jnp.array(file_index_stride))
+        file_index_stride.reverse()
+    elif config.flip:
+        step = config.file_index_start + config.file_index_stride * frames - 1
+    else:
+        step = config.file_index_start
 
     for frame in range(frames):
-
-        min = attributes[frame, 0]
-        max = attributes[frame, 1]
-
-        min = jax.device_put(min, device=jax.devices("gpu")[0])
-        max = jax.device_put(max, device=jax.devices("gpu")[0])
-
-        rho_normalized = sequence[frame]
-        rho = normalize_inv(rho_normalized, min, max)
-        delta, mean = compute_overdensity(rho)
+        attribs = jax.device_put(attributes[frame], device=jax.devices("gpu")[0])
+        normalized = sequence[frame]
+        rho = normalize_inv(normalized, attribs, config.normalizing_function)
+        delta = compute_overdensity(rho)
 
         ax_seq = fig.add_subplot(spec_sequence[0, frame])
-        ax_seq.set_title(fr'sim $z = {redshifts[frame]:.1f}$')
+        ax_seq.set_title(fr'sim $z = {to_redshift(step/100):.2f}$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
 
-        im_seq = ax_seq.imshow(rho_normalized[grid_size // 2, : , :], cmap='inferno')
+        im_seq = ax_seq.imshow(normalized[grid_size // 2, : , :], cmap='inferno')
         divider = make_axes_locatable(ax_seq)
         cax = divider.append_axes('bottom', size='5%', pad=0.03)
         fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
+        ax_cdf.hist(
+            normalized.flatten(), 
+            100, 
+            density=True, 
+            log=True, 
+            histtype="step",
+            cumulative=False, 
+            label=fr'sim $z = {to_redshift(step/100):.2f}$',
+            color=colors[frame])
+        
+        p,k = get_power(delta[:, :, :, 0], config.box_size)
+        ax_power.plot(
+            k, 
+            p, 
+            label=fr'sim $z = {to_redshift(step/100):.2f}$',
+            color=colors[frame])
+        
+        if frame < frames-1:
+            if isinstance(file_index_stride, list): 
+                step += file_index_stride[frame] * (-1 if config.flip else 1)
+            else:
+                step += file_index_stride * (-1 if config.flip else 1)
+
         if pred and frame < frames-1:
             rho_pred_normalized = sequence_prediction[frame]
-            rho_pred = normalize_inv(rho_pred_normalized, min, max)
-            delta_pred, mean_pred = compute_overdensity(rho_pred)
+            attribs = jax.device_put(attributes[frame+1], device=jax.devices("gpu")[0])
+            rho_pred = normalize_inv(rho_pred_normalized, attribs, config.normalizing_function)
+            delta_pred = compute_overdensity(rho_pred)
 
             ax_seq = fig.add_subplot(spec_sequence[1, frame+1])
             ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-            ax_seq.set_title(fr'pred $z = {redshifts[frame + 1]:.1f}$')
+            ax_seq.set_title(fr'pred $z = {to_redshift(step/100):.2f}$')
 
             im_seq = ax_seq.imshow(rho_pred_normalized[grid_size // 2, : , :], cmap='inferno')
             divider = make_axes_locatable(ax_seq)
@@ -92,32 +113,15 @@ def sequence(
                 log=True, 
                 histtype="step",
                 cumulative=False, 
-                label=fr'pred $z = {redshifts[frame + 1]:.1f}$',
+                label=fr'pred $z = {to_redshift(step/100):.2f}$',
                 color=colors[frame+1 if long else 3 + frame])
             
             axis = ax_power_pred if long else ax_power
             p,k = get_power(delta_pred[:, :, :, 0], config.box_size)
             axis.plot(
                 k, p, 
-                label=fr'pred $z = {redshifts[frame + 1]:.1f}$',
+                label=fr'pred $z = {to_redshift(step/100):.2f}$',
                 color=colors[frame+1 if long else 3 + frame])
-
-        ax_cdf.hist(
-            rho_normalized.flatten(), 
-            100, 
-            density=True, 
-            log=True, 
-            histtype="step",
-            cumulative=False, 
-            label=fr'sim $z = {redshifts[frame]:.1f}$',
-            color=colors[frame])
-        
-        p,k = get_power(delta[:, :, :, 0], config.box_size)
-        ax_power.plot(
-            k, 
-            p, 
-            label=fr'sim $z = {redshifts[frame]:.1f}$',
-            color=colors[frame])
 
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')

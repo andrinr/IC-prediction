@@ -21,10 +21,10 @@ def main(argv) -> None:
     dataset = data.DirectorySequence(
         grid_size = config.input_grid_size,
         grid_directory = config.grid_dir,
-        tipsy_directory = config.tipsy_dir,
         start = config.file_index_start,
         steps = config.file_index_steps,
         stride = config.file_index_stride,
+        normalizing_function = config.normalizing_function,
         flip = config.flip,        
         type = "test")  
 
@@ -40,12 +40,11 @@ def main(argv) -> None:
 
     sample = next(data_iterator)
     sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
-    pred = model(sequence, False)
-    pred_sequential = model(sequence, True)
+    attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[1]
+    pred = model(sequence, attributes, False)
+    pred_sequential = model(sequence, attributes, True)
 
     attributes = sample["attributes"][0]
-
-    print(attributes.shape)
 
     visualize.sequence(
         "img/prediction_stepwise.jpg", 
