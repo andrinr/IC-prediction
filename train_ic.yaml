@@ -15,16 +15,16 @@ include_potential : True
 sequential_skip_channels : 0
 stepwise_epochs : 0
 mixed_epochs : 0
-sequential_epochs : 5
+sequential_epochs : 30
 unique_networks : True
 model_dir : "models/ranges"
 model_type : "FNO" # UNet, FNO
-activation : "relu" # relu, tanh
+activation : "tanh" # relu, tanh
 
 # FNO parameters
 fno_modes : 32
 fno_input_channels : 1
-fno_hidden_channels : 5
+fno_hidden_channels : 8
 fno_output_channels : 1
 fno_n_layers : 5
 fno_increasing_modes : True

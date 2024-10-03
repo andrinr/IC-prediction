@@ -28,7 +28,6 @@ def mass_conservation_loss(prediction : jax.Array, truth : jax.Array):
 def power_spectrum_loss(prediction : jax.Array, truth : jax.Array):
     power_spectrum = PowerSpectrum(
         64, 20)
-    print(prediction.shape)
     p_pred, k = power_spectrum(prediction)
     p_true, k = power_spectrum(truth)
 
@@ -68,9 +67,6 @@ def total_loss(
     else:
         mse_loss = mse(truth, prediction)
 
-    print(mse_loss)
-    #print(power_loss)
-
     return  mse_loss #+ power_loss
 
 @partial(jax.jit, static_argnums=[1, 4, 5])
@@ -108,9 +104,6 @@ def get_batch_loss(
     # [Batch, Frames, Channels, Depth, Height, Width]
 
     # N = sequence.shape[3]
-
-    print(sequence.max())
-    print(sequence.min())
     
     loss, pred = prediction_loss(
         model_params,
