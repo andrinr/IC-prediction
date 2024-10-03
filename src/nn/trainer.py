@@ -107,7 +107,10 @@ def get_batch_loss(
     
     # [Batch, Frames, Channels, Depth, Height, Width]
 
-    N = sequence.shape[3]
+    # N = sequence.shape[3]
+
+    print(sequence.max())
+    print(sequence.min())
     
     loss, pred = prediction_loss(
         model_params,

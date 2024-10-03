@@ -107,7 +107,7 @@ def main(argv) -> None:
         train_data_iterator = train_data_iterator,
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,        
-        n_epochs = config.mixed_epochs,
+        n_epochs = config.stepwise_epochs,
         sequential_mode = False,
         single_state_loss = False)
     

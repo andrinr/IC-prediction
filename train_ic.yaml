@@ -13,9 +13,9 @@ normalizing_function : "norm_log_delta_one"
 learning_rate : 0.002
 include_potential : True
 sequential_skip_channels : 0
-stepwise_epochs : 3
+stepwise_epochs : 0
 mixed_epochs : 0
-sequential_epochs : 0
+sequential_epochs : 5
 unique_networks : True
 model_dir : "models/ranges"
 model_type : "FNO" # UNet, FNO

@@ -64,14 +64,14 @@ class SequentialModel(eqx.Module):
 
         if sequential_mode:
             if self.sequential_skip_channels > 0:
-                carry = jnp.concatenate((x[0], secondary_carry), axis=0)
+                distribution = jnp.concatenate((x[0], secondary_carry), axis=0)
             else:
-                carry = x[0]
+                distribution = x[0]
 
             for i in range(self.sequence_length):
                 # potential = potential_fn(carry)
-                carry = self.model[i](carry) if self.unique_networks else self.model(carry)
-                y = y.at[i].set(carry[0:1])
+                distribution = self.model[i](distribution) if self.unique_networks else self.model(distribution)
+                y = y.at[i].set(distribution[0:1])
                 
         else:
             
@@ -81,18 +81,17 @@ class SequentialModel(eqx.Module):
 
             for i in range(self.sequence_length):
                 # potential = potential_fn(x[i])
+                
+                if self.sequential_skip_channels > 0:
+                    distribution = jnp.concatenate((x[i], secondary_carry), axis=0)
+                else:
+                    distribution = x[i]
+
+                prediction = self.model[i](distribution) if self.unique_networks else self.model(distribution)
+                
+                y = y.at[i].set(prediction[0:1])
 
                 if self.sequential_skip_channels > 0:
-                    print(x[i].shape)
-                    print(secondary_carry.shape)
-                    carry = jnp.concatenate((x[i], secondary_carry), axis=0)
-                else:
-                    carry = x[i]
-
-                carry = self.model[i](carry) if self.unique_networks else self.model(carry)
-                
-                y = y.at[i].set(carry[0:1])
-
-                secondary_carry = carry[1:]
+                    secondary_carry = prediction[1:]
 
         return y
