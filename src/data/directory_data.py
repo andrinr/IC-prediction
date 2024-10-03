@@ -7,8 +7,7 @@ import nvidia.dali.fn as fn
 import nvidia.dali.types as types
 from nvidia.dali.auto_aug.core import augmentation
 # local
-from cosmos import norm_log_delta_one, to_expansion, normalize
-
+from cosmos import to_expansion, normalize
 
 BATCH_SIZE = 2
 TRAIN_SIZE = 0.8
@@ -59,7 +58,6 @@ class DirectorySequence:
             stride : int | list[int],
             flip : bool = True):
             
-        
         """
         Loads all folder in a directory, 
         where each folder contains a sequence of 3D arrays, each stored as a binary.

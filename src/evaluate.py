@@ -15,7 +15,7 @@ def main(argv) -> None:
     model_name = argv[0]
 
     model, config, training_stats = nn.load_sequential_model(
-        model_name, jax.nn.relu)
+        model_name)
     
     # Data Pipeline
     dataset = data.DirectorySequence(

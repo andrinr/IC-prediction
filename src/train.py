@@ -61,26 +61,29 @@ def main(argv) -> None:
     init_rng = jax.random.key(0)
     unet_hyperparams = {
         "num_spatial_dims" : 3,
-        "in_channels" : 1,
-        "out_channels" : 1,
-        "hidden_channels" : 8,
-        "num_levels" : 4,
+        "in_channels" : config.unet_input_channels,
+        "out_channels" : config.unet_output_channels,
+        "hidden_channels" : config.unet_hidden_channels,
+        "num_levels" : config.unet_num_levels,
         "padding" : 'SAME',
-        "padding_mode" : 'CIRCULAR'}
+        "padding_mode" : 'CIRCULAR',
+        "activation" : config.activation}
 
     fno_hyperparams = {
-        "modes" : 32,
-        "input_channels" : 2,
-        "hidden_channels" : 8,
-        "output_channels" : 2,
-        "n_fourier_layers" : 5}
+        "modes" : config.fno_modes,
+        "input_channels" : config.fno_input_channels,
+        "hidden_channels" : config.fno_hidden_channels,
+        "output_channels" : config.fno_output_channels,
+        "n_fourier_layers" : config.fno_n_layers,
+        "increasing_modes" : config.fno_increasing_modes,
+        "activation" : config.activation}
 
     model = nn.SequentialModel(
         sequence_length = config.file_index_steps,
         constructor = nn.UNet if config.model_type == "UNet" else nn.FNO,
         parameters = unet_hyperparams if config.model_type == "UNet" else fno_hyperparams,
-        activation = jax.nn.relu,
         unique_networks = config.unique_networks,
+        sequential_skip_channels=config.sequential_skip_channels,
         key = init_rng)
 
     model_params, model_static = eqx.partition(model, eqx.is_array)
@@ -103,14 +106,14 @@ def main(argv) -> None:
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
         val_data_iterator = val_data_iterator,
-        learning_rate = config.learning_rate,
+        learning_rate = config.learning_rate,        
         n_epochs = config.stepwise_epochs,
         sequential_mode = False,
         single_state_loss = False)
     
-    # train the model in sequential mode
-    print(f"Mxied mode training for {config.sequential_epochs} epochs")
-    model_params, metric_sequential = nn.train_model(
+    # train the model in mixed mode
+    print(f"Mixed mode training for {config.mixed_epochs} epochs")
+    model_params, metric_mixed = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -120,9 +123,9 @@ def main(argv) -> None:
         sequential_mode = True,
         single_state_loss = False)
     
-    # train the model in mixed mode
-    print(f"Sequential mode training for {config.mixed_epochs} epochs")
-    model_params, metric_mixed = nn.train_model(
+    # train the model in sequential mode
+    print(f"Sequential mode training for {config.sequential_epochs} epochs")
+    model_params, metric_sequential = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -140,11 +143,13 @@ def main(argv) -> None:
     model = eqx.combine(model_params, model_static)
 
     now = datetime.now()
-    datetime_str = now.strftime("%Y%m%d_%H%M%S")
+    datetime_str = now.strftime("%H%M%S")
+
     if isinstance(config.file_index_stride, list): 
-        filename =f"{config.model_dir}/model_{config.file_index_stride[0]:03d}_{config.file_index_start:03d}.eqx"
+        filename =f"{config.model_dir}/model_{config.file_index_stride[0]:03d}_{config.file_index_start:03d}_{config.file_index_steps:02d}_{datetime_str}.eqx"
     else:
-        filename =f"{config.model_dir}/model_{config.file_index_stride:03d}_{config.file_index_start:03d}.eqx"
+        filename =f"{config.model_dir}/model_{config.file_index_stride:03d}_{config.file_index_start:03d}_{config.file_index_steps:02d}_{datetime_str}.eqx"
+        
     # filename =f"{config.model_dir}/model_{config.file_index_stride[0]}_{datetime_str}.eqx"
     nn.save_sequential_model(
         filename, 

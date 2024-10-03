@@ -16,7 +16,7 @@ normalizing_function : "norm_log_delta_one"
 # Training parameters
 learning_rate : 0.002
 include_potential : True
-sequential_skip_channels : 0
+sequential_skip_channels : 2
 stepwise_epochs : 30
 mixed_epochs : 0
 sequential_epochs : 0

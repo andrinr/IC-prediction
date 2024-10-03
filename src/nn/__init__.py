@@ -6,3 +6,4 @@ from .unet import *
 from .dummy_model import *
 from .sequential_model import *
 from .metric import *
+from .base_module import *
