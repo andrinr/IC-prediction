@@ -1,7 +1,5 @@
 # dataset
 grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/" #"/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
-model_dir : "models/ranges"
-model_type : "FNO" # UNet, FNO
 input_grid_size : 128
 grid_size : 64
 file_index_stride : 
@@ -26,6 +24,23 @@ stepwise_epochs : 40
 mixed_epochs : 30
 sequential_epochs : 0
 unique_networks : True
+model_dir : "models/ranges"
+model_type : "FNO" # UNet, FNO
+activation : "relu" # relu, tanh
+
+# FNO parameters
+fno_modes : 32
+fno_input_channels : 2
+fno_hidden_channels : 3
+fno_output_channels : 2
+fno_n_layers : 5
+fno_increasing_modes : True
+
+# UNet parameters
+unet_input_channels : 1
+unet_hidden_channels : 8
+unet_output_channels : 1
+unet_num_levels : 4
 
 # cosmology parameters
 box_size : 60 # Mpc/h

@@ -3,22 +3,23 @@ import equinox as eqx
 from typing import Callable
 import jax
 import jax.numpy as jnp
+from ..base_module import BaseModule
 
-class DoubleConv(eqx.Module):
+class DoubleConv(BaseModule):
     conv_1: eqx.nn.Conv
     conv_2: eqx.nn.Conv
-    activation : Callable
 
     def __init__(
             self, 
+            activation: str,
             num_spatial_dims: int,
             in_channels: int,
             out_channels: int,
-            activation: Callable,
             padding : str,
             padding_mode: str,
             key):
         
+        super().__init__(activation=activation)
         key1, key2 = jax.random.split(key)
         self.conv_1 = eqx.nn.Conv(
             num_spatial_dims, 
@@ -37,8 +38,6 @@ class DoubleConv(eqx.Module):
             padding=padding,
             padding_mode=padding_mode, 
             key=key2)
-        
-        self.activation = activation
         
     def __call__(self, x):
         x = self.conv_1(x)

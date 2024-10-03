@@ -37,8 +37,7 @@ def save_sequential_model(
         eqx.tree_serialise_leaves(f, model)
 
 def load_sequential_model(
-        filename : str, 
-        activation : Callable) -> Tuple[eqx.Module, Config, dict]:
+        filename : str) -> Tuple[eqx.Module, Config, dict]:
     
     with open(filename, "rb") as f:
         config = Config(**json.loads(f.readline().decode()))
@@ -49,7 +48,7 @@ def load_sequential_model(
                 sequence_length = config.file_index_steps,
                 unique_networks = config.unique_networks,
                 key=jax.random.PRNGKey(0), 
-                parameters = hyperparams, 
-                activation = activation)
+                sequential_skip_channels=config.sequential_skip_channels,
+                parameters = hyperparams)
 
         return eqx.tree_deserialise_leaves(f, model), config, training_stats

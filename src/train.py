@@ -61,25 +61,27 @@ def main(argv) -> None:
     init_rng = jax.random.key(0)
     unet_hyperparams = {
         "num_spatial_dims" : 3,
-        "in_channels" : 1,
-        "out_channels" : 1,
-        "hidden_channels" : 8,
-        "num_levels" : 4,
+        "in_channels" : config.unet_input_channels,
+        "out_channels" : config.unet_output_channels,
+        "hidden_channels" : config.unet_hidden_channels,
+        "num_levels" : config.unet_num_levels,
         "padding" : 'SAME',
-        "padding_mode" : 'CIRCULAR'}
+        "padding_mode" : 'CIRCULAR',
+        "activation" : config.activation}
 
     fno_hyperparams = {
-        "modes" : 32,
-        "input_channels" : 3,
-        "hidden_channels" : 3,
-        "output_channels" : 3,
-        "n_fourier_layers" : 5}
+        "modes" : config.fno_modes,
+        "input_channels" : config.fno_input_channels,
+        "hidden_channels" : config.fno_hidden_channels,
+        "output_channels" : config.fno_output_channels,
+        "n_fourier_layers" : config.fno_n_layers,
+        "increasing_modes" : config.fno_increasing_modes,
+        "activation" : config.activation}
 
     model = nn.SequentialModel(
         sequence_length = config.file_index_steps,
         constructor = nn.UNet if config.model_type == "UNet" else nn.FNO,
         parameters = unet_hyperparams if config.model_type == "UNet" else fno_hyperparams,
-        activation = jax.nn.relu,
         unique_networks = config.unique_networks,
         sequential_skip_channels=config.sequential_skip_channels,
         key = init_rng)

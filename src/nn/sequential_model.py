@@ -23,7 +23,6 @@ class SequentialModel(eqx.Module):
             sequence_length : int,
             constructor : eqx.Module,
             parameters : dict,
-            activation: Callable,
             unique_networks : bool,
             sequential_skip_channels : int,
             key):
@@ -32,11 +31,11 @@ class SequentialModel(eqx.Module):
 
         self.unique_networks = unique_networks
         if not unique_networks:
-            self.model = constructor(key=key, activation=activation, **parameters)
+            self.model = constructor(key=key, **parameters)
         else:
             self.model = []
             for i in range(sequence_length):
-                self.model.append(constructor(key=key, activation=activation, **parameters))
+                self.model.append(constructor(key=key, **parameters))
 
         self.sequential_skip_channels = sequential_skip_channels
         return
