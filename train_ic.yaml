@@ -2,12 +2,12 @@
 grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/" #"/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
 input_grid_size : 128
 grid_size : 64
-file_index_stride : 1
+file_index_stride : 100
 file_index_steps : 1
 file_index_start : 0
 total_index_steps : 100
 flip : True 
-normalizing_function : "norm_log_delta_one"
+normalizing_function : "log_growth" # log_growth, delta
 
 # Training parameters
 learning_rate : 0.002
@@ -17,7 +17,7 @@ stepwise_epochs : 0
 mixed_epochs : 0
 sequential_epochs : 30
 unique_networks : True
-model_dir : "models/ranges"
+model_dir : "models/normalization"
 model_type : "FNO" # UNet, FNO
 activation : "tanh" # relu, tanh
 

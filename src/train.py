@@ -143,11 +143,23 @@ def main(argv) -> None:
     model = eqx.combine(model_params, model_static)
 
     now = datetime.now()
-    datetime_str = now.strftime("%Y%m%d_%H%M%S")
+    datetime_str = now.strftime("%H%M%S")
+    
     if isinstance(config.file_index_stride, list): 
-        filename =f"{config.model_dir}/model_{config.file_index_stride[0]:03d}_{config.file_index_start:03d}_{config.file_index_steps:02d}.eqx"
+        filename =f"{config.model_dir}/\
+            model_{config.file_index_stride[0]:03d}_\
+            {config.file_index_start:03d}_\
+            {config.file_index_steps:02d}\
+            _{datetime_str}\
+            .eqx"
     else:
-        filename =f"{config.model_dir}/model_{config.file_index_stride:03d}_{config.file_index_start:03d}_{config.file_index_steps:02d}.eqx"
+        filename =f"{config.model_dir}/\
+            model_{config.file_index_stride:03d}_\
+            {config.file_index_start:03d}_\
+            {config.file_index_steps:02d}_\
+            _{datetime_str}\
+            .eqx"
+        
     # filename =f"{config.model_dir}/model_{config.file_index_stride[0]}_{datetime_str}.eqx"
     nn.save_sequential_model(
         filename, 

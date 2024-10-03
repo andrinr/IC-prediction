@@ -14,7 +14,7 @@ file_index_steps : 7
 file_index_start : 0
 total_index_steps : 100
 flip : True 
-normalizing_function : "norm_log_delta_one"
+normalizing_function : "norm_log_one"
 
 # Training parameters
 learning_rate : 0.002
