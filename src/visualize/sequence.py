@@ -68,7 +68,7 @@ def sequence(
         fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
         ax_cdf.hist(
-            normalized.flatten() / 1000,
+            normalized.flatten(),
             20, 
             density=True, 
             log=True, 
