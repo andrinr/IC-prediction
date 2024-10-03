@@ -111,9 +111,9 @@ def main(argv) -> None:
         sequential_mode = False,
         single_state_loss = False)
     
-    # train the model in sequential mode
+    # train the model in mixed mode
     print(f"Mixed mode training for {config.mixed_epochs} epochs")
-    model_params, metric_sequential = nn.train_model(
+    model_params, metric_mixed = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
@@ -123,9 +123,9 @@ def main(argv) -> None:
         sequential_mode = True,
         single_state_loss = False)
     
-    # train the model in mixed mode
+    # train the model in sequential mode
     print(f"Sequential mode training for {config.sequential_epochs} epochs")
-    model_params, metric_mixed = nn.train_model(
+    model_params, metric_sequential = nn.train_model(
         model_params = model_params,
         model_static = model_static, 
         train_data_iterator = train_data_iterator,
