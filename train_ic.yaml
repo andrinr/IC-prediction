@@ -7,7 +7,7 @@ file_index_steps : 1
 file_index_start : 0
 total_index_steps : 100
 flip : True 
-normalizing_function : "log_growth" # log_growth, delta
+normalizing_function : "low_growth" # log_growth, delta
 
 # Training parameters
 learning_rate : 0.002
@@ -17,7 +17,7 @@ stepwise_epochs : 0
 mixed_epochs : 0
 sequential_epochs : 30
 unique_networks : True
-model_dir : "models/normalization"
+model_dir : "models/normalization/"
 model_type : "FNO" # UNet, FNO
 activation : "tanh" # relu, tanh
 
