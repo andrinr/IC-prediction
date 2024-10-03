@@ -29,6 +29,8 @@ def normalize(rho : jax.Array, a : float, type : str) -> Tuple[jax.Array, jax.Ar
         normalized, attributes = norm_log_growth(rho, a)
     elif type == "delta":
         normalized, attributes = norm_delta(rho)
+    elif type == "ssm":
+        normalized, attributes = norm_ssm(rho)
     else:
         raise NotImplementedError(f"Norm function {type} not found")
 
@@ -39,9 +41,32 @@ def normalize_inv(norm : jax.Array, attributes : jax.Array, type : str) -> jax.A
         rho = norm_log_growth_inv(norm, attributes)
     elif type == "delta":
         rho = norm_delta_inv(norm, attributes)
+    elif type == "ssm":
+        rho = norm_ssm_inv(norm, attributes)
     else:
         raise NotImplementedError(f"Norm function {type} not found")
     
+    return rho
+
+def norm_ssm(rho : jax.Array):
+    mean = rho.mean()
+    var = rho.var()
+
+    norm = rho - mean 
+    norm /= var
+
+    attributes = jnp.array([mean, var])
+
+    return norm, attributes
+
+def norm_ssm_inv(norm : jax.Array, attributes : jax.Array):
+
+    mean = attributes[0]
+    var = attributes[1]
+
+    rho = norm * var
+    rho += mean 
+
     return rho
 
 def norm_delta(rho : jax.Array):

@@ -7,7 +7,7 @@ file_index_steps : 1
 file_index_start : 0
 total_index_steps : 100
 flip : True 
-normalizing_function : "low_growth" # log_growth, delta
+normalizing_function : "none" # log_growth, delta
 
 # Training parameters
 learning_rate : 0.002

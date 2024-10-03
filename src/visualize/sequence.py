@@ -68,7 +68,7 @@ def sequence(
         fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
         ax_cdf.hist(
-            normalized.flatten(),
+            normalized.flatten() * 1000,
             20, 
             density=True, 
             log=True, 
@@ -141,7 +141,7 @@ def sequence(
         ax_cdf_pred.set_title(r'pdf $\rho_{norm}$')
         ax_cdf_pred.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    ax_cdf.set_title(r'pdf $\rho_{norm}$')
+    ax_cdf.set_title(r'pdf $\rho_{norm} \cdot 1000$')
     ax_cdf.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     # plt.tight_layout(rect=[0.03, 0.03, 0.97, 0.97], pad=3.0, w_pad=2.0, h_pad=2.0)
