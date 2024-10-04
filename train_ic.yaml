@@ -4,7 +4,7 @@ grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 input_grid_size : 128
 grid_size : 64
 file_index_stride : 20
-file_index_steps : 1
+file_index_steps : 2
 file_index_start : 50
 total_index_steps : 100
 flip : True 
@@ -12,19 +12,19 @@ normalizing_function : "log_growth" # log_growth, delta, ssm
 
 # Training parameters
 learning_rate : 0.002
-include_potential : True
+include_potential : False
 sequential_skip_channels : 0
 stepwise_epochs : 20
-mixed_epochs : 0
+mixed_epochs : 5
 sequential_epochs : 0
-unique_networks : True
-model_dir : "models/"
+unique_networks : False
+model_dir : "/data/arehma/models/"
 model_type : "FNO" # UNet, FNO
 activation : "tanh" # relu, tanh
 
 # FNO parameters
 fno_modes : 32
-fno_input_channels : 2 # sequential_skip_channels + include_potential * 1 + 1
+fno_input_channels : 1 # sequential_skip_channels + include_potential * 1 + 1
 fno_hidden_channels : 16
 fno_output_channels : 1
 fno_n_layers : 4

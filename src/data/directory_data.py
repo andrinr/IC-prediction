@@ -136,7 +136,7 @@ class DirectorySequence:
             if isinstance(self.stride, list): 
                 time += self.stride[i]
             else:
-                time =+ self.stride
+                time += self.stride
 
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)

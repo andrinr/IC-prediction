@@ -67,6 +67,8 @@ class SequentialModel(eqx.Module):
             secondary_carry = jnp.ones((self.sequential_skip_channels, d, w, h))
 
         if sequential_mode:
+
+            
             if self.sequential_skip_channels > 0:
                 distribution = jnp.concatenate((x[0], secondary_carry), axis=0)
             else:
