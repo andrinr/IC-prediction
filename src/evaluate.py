@@ -46,16 +46,16 @@ def main(argv) -> None:
 
     attributes = sample["attributes"][0]
 
-    visualize.sequence(
+    visualize.compare(
         "img/prediction_stepwise.jpg", 
-        sequence = sequence, 
+        sequence_curr = sequence, 
         config = config,
         sequence_prediction = pred,
         attributes = attributes)
 
-    visualize.sequence(
+    visualize.compare(
         "img/prediction_sequential.jpg", 
-        sequence = sequence, 
+        sequence_curr = sequence, 
         config = config,
         sequence_prediction = pred_sequential,
         attributes = attributes)

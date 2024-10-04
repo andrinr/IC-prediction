@@ -11,8 +11,6 @@ from cosmos import to_redshift
 
 def main(argv) -> None:
 
-
-
     folder = "models/ranges"
     files = os.listdir(folder)
 

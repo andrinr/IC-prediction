@@ -30,7 +30,7 @@ def main(argv) -> None:
         "stride" : config.file_index_stride,
         "normalizing_function" : config.normalizing_function,
         "flip" : config.flip,
-        "type" : "Test"}
+        "type" : "train"}
     
     train_dataset = data.DirectorySequence(**dataset_params)
     train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)

@@ -95,6 +95,8 @@ class DirectorySequence:
         if type == 'test':
             self.grid_folders = self.grid_folders[c : -1]
             # self.tipsy_folders = self.tipsy_folders[0 : b]
+        else :
+            raise NotImplementedError("type {type} not found")
 
     def __call__(self, sample_info : types.SampleInfo):
         sequence = jnp.zeros(
