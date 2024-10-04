@@ -13,16 +13,17 @@ def compare(
         sequences: list[jax.Array],
         predictions: list[jax.Array],
         labels : list[str],
-        attributes: list[jax.Array]):
+        attributes: list[jax.Array],
+        norm_functions : list[str]):
     
     num_predictions = len(predictions)
 
     print(num_predictions)
 
     # Create figure
-    fig = plt.figure(layout='constrained', figsize=(4 + 3 * num_predictions, 10))
+    fig = plt.figure(layout='constrained', figsize=(4 + 3 * num_predictions, 10),  constrained_layout=True)
     subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.1, height_ratios=[2, 1] if num_predictions > 0 else [1, 1])
-    spec_sequence = subfigs[0].add_gridspec(2, num_predictions, wspace=0.3, hspace=0.1)
+    spec_sequence = subfigs[0].add_gridspec(2, num_predictions+1, wspace=0.3, hspace=0.1)
     spec_stats = subfigs[1].add_gridspec(1, 1)
     
     # Main sequence analysis part
@@ -33,6 +34,28 @@ def compare(
     
     file_index_stride = config.file_index_stride
     step = config.file_index_start
+
+    frames = sequences[0].shape[0]
+    grid_size = sequences[0].shape[2]
+        
+    sequence_curr = jnp.reshape(sequences[0], (frames, grid_size, grid_size, grid_size, 1))
+    attributes_curr = attributes[0]
+    attribs = jax.device_put(attributes_curr[1], device=jax.devices("gpu")[0])
+    normalized = sequence_curr[1]
+    rho = normalize_inv(normalized, attribs, norm_functions[0])
+    delta = compute_overdensity(rho)
+
+    ax_seq = fig.add_subplot(spec_sequence[1, 0])
+    ax_seq.set_title(r'$\rho_{norm}$')
+    ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+    im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
+
+    p, k = get_power(delta[:, :, :, 0], config.box_size)
+    ax_power.plot(
+        k,
+        p,
+        label=fr'sim $z = {to_redshift(step/100):.2f}$')
+        # color=colors[frame])
     
     # Process predictions
     for idx in range(num_predictions):
@@ -55,15 +78,15 @@ def compare(
         frame = 0
         attribs = jax.device_put(attributes_curr[frame+1], device=jax.devices("gpu")[0])
         normalized = sequence_curr[frame+1]
-        rho = normalize_inv(normalized, attribs, labels[idx])
+        rho = normalize_inv(normalized, attribs, norm_functions[idx])
         delta = compute_overdensity(rho)
 
         rho_pred_normalized = pred_curr[frame]
         attribs = jax.device_put(attributes_curr[frame + 1], device=jax.devices("gpu")[0])
-        rho_pred = normalize_inv(rho_pred_normalized, attribs,  labels[idx])
+        rho_pred = normalize_inv(rho_pred_normalized, attribs,  norm_functions[idx])
         delta_pred = compute_overdensity(rho_pred)
         
-        ax_seq = fig.add_subplot(spec_sequence[0, idx])
+        ax_seq = fig.add_subplot(spec_sequence[0, idx+1])
         ax_seq.set_title(r'$\delta - \hat{\delta}$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
         im_seq = ax_seq.imshow(delta[grid_size // 2, :, :] - delta_pred[grid_size // 2, :, :], cmap='RdYlBu')
@@ -81,20 +104,13 @@ def compare(
         #     cumulative=False,
         #     label=fr'sim $z = {to_redshift(step/100):.2f}$')
         #     # color=colors[frame])
-        
-        p, k = get_power(delta[:, :, :, 0], config.box_size)
-        ax_power.plot(
-            k,
-            p,
-            label=fr'sim $z = {to_redshift(step/100):.2f}$')
-            # color=colors[frame])
 
         # prediction
         step += file_index_stride * (-1 if config.flip else 1)
 
-        ax_seq_pred = fig.add_subplot(spec_sequence[1, idx])
+        ax_seq_pred = fig.add_subplot(spec_sequence[1, idx+1])
         ax_seq_pred.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-        ax_seq_pred.set_title(fr'pred {labels[idx]}')
+        ax_seq_pred.set_title(r'$\hat{\rho}_{norm}$' + f' {labels[idx]}')
         im_seq_pred = ax_seq_pred.imshow(rho_pred_normalized[grid_size // 2, :, :], cmap='inferno')
         
         divider_pred = make_axes_locatable(ax_seq_pred)
@@ -114,10 +130,11 @@ def compare(
         p_pred, k_pred = get_power(delta_pred[:, :, :, 0], config.box_size)
         ax_power.plot(
             k_pred, p_pred,
-            label=fr'pred {labels[idx]}$')
+            label=fr'from {labels[idx]}')
             # color=colors[frame + 1])
 
     # Finalize plots
+    
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
     ax_power.legend(loc='center left', bbox_to_anchor=(1, 0.5))
@@ -126,4 +143,7 @@ def compare(
     ax_power.set_ylabel(r'$P(k)$ [$h^{-3} \ \mathrm{Mpc}^3$]')
     # ax_cdf.set_title(r'pdf $\rho_{norm}$')
     # ax_cdf.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+
+    # plt.tight_layout()
+    plt.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9, hspace=0.3, wspace=0.3)
     plt.savefig(output_file)

@@ -10,16 +10,20 @@ import nn
 import data
 import visualize
 from config import Config
+from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv
 
 def main(argv) -> None:
 
-    folder = "models/normalization"
+    folder = argv[0]
+
+    # folder = "models/normalization"
     files = os.listdir(folder)
 
     inputs = []
     predictions = []
     attributes_ls = []
     labels = []
+    norm_functions = []
 
     # load config from first model, assuming data configs are all identical
 
@@ -28,7 +32,11 @@ def main(argv) -> None:
         filename = os.path.join(folder, file)
         model, config, _ = nn.load_sequential_model(filename)
 
-        labels.append(config.normalizing_function)
+        # labels.append(config.normalizing_function)
+        labels.append(f"from z{to_redshift((config.file_index_start + config.file_index_stride) / 100):.1f}")
+        print((config.file_index_start + config.file_index_stride) / 100)
+
+        norm_functions.append(config.normalizing_function)
 
             # Data Pipeline
         dataset = data.DirectorySequence(
@@ -60,7 +68,8 @@ def main(argv) -> None:
         config = config,
         predictions = predictions,
         attributes = attributes_ls,
-        labels = labels)
+        labels = labels,
+        norm_functions = norm_functions)
 
     # Delete Data Pipeline
     del data_pipeline
