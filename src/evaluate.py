@@ -42,7 +42,7 @@ def main(argv) -> None:
     sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
     attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[1]
     pred = model(sequence, attributes, False)
-    pred_sequential = model(sequence, attributes, True)
+    # pred_sequential = model(sequence, attributes, True)
 
     attributes = sample["attributes"][0]
 
@@ -50,15 +50,15 @@ def main(argv) -> None:
         "img/prediction_stepwise.jpg", 
         sequence = sequence, 
         config = config,
-        sequence_prediction = pred,
+        sequence_prediction = pred[:, 0:1],
         attributes = attributes)
 
-    visualize.sequence(
-        "img/prediction_sequential.jpg", 
-        sequence = sequence, 
-        config = config,
-        sequence_prediction = pred_sequential,
-        attributes = attributes)
+    # visualize.sequence(
+    #     "img/prediction_sequential.jpg", 
+    #     sequence = sequence, 
+    #     config = config,
+    #     sequence_prediction = pred_sequential,
+    #     attributes = attributes)
 
     # Delete Data Pipeline
     del data_pipeline

@@ -5,8 +5,9 @@ from typing import Callable
 import jax
 from typing import Callable
 import jax.numpy as jnp
-from cosmos import normalize_inv, compute_overdensity, potential
+from cosmos import normalize_inv, compute_overdensity, Potential
 from functools import partial
+
 
 class SequentialModel(eqx.Module):
     """
@@ -55,6 +56,7 @@ class SequentialModel(eqx.Module):
         """
         f, c, d, h, w = x.shape
         y = jnp.zeros((f-1, c, d, h, w))
+        potential = Potential(d)
 
         # potential_fn = cosmos.Potential(d)
         # time_grid = jnp.ones((1, d, w, h))
@@ -84,9 +86,10 @@ class SequentialModel(eqx.Module):
                 # potential = potential_fn(x[i])
                 
                 if self.sequential_skip_channels > 0:
-                    # rho = normalize_inv(x[i], attributes[i], type="log_growth")
-                    # delta = compute_overdensity(rho)
-                    distribution = jnp.concatenate((x[i], secondary_carry), axis=0)
+                    rho = normalize_inv(x[i], attributes[i], type="log_growth")
+                    delta = compute_overdensity(rho)
+                    pot = potential(delta)
+                    distribution = jnp.concatenate((x[i], pot, secondary_carry), axis=0)
                 else:
                     distribution = x[i]
 
