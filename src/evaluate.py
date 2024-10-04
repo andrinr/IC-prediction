@@ -46,27 +46,19 @@ def main(argv) -> None:
 
     attributes = sample["attributes"][0]
 
-    visualize.compare(
+    visualize.sequence(
         "img/prediction_stepwise.jpg", 
-        sequence_curr = sequence, 
+        sequence = sequence, 
         config = config,
         sequence_prediction = pred,
         attributes = attributes)
 
-    visualize.compare(
+    visualize.sequence(
         "img/prediction_sequential.jpg", 
-        sequence_curr = sequence, 
+        sequence = sequence, 
         config = config,
         sequence_prediction = pred_sequential,
         attributes = attributes)
-    
-    # visualize.sequence(
-    #     "img/prediction_sequential.jpg", 
-    #     sequence = sequence, 
-    #     config = config,
-    #     sequence_prediction = pred_sequential,
-    #     timeline = timeline,
-    #     attributes = attributes)
 
     # Delete Data Pipeline
     del data_pipeline

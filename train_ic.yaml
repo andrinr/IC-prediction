@@ -7,7 +7,7 @@ file_index_steps : 1
 file_index_start : 0
 total_index_steps : 100
 flip : True 
-normalizing_function : "delta" # log_growth, delta, ssm
+normalizing_function : "ssm" # log_growth, delta, ssm
 
 # Training parameters
 learning_rate : 0.002
@@ -24,7 +24,7 @@ activation : "tanh" # relu, tanh
 # FNO parameters
 fno_modes : 32
 fno_input_channels : 1
-fno_hidden_channels : 8
+fno_hidden_channels : 5
 fno_output_channels : 1
 fno_n_layers : 5
 fno_increasing_modes : True

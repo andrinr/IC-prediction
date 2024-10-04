@@ -88,13 +88,14 @@ class DirectorySequence:
             self.grid_folders = self.grid_folders[0 : b]
             # self.tipsy_folders = self.tipsy_folders[0 : b]
 
-        if type == 'val':
+        elif type == 'val':
             self.grid_folders = self.grid_folders[b : c]
             # self.tipsy_folders = self.tipsy_folders[0 : b]
 
-        if type == 'test':
+        elif type == 'test':
             self.grid_folders = self.grid_folders[c : -1]
             # self.tipsy_folders = self.tipsy_folders[0 : b]
+            
         else :
             raise NotImplementedError("type {type} not found")
 

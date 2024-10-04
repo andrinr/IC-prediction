@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import os 
 import nn
 import jax
+from matplotlib.cm import get_cmap
 
 def main(argv) -> None:
 
@@ -23,6 +24,9 @@ def main(argv) -> None:
     files = os.listdir(folder)
     files.sort()
 
+    cmap = get_cmap('Accent')
+    colors = cmap(jnp.linspace(0, 1, len(files)))
+
     for i, file in enumerate(files):
         print(file)
         filename = os.path.join(folder, file)
@@ -34,14 +38,14 @@ def main(argv) -> None:
 
         m_params = int(jnp.log2(parameter_count))
 
-        validation_loss = jnp.array(training_stats['metric_step']['val_mse'])[2:]
-        training_loss = jnp.array(training_stats['metric_step']['train_mse'])[2:]
+        validation_loss = jnp.array(training_stats['metric_step']['val_mse'])[3:]
+        training_loss = jnp.array(training_stats['metric_step']['train_mse'])[3:]
         print(validation_loss)
         n = len(validation_loss)
         if param == "stride" or param == "normalization":
             times = jnp.linspace(0, n-1,  n)
-            validation_loss = abs(validation_loss - validation_loss[0]) / validation_loss.max()
-            training_loss = abs(training_loss - training_loss[0]) / training_loss.max()
+            validation_loss = validation_loss / validation_loss.max()
+            training_loss = training_loss / training_loss.max(0)
             print(times)
         else:
             times = training_stats['time']
@@ -53,8 +57,16 @@ def main(argv) -> None:
         if param == "stride":
             plt.plot(times, validation_loss, label=f"{2**(2+i)} stride; 2^{m_params} params")
         if param == "normalization":
-            plt.plot(times, validation_loss, label=f"val {config.normalizing_function}")
-            # plt.plot(times, training_loss, label=f"train {config.normalizing_function}")
+            plt.plot(
+                times, 
+                validation_loss, 
+                label=f"val {config.normalizing_function}", 
+                color=colors[i])
+            plt.plot(times, 
+                training_loss, 
+                label=f"train {config.normalizing_function}", 
+                color=colors[i],
+                linestyle='dashed')
 
         
     if param == "stride" or param == "normalization":
@@ -66,12 +78,13 @@ def main(argv) -> None:
     else:
         plt.xlabel("Compute (seconds)")
     
-    plt.ylabel("Absolute Validation Loss Decrease")
+    plt.ylabel("Relative Change in loss")
 
     if param == "layers" or param == "channels" or param == "normalization":
         plt.yscale("log")
         # plt.xscale("log")
     plt.legend()
+    plt.tight_layout()
 
     if param == "layers":
         plt.savefig("img/layer_compute.png")
