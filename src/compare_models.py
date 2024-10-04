@@ -18,6 +18,7 @@ def main(argv) -> None:
 
     # folder = "models/normalization"
     files = os.listdir(folder)
+    files.sort()
 
     inputs = []
     predictions = []
@@ -33,8 +34,8 @@ def main(argv) -> None:
         model, config, _ = nn.load_sequential_model(filename)
 
         # labels.append(config.normalizing_function)
-        labels.append(f"from z{to_redshift((config.file_index_start + config.file_index_stride) / 100):.1f}")
-        print((config.file_index_start + config.file_index_stride) / 100)
+        labels.append(f"from z={to_redshift((config.file_index_start + config.file_index_stride) / 100):.1f}")
+        print((config.file_index_start + config.file_index_stride) / config.total_index_steps)
 
         norm_functions.append(config.normalizing_function)
 

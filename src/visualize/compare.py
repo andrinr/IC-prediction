@@ -50,6 +50,34 @@ def compare(
     ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
     im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
 
+    N = normalized.shape[1]
+    print(normalized.shape)
+    # x shape : n_channels, N, N, N
+    # x_fs shape : n_channels, N, N, N // 2, 2
+
+    norm_fs = jnp.fft.rfftn(normalized, s=(N, N, N), axes=(0, 1, 2))
+    kx = jnp.fft.fftfreq(N)[:, None, None]
+    ky = jnp.fft.fftfreq(N)[None, :, None]
+    kz = jnp.fft.rfftfreq(N)[None, None, :]
+
+    print(norm_fs.shape)
+
+    k_squared = kx**2 + ky**2 + kz**2
+    cutoff_k_squared = (1.0 / 4)**2
+
+    # Mask out higher wavelengths
+    mask = (k_squared <= cutoff_k_squared)[:, :, :, None]
+    # mask = k_squared <= cutoff_k_squared
+    norm_fs_filtered = norm_fs * mask
+
+    # Transform back to real space
+    norm_filtered = jnp.fft.irfftn(norm_fs_filtered, s=(N, N, N), axes=(0, 1, 2))
+
+    ax_seq = fig.add_subplot(spec_sequence[0, 0])
+    ax_seq.set_title(r'$\rho_{norm}$')
+    ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+    im_seq = ax_seq.imshow(norm_filtered[grid_size // 2, :, :], cmap='inferno')
+
     p, k = get_power(delta[:, :, :, 0], config.box_size)
     ax_power.plot(
         k,
@@ -89,7 +117,7 @@ def compare(
         ax_seq = fig.add_subplot(spec_sequence[0, idx+1])
         ax_seq.set_title(r'$\delta - \hat{\delta}$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-        im_seq = ax_seq.imshow(delta[grid_size // 2, :, :] - delta_pred[grid_size // 2, :, :], cmap='RdYlBu')
+        im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :] - rho_pred_normalized[grid_size // 2, :, :], cmap='RdYlBu')
         
         divider = make_axes_locatable(ax_seq)
         cax = divider.append_axes('bottom', size='5%', pad=0.03)

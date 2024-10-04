@@ -1,11 +1,12 @@
 # Dataset
-grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/" #"/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
-input_grid_size : 128
+# grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/" #"/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
+grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+input_grid_size : 256
 grid_size : 64
-file_index_stride : 32
+file_index_stride : 2
 file_index_steps : 1
-file_index_start : 0
-total_index_steps : 100
+file_index_start : 5
+total_index_steps : 10
 flip : True 
 normalizing_function : "log_growth" # log_growth, delta, ssm
 
@@ -13,18 +14,18 @@ normalizing_function : "log_growth" # log_growth, delta, ssm
 learning_rate : 0.002
 include_potential : True
 sequential_skip_channels : 0
-stepwise_epochs : 30
+stepwise_epochs : 4
 mixed_epochs : 0
 sequential_epochs : 0
 unique_networks : True
-model_dir : "models/IC/"
+model_dir : "models/late/"
 model_type : "FNO" # UNet, FNO
 activation : "tanh" # relu, tanh
 
 # FNO parameters
 fno_modes : 32
 fno_input_channels : 1
-fno_hidden_channels : 5
+fno_hidden_channels : 4
 fno_output_channels : 1
 fno_n_layers : 5
 fno_increasing_modes : True

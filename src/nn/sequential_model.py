@@ -5,7 +5,7 @@ from typing import Callable
 import jax
 from typing import Callable
 import jax.numpy as jnp
-from cosmos import compute_overdensity
+from cosmos import normalize_inv, compute_overdensity, potential
 from functools import partial
 
 class SequentialModel(eqx.Module):
@@ -70,6 +70,7 @@ class SequentialModel(eqx.Module):
 
             for i in range(self.sequence_length):
                 # potential = potential_fn(carry)
+
                 distribution = self.model[i](distribution) if self.unique_networks else self.model(distribution)
                 y = y.at[i].set(distribution[0:1])
                 
@@ -83,6 +84,8 @@ class SequentialModel(eqx.Module):
                 # potential = potential_fn(x[i])
                 
                 if self.sequential_skip_channels > 0:
+                    # rho = normalize_inv(x[i], attributes[i], type="log_growth")
+                    # delta = compute_overdensity(rho)
                     distribution = jnp.concatenate((x[i], secondary_carry), axis=0)
                 else:
                     distribution = x[i]

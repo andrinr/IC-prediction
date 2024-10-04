@@ -59,7 +59,7 @@ def sequence(
         delta = compute_overdensity(rho)
 
         ax_seq = fig.add_subplot(spec_sequence[0, frame])
-        ax_seq.set_title(fr'sim $z = {to_redshift(step/100):.2f}$')
+        ax_seq.set_title(fr'sim $z = {to_redshift(step/config.total_index_steps):.2f}$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
 
         im_seq = ax_seq.imshow(normalized[grid_size // 2, : , :], cmap='inferno')
@@ -68,20 +68,20 @@ def sequence(
         fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
         ax_cdf.hist(
-            normalized.flatten() * 1000,
+            normalized.flatten(),
             20, 
             density=True, 
             log=True, 
             histtype="step",
             cumulative=False, 
-            label=fr'sim $z = {to_redshift(step/100):.2f}$',
+            label=fr'sim $z = {to_redshift(step/config.total_index_steps):.2f}$',
             color=colors[frame])
         
         p,k = get_power(delta[:, :, :, 0], config.box_size)
         ax_power.plot(
             k, 
             p, 
-            label=fr'sim $z = {to_redshift(step/100):.2f}$',
+            label=fr'sim $z = {to_redshift(step/config.total_index_steps):.2f}$',
             color=colors[frame])
         
         if frame < frames-1:
@@ -98,7 +98,7 @@ def sequence(
 
             ax_seq = fig.add_subplot(spec_sequence[1, frame+1])
             ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-            ax_seq.set_title(fr'pred $z = {to_redshift(step/100):.2f}$')
+            ax_seq.set_title(fr'pred $z = {to_redshift(step/config.total_index_steps):.2f}$')
 
             im_seq = ax_seq.imshow(rho_pred_normalized[grid_size // 2, : , :], cmap='inferno')
             divider = make_axes_locatable(ax_seq)
@@ -113,14 +113,14 @@ def sequence(
                 log=True, 
                 histtype="step",
                 cumulative=False, 
-                label=fr'pred $z = {to_redshift(step/100):.2f}$',
+                label=fr'pred $z = {to_redshift(step/config.total_index_steps):.2f}$',
                 color=colors[frame+1 if long else 3 + frame])
             
             axis = ax_power_pred if long else ax_power
             p,k = get_power(delta_pred[:, :, :, 0], config.box_size)
             axis.plot(
                 k, p, 
-                label=fr'pred $z = {to_redshift(step/100):.2f}$',
+                label=fr'pred $z = {to_redshift(step/config.total_index_steps):.2f}$',
                 color=colors[frame+1 if long else 3 + frame])
 
     ax_power.set_yscale('log')
