@@ -46,7 +46,13 @@ def compare(
     delta = compute_overdensity(rho)
 
     ax_seq = fig.add_subplot(spec_sequence[1, 0])
-    ax_seq.set_title(r'$\rho_{norm}$')
+    ax_seq.set_title(r'output $\rho_{norm}$')
+    ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+    im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
+
+    normalized = sequence_curr[0]
+    ax_seq = fig.add_subplot(spec_sequence[0, 0])
+    ax_seq.set_title(r'input $\rho_{norm}$')
     ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
     im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
 
@@ -112,11 +118,11 @@ def compare(
         delta_pred_filtered = compute_overdensity(rho_pred_filtered)
 
         ax_seq = fig.add_subplot(spec_sequence[0, idx+1])
-        # ax_seq.set_title(r'$\delta - \hat{\delta}$')
-        ax_seq.set_title(r'input $\rho$')
+        ax_seq.set_title(r'$\rho_{norm} - \hat{\rho}_{norm}$')
+        # ax_seq.set_title(r'input $\rho$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-        # im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :] - rho_pred_normalized[grid_size // 2, :, :], cmap='RdYlBu')
-        im_seq = ax_seq.imshow(norm_filtered[grid_size // 2, :, :], cmap='inferno')
+        im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :] - rho_pred_normalized[grid_size // 2, :, :], cmap='RdYlBu')
+        # im_seq = ax_seq.imshow(norm_filtered[grid_size // 2, :, :], cmap='inferno')
 
         divider = make_axes_locatable(ax_seq)
         cax = divider.append_axes('bottom', size='5%', pad=0.03)
@@ -157,13 +163,13 @@ def compare(
         p_pred, k_pred = get_power(delta_pred[:, :, :, 0], config.box_size)
         ax_power.plot(
             k_pred, p_pred,
-            label=fr'from {labels[idx]}')
+            label=fr'pred {labels[idx]}')
         
-        p_pred, k_pred = get_power(delta_pred_filtered[:, :, :, 0], config.box_size)
-        ax_power.plot(
-            k_pred, p_pred,
-            label=fr'filtered z={labels[idx]}')
-            # color=colors[frame + 1])
+        # p_pred, k_pred = get_power(delta_pred_filtered[:, :, :, 0], config.box_size)
+        # ax_power.plot(
+        #     k_pred, p_pred,
+        #     label=fr'filtered z={labels[idx]}')
+        #     # color=colors[frame + 1])
 
     # Finalize plots
     

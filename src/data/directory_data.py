@@ -86,6 +86,7 @@ class DirectorySequence:
 
         if type == 'train':
             self.grid_folders = self.grid_folders[0 : b]
+            print(len(self.grid_folders))
             # self.tipsy_folders = self.tipsy_folders[0 : b]
 
         elif type == 'val':
