@@ -108,6 +108,7 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,        
         n_epochs = config.stepwise_epochs,
+        add_potential = config.include_potential,
         sequential_mode = False,
         single_state_loss = False)
     
@@ -120,6 +121,7 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
         n_epochs = config.mixed_epochs,
+        add_potential = config.include_potential,
         sequential_mode = True,
         single_state_loss = False)
     
@@ -132,6 +134,7 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
         n_epochs = config.sequential_epochs,
+        add_potential = config.include_potential,
         sequential_mode = True,
         single_state_loss = True)
     

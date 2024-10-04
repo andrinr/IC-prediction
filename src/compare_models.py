@@ -57,7 +57,8 @@ def main(argv) -> None:
         sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
         attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[1]
         
-        pred_sequential = model(sequence, attributes, True)
+        print(config.include_potential)
+        pred_sequential = model(sequence, attributes, False, config.include_potential)
 
         predictions.append(pred_sequential)
         inputs.append(sequence)

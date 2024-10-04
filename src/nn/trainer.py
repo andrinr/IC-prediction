@@ -69,13 +69,14 @@ def total_loss(
 
     return  mse_loss #+ power_loss
 
-@partial(jax.jit, static_argnums=[1, 4, 5])
+@partial(jax.jit, static_argnums=[1, 4, 5, 6])
 def prediction_loss(
         model_params : list,
         model_static : eqx.Module,
         sequence : jax.Array,
         attributes : jax.Array,
         sequential_mode : bool,
+        add_potential : bool,
         single_state_loss : bool):
     
     """
@@ -85,20 +86,21 @@ def prediction_loss(
     [Batch, Frames, Channels, Depth, Height, Width]
     """
     model = eqx.combine(model_params, model_static)
-    model_fn = lambda x, y : model(x, y, sequential_mode)
+    model_fn = lambda x, y : model(x, y, sequential_mode, add_potential)
     pred = jax.vmap(model_fn)(sequence, attributes)
 
     loss = total_loss(pred, sequence[:, 1:], attributes[:, 1:], single_state_loss)
 
     return loss, pred
 
-@partial(jax.jit, static_argnums=[3, 4, 5])
+@partial(jax.jit, static_argnums=[3, 4, 5, 6])
 def get_batch_loss(
         sequence : jax.Array,
         attributes : jax.Array,
         model_params,
         model_static : eqx.Module,
         sequential_mode : bool,
+        add_potential : bool,
         single_state_loss : bool):
     
     # [Batch, Frames, Channels, Depth, Height, Width]
@@ -111,6 +113,7 @@ def get_batch_loss(
         sequence,
         attributes,
         sequential_mode,
+        add_potential,
         single_state_loss)
     
     # cross_correlation = jax.vmap(jax.vmap(jax.scipy.signal.correlate))(sequence[:, 1:], pred)
@@ -144,7 +147,7 @@ def get_batch_loss(
 
     return loss, rae, rse
 
-@partial(jax.jit, static_argnums=[3, 5, 6, 7])
+@partial(jax.jit, static_argnums=[3, 5, 6, 7, 8])
 def learn_batch(
         sequence : jax.Array,
         attributes : jax.Array,
@@ -153,6 +156,7 @@ def learn_batch(
         optimizer_state : optax.OptState,
         optimizer_static,
         sequential_mode : bool,
+        add_potential : bool,
         single_state_loss : bool):
     """
     Learn model on batch of sequences.
@@ -169,6 +173,7 @@ def learn_batch(
         sequence,
         attributes,
         sequential_mode,
+        add_potential,
         single_state_loss)
     
     updates, optimizer_state = optimizer_static.update(grad, optimizer_state)
@@ -187,6 +192,7 @@ def train_model(
         learning_rate : float,
         n_epochs : int,
         sequential_mode : bool,
+        add_potential : bool,
         single_state_loss : bool) -> Tuple[eqx.Module, Metric]:
     
     optimizer = optax.adam(learning_rate)
@@ -212,6 +218,7 @@ def train_model(
                 optimizer_state = optimizer_state,   
                 optimizer_static = optimizer,
                 sequential_mode = sequential_mode,
+                add_potential = add_potential,
                 single_state_loss = single_state_loss)
             epoch_train_loss.append(loss)
 
@@ -224,6 +231,7 @@ def train_model(
                 model_params = model_params,
                 model_static= model_static,
                 sequential_mode = sequential_mode,
+                add_potential = add_potential,
                 single_state_loss = single_state_loss)
             epoch_val_loss.append(loss)
             epoch_rae.append(rae)

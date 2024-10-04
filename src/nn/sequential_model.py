@@ -7,6 +7,7 @@ from typing import Callable
 import jax.numpy as jnp
 from cosmos import normalize_inv, compute_overdensity, Potential
 from functools import partial
+from field import gradient
 
 
 class SequentialModel(eqx.Module):
@@ -49,7 +50,8 @@ class SequentialModel(eqx.Module):
             self, 
             x : jax.Array, 
             attributes : jax.Array,
-            sequential_mode : bool):
+            sequential_mode : bool,
+            add_potential : bool):
         """
         shape of x:
         [Frames, Channels, Depth, Height, Width]
@@ -85,11 +87,23 @@ class SequentialModel(eqx.Module):
             for i in range(self.sequence_length):
                 # potential = potential_fn(x[i])
                 
-                if self.sequential_skip_channels > 0:
+                if add_potential and self.sequential_skip_channels == 0:
                     rho = normalize_inv(x[i], attributes[i], type="log_growth")
                     delta = compute_overdensity(rho)
                     pot = potential(delta)
+                    # grad = gradient(pot, 1)
+                    distribution = jnp.concatenate((x[i], pot), axis=0)
+
+                elif self.sequential_skip_channels > 0 and not add_potential:
+                    distribution = jnp.concatenate((x[i], secondary_carry), axis=0)
+
+                elif add_potential and self.sequential_skip_channels > 0:
+                    rho = normalize_inv(x[i], attributes[i], type="log_growth")
+                    delta = compute_overdensity(rho)
+                    pot = potential(delta)
+                    # grad = gradient(pot, 1)
                     distribution = jnp.concatenate((x[i], pot, secondary_carry), axis=0)
+
                 else:
                     distribution = x[i]
 
