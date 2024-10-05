@@ -18,7 +18,11 @@ def test_power():
     
     k, P_k = power_spectrum(delta)
 
+    print(P_k)
+
     assert k.shape == (n_bins,)
     assert P_k.shape == (n_bins,)
 
     assert jnp.all(P_k >= 0)
+
+    assert False

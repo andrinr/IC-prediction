@@ -4,7 +4,7 @@ import optax
 import equinox as eqx
 from functools import partial
 import time
-from cosmos import PowerSpectrum, compute_overdensity
+from cosmos import PowerSpectrum, compute_overdensity, normalize_inv
 from typing import NamedTuple, Tuple
 from .metric import Metric
 from powerbox import get_power
@@ -41,33 +41,36 @@ def total_loss(
     single_state_loss : bool):
 
     # truth / prediction: [Batch, Frames, Channels, Depth, Height, Width]
-    # attributes: [Batch, Frames, 2] where 0 min 1 max
+    # attributes: [Batch, Frames, normaliztion_attributes]
 
-    # b, f, c, d, w, h = prediction.shape
-    # power_spectrum = PowerSpectrum(
-    #     d, 20)
+    normalize_inv_func = lambda x, y : normalize_inv(x, y, "log_growth")
 
-    # normalize_map = jax.vmap(jax.vmap(normalize_inv))
-    # power_map = jax.vmap(jax.vmap(power_spectrum))
+    b, f, c, d, w, h = prediction.shape
+    power_spectrum = PowerSpectrum(
+        d, 20)
 
-    # rho_truth = normalize_map(truth, attributes[:, :, 0], attributes[:, :, 1])
-    # rho_pred = normalize_map(prediction, attributes[:, :, 0], attributes[:, :, 1])
+    normalize_map = jax.vmap(jax.vmap(normalize_inv_func))
+    power_map = jax.vmap(jax.vmap(power_spectrum))
+    overdensity_map = jax.vmap(jax.vmap(compute_overdensity))
 
-    # delta_truth, mean = compute_overdensity(rho_truth[0])
-    # delta_pred, mean = compute_overdensity(rho_pred[0])
+    rho_truth = normalize_map(truth, attributes)
+    rho_pred = normalize_map(prediction, attributes)
 
-    # # mass_loss = mass_conservation_loss(rho_pred, rho_truth)
-    # p_truth, k = power_map(delta_truth)
-    # p_pred, k = power_map(delta_pred)
+    delta_truth, mean = overdensity_map(rho_truth)
+    delta_pred, mean = overdensity_map(rho_pred)
 
-    # power_loss = mse(jnp.log(p_truth), jnp.log(p_pred))
+    # mass_loss = mass_conservation_loss(rho_pred, rho_truth)
+    k, p_truth = power_map(rho_truth[:, :, 0])
+    k, p_pred = power_map(rho_pred[:, :, 0])
+
+    power_loss = mse(jnp.log10(p_truth), jnp.log10(p_pred))
 
     if single_state_loss:
         mse_loss = mse(truth[:, -1], prediction[:, -1])
     else:
         mse_loss = mse(truth, prediction)
 
-    return  mse_loss #+ power_loss
+    return  power_loss + mse_loss
 
 @partial(jax.jit, static_argnums=[1, 4, 5, 6])
 def prediction_loss(

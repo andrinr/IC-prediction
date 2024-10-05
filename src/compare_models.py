@@ -37,7 +37,8 @@ def main(argv) -> None:
         # labels.append(f"from z={to_redshift((config.file_index_start + config.file_index_stride) / 100):.1f}")
         # labels.append("+ potential" if config.include_potential else "")
         # labels.append(str(config.fno_hidden_channels) + " hidden channels")
-        labels.append(str(config.fno_n_layers) + " layers")
+        labels.append("mse" if i == 0 else "mse + power loss")
+        # labels.append(str(config.fno_n_layers) + " layers")
         print((config.file_index_start + config.file_index_stride) / config.total_index_steps)
 
         norm_functions.append(config.normalizing_function)
