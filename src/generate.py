@@ -7,8 +7,7 @@ from nvidia.dali.plugin.jax import DALIGenericIterator
 # Local
 import nn
 from data import DirectorySequence, directory_sequence_pipe, generate_tipsy
-import cosmos
-from config import Config
+import cosmos 
 import field
 
 def main(argv) -> None:
@@ -16,37 +15,38 @@ def main(argv) -> None:
     model_name = argv[0]
 
     model, config, training_stats = nn.load_sequential_model(
-        model_name, jax.nn.relu)
+        model_name)
     
     # Data Pipeline
     dataset = DirectorySequence(
         grid_size = config.input_grid_size,
-        directory = config.data_dir,
-        start = config.start,
-        steps = config.steps,
-        stride = config.stride,
-        flip=True,        
-        type = "test")
-
+        grid_directory = config.grid_dir,
+        start = config.file_index_start,
+        steps = config.file_index_steps,
+        stride = config.file_index_stride,
+        normalizing_function = "log_growth",
+        flip = config.flip,        
+        type = "test")  
 
     data_pipeline = directory_sequence_pipe(dataset, config.grid_size)
-    data_iterator = DALIGenericIterator(data_pipeline, ["data", "steps", "means"])
+    data_iterator = DALIGenericIterator(data_pipeline, ["data", "attributes"])
 
-    data = next(data_iterator)
-    sequence = jax.device_put(data['data'], jax.devices('gpu')[0])[0]
+    sample = next(data_iterator)
+    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
+    attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[0]
     # pred = model(sequence, False)
     # pred_sequential = model(sequence, True)
 
-    timeline = data["steps"][0]
-    means = data["means"][0]
+    IC = sequence[-1]
+    IC_attr = attributes[-1]
 
-    gpus = jax.devices("gpu")
-    means = jax.device_put(means, gpus[0])
+    rho = cosmos.normalize_inv(IC, IC_attr, "log_growth" )
 
-    delta = sequence[-1]
-    rho = cosmos.compute_rho(sequence[-1], means[-1])
+    print(IC.shape)
+    print(IC_attr.shape)
+    print(rho.shape)
 
-    scaling = 10000000
+    scaling = 0.00001
     rho = rho[0]
     rho *= scaling
     print(f"total mass {rho.sum()}")
@@ -59,12 +59,12 @@ def main(argv) -> None:
         config.grid_size,
         rho,
         jnp.sum(rho),
-        3000,
+        10000,
         learning_rate=0.0001)
     
     mass /= scaling
     
-    a = 1 / (1 + config.redshift_start)
+    a = 1.0
     
     #euelerian_position = lagrangian_position + dspls * m_Dplus;
     D_plus = cosmos.growth_factor_approx(a, config.omega_M, config.omega_L)
@@ -78,7 +78,7 @@ def main(argv) -> None:
     # normalize to PKDGRAV3 standards
     euelerian_position = euelerian_position - 0.5
     generate_tipsy(
-        config.output_tipsy_file,
+        "test.tipsy",
         euelerian_position,
         velocity,
         mass,
