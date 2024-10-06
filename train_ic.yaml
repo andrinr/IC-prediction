@@ -3,7 +3,7 @@
 grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
 input_grid_size : 256
 grid_size : 128
-file_index_stride : 1
+file_index_stride : 2
 file_index_steps : 1
 file_index_start : 0
 total_index_steps : 10
