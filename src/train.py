@@ -66,7 +66,7 @@ def main(argv) -> None:
         "hidden_channels" : config.unet_hidden_channels,
         "num_levels" : config.unet_num_levels,
         "padding" : 'SAME',
-        "padding_mode" : 'CIRCULAR',
+        "padding_mode" : 'ZEROS',
         "activation" : config.activation}
 
     fno_hyperparams = {

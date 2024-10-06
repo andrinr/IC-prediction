@@ -5,13 +5,14 @@ import jax
 import jax.numpy as jnp
 from ..base_module import BaseModule
 
-class DoubleConv(BaseModule):
+class DoubleConv(eqx.Module):
     conv_1: eqx.nn.Conv
     conv_2: eqx.nn.Conv
+    activation : Callable
 
     def __init__(
             self, 
-            activation: str,
+            activation: Callable,
             num_spatial_dims: int,
             in_channels: int,
             out_channels: int,
@@ -19,21 +20,21 @@ class DoubleConv(BaseModule):
             padding_mode: str,
             key):
         
-        super().__init__(activation=activation)
+        self.activation = activation
         key1, key2 = jax.random.split(key)
         self.conv_1 = eqx.nn.Conv(
-            num_spatial_dims, 
-            in_channels, 
-            out_channels, 
+            num_spatial_dims=num_spatial_dims, 
+            in_channels=in_channels, 
+            out_channels=out_channels, 
             kernel_size=3, 
             padding=padding,
             padding_mode=padding_mode, 
             key=key1)
         
         self.conv_2 = eqx.nn.Conv(
-            num_spatial_dims, 
-            out_channels, 
-            out_channels, 
+            num_spatial_dims=num_spatial_dims, 
+            in_channels=out_channels, 
+            out_channels=out_channels, 
             kernel_size=3, 
             padding=padding,
             padding_mode=padding_mode, 
@@ -46,7 +47,7 @@ class DoubleConv(BaseModule):
         x = self.activation(x)
         return x
     
-class UNet(eqx.Module):
+class UNet(BaseModule):
     lifting : DoubleConv
     down_sampling : list[eqx.nn.Conv]
     left_arc : list[eqx.nn.Conv]
@@ -68,30 +69,29 @@ class UNet(eqx.Module):
             out_channels: int,
             hidden_channels: int,
             num_levels: int,
-            activation: Callable,
+            activation: str,
             padding: str,
             padding_mode: str,
             key):
+        super().__init__(activation=activation)
 
         key, key_liftiing, key_projection = jax.random.split(key, 3)
 
         self.lifting = DoubleConv(
-            num_spatial_dims, 
-            in_channels,
-            hidden_channels,
-            activation,
-            padding,
-            padding_mode,
-            key_liftiing
-        )
+            num_spatial_dims=num_spatial_dims, 
+            in_channels=in_channels,
+            out_channels = hidden_channels,
+            activation = self.activation,
+            padding=padding,
+            padding_mode=padding_mode,
+            key=key_liftiing)
 
         self.projection = eqx.nn.Conv(
-            num_spatial_dims,
-            hidden_channels,
-            out_channels,
+            num_spatial_dims=num_spatial_dims,
+            in_channels=hidden_channels,
+            out_channels=out_channels,
             kernel_size=1,
-            key=key_projection
-        )
+            key=key_projection)
 
         channels_per_level = [hidden_channels * 2**i for i in range(num_levels + 1)]
 
@@ -103,57 +103,50 @@ class UNet(eqx.Module):
         for (upper_level_channels, lower_level_channels) in zip(
             channels_per_level[:-1], channels_per_level[1:]):
             key, key_down, key_left, key_right, key_up = jax.random.split(key, 5)
+            print(upper_level_channels)
+            print(lower_level_channels)
 
             self.down_sampling.append(
                 eqx.nn.Conv(
-                    num_spatial_dims,
-                    upper_level_channels,
-                    upper_level_channels,
+                    num_spatial_dims=num_spatial_dims,
+                    in_channels=upper_level_channels,
+                    out_channels=upper_level_channels,
                     kernel_size=3,
                     stride=2,
                     padding=padding,
                     padding_mode=padding_mode,
-                    key=key_down
-                )
-            )
+                    key=key_down))
 
             self.left_arc.append(
                 DoubleConv(
-                    num_spatial_dims,
-                    upper_level_channels,
-                    lower_level_channels,
-                    activation,
-                    padding,
-                    padding_mode,
-                    key_left
-                )
-            )
+                    num_spatial_dims=num_spatial_dims,
+                    in_channels=upper_level_channels,
+                    out_channels=lower_level_channels,
+                    activation=self.activation,
+                    padding=padding,
+                    padding_mode=padding_mode,
+                    key=key_left))
 
             self.up_sampling.append(
                 eqx.nn.ConvTranspose(
-                    num_spatial_dims,
-                    lower_level_channels,
-                    upper_level_channels,
+                    num_spatial_dims=num_spatial_dims,
+                    in_channels=lower_level_channels,
+                    out_channels=upper_level_channels,
                     kernel_size=3,
                     stride=2,
                     padding=padding,
                     padding_mode=padding_mode,
-                    # output_padding=1,
-                    key=key_up
-                )
-            )
+                    key=key_up))
 
             self.right_arc.append(
                 DoubleConv(
-                    num_spatial_dims,
-                    lower_level_channels,
-                    upper_level_channels,
-                    activation,
-                    padding,
-                    padding_mode,
-                    key_right
-                )
-            )
+                    num_spatial_dims=num_spatial_dims,
+                    in_channels=lower_level_channels,
+                    out_channels=upper_level_channels,
+                    activation=self.activation,
+                    padding=padding,
+                    padding_mode=padding_mode,
+                    key=key_right))
 
     def __call__(self, x):
         x = self.lifting(x)
