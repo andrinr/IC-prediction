@@ -9,6 +9,9 @@ import nn
 from data import DirectorySequence, directory_sequence_pipe, generate_tipsy
 import cosmos 
 import field
+import matplotlib.pyplot as plt
+from field import cic_ma
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 
 def main(argv) -> None:
    
@@ -24,7 +27,7 @@ def main(argv) -> None:
         start = config.file_index_start,
         steps = config.file_index_steps,
         stride = config.file_index_stride,
-        normalizing_function = "log_growth",
+        normalizing_function = config.normalizing_function,
         flip = config.flip,        
         type = "test")  
 
@@ -59,21 +62,48 @@ def main(argv) -> None:
         config.grid_size,
         rho,
         jnp.sum(rho),
-        10000,
+        5000,
         learning_rate=0.0001)
     
+    rho /= scaling
     mass /= scaling
+
+    
+    L = rho.shape[0]
+    rho_pred = cic_ma(
+        euelerian_position,
+        mass,
+        rho.shape[0])
+    
+    diff = rho - rho_pred
+    diff /= rho.std()
+    diff = jnp.reshape(diff, (L, L, L, 1))
+    fig, axs = plt.subplots()
+    im = axs.imshow(diff[L//2])
+    divider = make_axes_locatable(axs)
+    cax = divider.append_axes('bottom', size='5%', pad=0.03)
+    fig.colorbar(im, cax=cax, orientation='horizontal')
+
+    print(rho.mean())
+    print(rho_pred.mean())
+
+    plt.savefig("img/cmp.jpg")
     
     a = 1.0
     
     #euelerian_position = lagrangian_position + dspls * m_Dplus;
     D_plus = cosmos.growth_factor_approx(a, config.omega_M, config.omega_L)
     
+    # print(D_plus)
     displacement = (euelerian_position - lagrangian_position) / D_plus
 
     D_plus_da = cosmos.growth_factor_approx_deriv(config.omega_M, config.omega_L)
 
+    # print(D_plus_da)
+    # print(displacement.mean())
     velocity = displacement * D_plus_da
+
+    # print(velocity.mean())
 
     # normalize to PKDGRAV3 standards
     euelerian_position = euelerian_position - 0.5

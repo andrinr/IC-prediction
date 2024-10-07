@@ -4,10 +4,11 @@ import optax
 import equinox as eqx
 from functools import partial
 import time
-from cosmos import PowerSpectrum, compute_overdensity, normalize_inv
+from cosmos import PowerSpectrum, compute_overdensity, normalize_inv, SpectralLoss
 from typing import NamedTuple, Tuple
 from .metric import Metric
 from powerbox import get_power
+from .loss import power_loss
 
 # @partial(jax.jit)
 # def mse(prediction : jax.Array, truth : jax.Array):
@@ -39,38 +40,15 @@ def total_loss(
     truth : jax.Array,
     attributes : jax.Array,
     single_state_loss : bool):
-
-    # truth / prediction: [Batch, Frames, Channels, Depth, Height, Width]
-    # attributes: [Batch, Frames, normaliztion_attributes]
-
-    # normalize_inv_func = lambda x, y : normalize_inv(x, y, "log_growth")
-
-    # b, f, c, d, w, h = prediction.shape
-    # power_spectrum = PowerSpectrum(
-    #     d, 20)
-
-    # normalize_map = jax.vmap(jax.vmap(normalize_inv_func))
-    # power_map = jax.vmap(jax.vmap(power_spectrum))
-    # overdensity_map = jax.vmap(jax.vmap(compute_overdensity))
-
-    # rho_truth = normalize_map(truth, attributes)
-    # rho_pred = normalize_map(prediction, attributes)
-
-    # delta_truth, mean = overdensity_map(rho_truth)
-    # delta_pred, mean = overdensity_map(rho_pred)
-
-    # # mass_loss = mass_conservation_loss(rho_pred, rho_truth)
-    # k, p_truth = power_map(rho_truth[:, :, 0])
-    # k, p_pred = power_map(rho_pred[:, :, 0])
-
-    # power_loss = mse(jnp.log10(p_truth), jnp.log10(p_pred))
+    
+    pl = 0.001 * power_loss(prediction, truth, attributes)
 
     if single_state_loss:
         mse_loss = mse(truth[:, -1], prediction[:, -1])
     else:
         mse_loss = mse(truth, prediction)
 
-    return  mse_loss #+ power_loss
+    return  mse_loss + pl
 
 @partial(jax.jit, static_argnums=[1, 4, 5, 6])
 def prediction_loss(

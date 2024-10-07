@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from config import Config
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from powerbox import get_power
-from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv
+from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv, SpectralLoss
 from matplotlib.cm import get_cmap
 
 def sequence(
@@ -16,6 +16,8 @@ def sequence(
     
     frames = sequence.shape[0]
     grid_size = sequence.shape[2]
+
+    spectral_loss = SpectralLoss(grid_size, 20)
 
     pred = sequence_prediction is not None
     long = frames > 3
@@ -36,6 +38,7 @@ def sequence(
     spec_stats = subfigs[1].add_gridspec(1, 4 if pred and long else 2)
 
     ax_cdf = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
+    ax_sl = fig.add_subplot(spec_sequence[1, 0])
     ax_power = fig.add_subplot(spec_stats[2 if pred and long else 1],  adjustable='box', aspect=0.1)
     if pred and long:
         ax_cdf_pred = fig.add_subplot(spec_stats[1], adjustable='box', aspect=0.1)
@@ -101,6 +104,11 @@ def sequence(
             rho_pred = normalize_inv(rho_pred_normalized, attribs, config.normalizing_function)
             delta_pred = compute_overdensity(rho_pred)
 
+            normalized = sequence[frame+1]
+            rho = normalize_inv(normalized, attribs, config.normalizing_function)
+            delta = compute_overdensity(rho_pred)
+
+
             ax_seq = fig.add_subplot(spec_sequence[1, frame+1])
             ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
             ax_seq.set_title(fr'pred $z = {to_redshift(step/t_steps):.2f}$')
@@ -127,6 +135,13 @@ def sequence(
                 k, p, 
                 label=fr'pred $z = {to_redshift(step/t_steps):.2f}$',
                 color=colors[frame+1 if long else 3 + frame])
+            
+            k, loss = spectral_loss(rho_pred[:, :, :, 0], rho[:, :, :, 0])
+            ax_sl.plot(
+                k, loss,
+                label=fr'pred $z = {to_redshift(step/t_steps):.2f}$',
+                color=colors[frame+1 if long else 3 + frame])
+
 
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
@@ -134,6 +149,9 @@ def sequence(
     ax_power.set_title(r'Power Spectrum of $\delta$')
     ax_power.set_xlabel(r'$k$ [$h \ \mathrm{Mpc}^{-1}$]')
     ax_power.set_ylabel(r'$P(k)$ [$h^{-3} \ \mathrm{Mpc}^3$]')
+
+    ax_sl.set_yscale('log')
+    ax_sl.set_xscale('log')
 
     if pred and long:
         ax_power_pred.set_yscale('log')
