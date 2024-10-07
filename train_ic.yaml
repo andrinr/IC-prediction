@@ -17,8 +17,8 @@ normalizing_function : "log_growth" # log_growth, delta, ssm
 learning_rate : 0.002
 include_potential : False
 sequential_skip_channels : 0
-stepwise_epochs : 10
-mixed_epochs : 5
+stepwise_epochs : 20
+mixed_epochs : 10
 sequential_epochs : 0
 unique_networks : True
 model_dir : "/data/arehma/models/large/"
