@@ -49,12 +49,18 @@ def compare(
     ax_seq.set_title(r'output $\rho_{norm}$')
     ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
     im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
+    divider = make_axes_locatable(ax_seq)
+    cax = divider.append_axes('bottom', size='5%', pad=0.03)
+    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
     normalized = sequence_curr[0]
     ax_seq = fig.add_subplot(spec_sequence[0, 0])
     ax_seq.set_title(r'input $\rho_{norm}$')
     ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
     im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
+    divider = make_axes_locatable(ax_seq)
+    cax = divider.append_axes('bottom', size='5%', pad=0.03)
+    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
     p, k = get_power(delta[:, :, :, 0], config.box_size)
     ax_power.plot(
@@ -92,7 +98,7 @@ def compare(
         rho_pred = normalize_inv(rho_pred_normalized, attribs,  norm_functions[idx])
         delta_pred = compute_overdensity(rho_pred)
 
-        normalized = sequence_curr[0]
+        normalized = sequence_curr[1]
         N = normalized.shape[1]
         # x shape : n_channels, N, N, N
         # x_fs shape : n_channels, N, N, N // 2, 2

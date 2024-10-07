@@ -116,4 +116,6 @@ class SequentialModel(eqx.Module):
                 if self.sequential_skip_channels > 0:
                     secondary_carry = prediction[1:]
 
+        print(y.shape)
+
         return y
