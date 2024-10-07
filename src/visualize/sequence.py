@@ -165,7 +165,7 @@ def sequence(
         ax_cdf_pred.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
     ax_cdf.set_title(r'pdf $\rho_{norm}$')
-    ax_cdf.legend(loc='upper center', bbox_to_anchor=(0.5, -0.45), fancybox=True, shadow=True,)
+    ax_cdf.legend(loc='lower center', bbox_to_anchor=(0.5, 1.745), fancybox=True, shadow=True,)
 
     # plt.tight_layout(rect=[0.03, 0.03, 0.97, 0.97], pad=3.0, w_pad=2.0, h_pad=2.0)
 

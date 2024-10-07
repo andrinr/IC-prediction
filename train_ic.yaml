@@ -5,8 +5,9 @@ input_grid_size : 256
 grid_size : 128
 file_index_stride : 
 - 1
-- 9
-file_index_steps : 2
+- 2
+- 7
+file_index_steps : 3
 file_index_start : 0
 total_index_steps : 10
 flip : True 
