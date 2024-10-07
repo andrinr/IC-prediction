@@ -97,9 +97,7 @@ class SequentialModel(eqx.Module):
                     distribution = jnp.concatenate((x[i], pot), axis=0)
 
                 elif self.sequential_skip_channels > 0 and not add_potential:
-                    key = jax.random.key(0)
-                    noise = jax.random.normal(key, (1, d, w, h))
-                    distribution = jnp.concatenate((x[i], secondary_carry, noise), axis=0)
+                    distribution = jnp.concatenate((x[i], secondary_carry), axis=0)
 
                 elif add_potential and self.sequential_skip_channels > 0:
                     rho = normalize_inv(x[i], attributes[i], type="log_growth")

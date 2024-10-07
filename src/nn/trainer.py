@@ -41,14 +41,14 @@ def total_loss(
     attributes : jax.Array,
     single_state_loss : bool):
     
-    pl = 0.001 * power_loss(prediction, truth, attributes)
+    #pl = 0.001 * power_loss(prediction, truth, attributes)
 
     if single_state_loss:
         mse_loss = mse(truth[:, -1], prediction[:, -1])
     else:
         mse_loss = mse(truth, prediction)
 
-    return  mse_loss + pl
+    return  mse_loss# + pl
 
 @partial(jax.jit, static_argnums=[1, 4, 5, 6])
 def prediction_loss(

@@ -38,7 +38,7 @@ def sequence(
     spec_stats = subfigs[1].add_gridspec(1, 4 if pred and long else 2)
 
     ax_cdf = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
-    ax_sl = fig.add_subplot(spec_sequence[1, 0])
+    # ax_sl = fig.add_subplot(spec_sequence[1, 0])
     ax_power = fig.add_subplot(spec_stats[2 if pred and long else 1],  adjustable='box', aspect=0.1)
     if pred and long:
         ax_cdf_pred = fig.add_subplot(spec_stats[1], adjustable='box', aspect=0.1)
@@ -47,7 +47,7 @@ def sequence(
     cmap = get_cmap('viridis') if long else get_cmap('Accent')
     colors = cmap(jnp.linspace(0, 1, frames if long else 6))
 
-    file_index_stride = config.file_index_stride
+    file_index_stride = config.file_index_stride.copy()
 
     if config.flip and isinstance(file_index_stride, list): 
         step = jnp.sum(jnp.array(file_index_stride)) + config.file_index_start
@@ -57,15 +57,13 @@ def sequence(
     else:
         step = config.file_index_start
 
-
     for frame in range(frames):
-        print(step)
+        print(f"step {step}")
         attribs = jax.device_put(attributes[frame], device=jax.devices("gpu")[0])
         normalized = sequence[frame]
         rho = normalize_inv(normalized, attribs, config.normalizing_function)
         delta = compute_overdensity(rho)
 
-        print(step/t_steps)
         ax_seq = fig.add_subplot(spec_sequence[0, frame])
         ax_seq.set_title(fr'sim $z = {to_redshift(step/t_steps):.2f}$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
@@ -92,12 +90,14 @@ def sequence(
             label=fr'sim $z = {to_redshift(step/t_steps):.2f}$',
             color=colors[frame])
         
+        print(f"stride {file_index_stride}")
         if frame < frames-1:
             if isinstance(file_index_stride, list): 
                 step += file_index_stride[frame] * (-1 if config.flip else 1)
             else:
                 step += file_index_stride * (-1 if config.flip else 1)
 
+        print(f"step {step}")
         if pred and frame < frames-1:
             rho_pred_normalized = sequence_prediction[frame]
             attribs = jax.device_put(attributes[frame+1], device=jax.devices("gpu")[0])
@@ -136,11 +136,11 @@ def sequence(
                 label=fr'pred $z = {to_redshift(step/t_steps):.2f}$',
                 color=colors[frame+1 if long else 3 + frame])
             
-            k, loss = spectral_loss(rho_pred[:, :, :, 0], rho[:, :, :, 0])
-            ax_sl.plot(
-                k, loss,
-                label=fr'pred $z = {to_redshift(step/t_steps):.2f}$',
-                color=colors[frame+1 if long else 3 + frame])
+            # k, loss = spectral_loss(rho_pred[:, :, :, 0], rho[:, :, :, 0])
+            # ax_sl.plot(
+            #     k, loss,
+            #     label=fr'pred $z = {to_redshift(step/t_steps):.2f}$',
+            #     color=colors[frame+1 if long else 3 + frame])
 
 
     ax_power.set_yscale('log')
@@ -150,8 +150,8 @@ def sequence(
     ax_power.set_xlabel(r'$k$ [$h \ \mathrm{Mpc}^{-1}$]')
     ax_power.set_ylabel(r'$P(k)$ [$h^{-3} \ \mathrm{Mpc}^3$]')
 
-    ax_sl.set_yscale('log')
-    ax_sl.set_xscale('log')
+    # ax_sl.set_yscale('log')
+    # ax_sl.set_xscale('log')
 
     if pred and long:
         ax_power_pred.set_yscale('log')
