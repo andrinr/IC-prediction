@@ -11,12 +11,12 @@ achOutName = sys.argv[2]
 
 # Initial Condition
 dBoxSize        = 60          # Mpc/h
-nGrid           = 256           # Simulation has nGrid^3 particles
-iLPT            = 2             # LPT order for IC
-iSeed 			= 1000 	# Seed
-dRedFrom        = 49            # Starting redshift
+# nGrid           = 256           # Simulation has nGrid^3 particles
+# iLPT            = 2             # LPT order for IC
+# iSeed 			= 1000 	# Seed
+# dRedFrom        = 49            # Starting redshift
 
-achInFile       = int(sys.argv[1])
+achInFile       = sys.argv[1]
 # Cosmology
 achTfFile       = "euclid_z0_transfer_combined.dat"
 h               = 0.67
