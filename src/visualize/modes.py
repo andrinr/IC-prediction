@@ -85,4 +85,39 @@ def modes(
     cax = divider.append_axes('bottom', size='5%', pad=0.03)
     fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
-    plt.savefig(output_file)
+    plt.savefig("img/low_modes.jpg")
+
+    # Create figure
+    fig = plt.figure(layout='constrained', figsize=(10, 4),  constrained_layout=True)
+    fig, (ax1, ax2) = plt.subplots(1, 2)
+    # Mask out lower wavelengths
+    mask = (k_squared >= cutoff_k_squared)[:, :, :, None]
+    # mask = k_squared <= cutoff_k_squared
+    norm_fs_filtered = norm_fs * mask
+    norm_pred_fs_filtered = norm_pred_fs * mask
+    norm_filtered = jnp.fft.irfftn(norm_fs_filtered, s=(N, N, N), axes=(0, 1, 2))
+    norm_pred_filtered = jnp.fft.irfftn(norm_pred_fs_filtered, s=(N, N, N), axes=(0, 1, 2))
+
+    ax1.hist(
+        norm_filtered.flatten(),
+        100, 
+        density=True, 
+        log=True, 
+        histtype="step",
+        cumulative=False, 
+        label=fr'simulation')
+    ax1.legend()
+
+    ax2.hist(
+        norm_pred_filtered.flatten(),
+        100, 
+        density=True, 
+        log=True, 
+        histtype="step",
+        cumulative=False, 
+        label=fr'prediction')
+    ax2.legend()
+    # plot cdf 
+
+
+    plt.savefig("img/high_modes.jpg")

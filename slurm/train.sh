@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-#SBATCH --gpus=T4:1
+#SBATCH --gpus=A100:1
 #SBATCH --mem=16G
 #SBATCH --cpus-per-task=8
 #SBATCH --time=01:00:00

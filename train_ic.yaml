@@ -2,11 +2,12 @@
 # grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/" #"/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
 grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
 input_grid_size : 256
-grid_size : 64
+grid_size : 128
 file_index_stride : 
 - 1
-- 9
-file_index_steps : 2
+- 2
+- 7
+file_index_steps : 3
 file_index_start : 0
 total_index_steps : 10
 flip : True 
@@ -15,9 +16,9 @@ normalizing_function : "log_growth" # log_growth, delta, ssm
 # Training parameters
 learning_rate : 0.002
 include_potential : False
-sequential_skip_channels : 1
-stepwise_epochs : 10
-mixed_epochs : 5
+sequential_skip_channels : 3
+stepwise_epochs : 20
+mixed_epochs : 10
 sequential_epochs : 0
 unique_networks : True
 model_dir : "/data/arehma/models/multistep/"
@@ -25,10 +26,10 @@ model_type : "FNO" # UNet, FNO
 activation : "tanh" # relu, tanh
 
 # FNO parameters
-fno_modes : 16
-fno_input_channels : 2 # sequential_skip_channels + include_potential * 1 + 1
+fno_modes : 32
+fno_input_channels : 4 # sequential_skip_channels + include_potential * 1 + 1
 fno_hidden_channels : 16
-fno_output_channels : 2  # sequential_skip_channels + 1
+fno_output_channels : 4  # sequential_skip_channels + 1
 fno_n_layers : 5
 fno_increasing_modes : True
 
