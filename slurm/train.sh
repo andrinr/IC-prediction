@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-#SBATCH --gpus=1
+#SBATCH --gpus=T4:1
 #SBATCH --mem=16G
 #SBATCH --cpus-per-task=8
-#SBATCH --time=03:00:00
+#SBATCH --time=01:00:00
 #SBATCH --output=job.out
 
 # module load conda

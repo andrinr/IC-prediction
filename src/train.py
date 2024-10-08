@@ -11,8 +11,12 @@ import nn
 import data
 from config import load_config
 from datetime import datetime
+import os
 
 def main(argv) -> None:
+    # os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
+    # os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]=".XX"
+    # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"
    
     config = load_config(argv[0])
     print(config)

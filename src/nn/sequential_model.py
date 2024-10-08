@@ -31,6 +31,8 @@ class SequentialModel(eqx.Module):
         
         self.sequence_length = sequence_length
 
+        print(self.sequence_length)
+
         self.unique_networks = unique_networks
         if not unique_networks:
             self.model = constructor(key=key, **parameters)
