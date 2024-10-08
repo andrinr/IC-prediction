@@ -89,7 +89,7 @@ def modes(
 
     # Create figure
     fig = plt.figure(layout='constrained', figsize=(10, 4),  constrained_layout=True)
-    fig, (ax1, ax2) = plt.subplots(1, 2)
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
     # Mask out lower wavelengths
     mask = (k_squared >= cutoff_k_squared)[:, :, :, None]
     # mask = k_squared <= cutoff_k_squared
@@ -106,9 +106,8 @@ def modes(
         histtype="step",
         cumulative=False, 
         label=fr'simulation')
-    ax1.legend()
 
-    ax2.hist(
+    ax1.hist(
         norm_pred_filtered.flatten(),
         100, 
         density=True, 
@@ -116,8 +115,24 @@ def modes(
         histtype="step",
         cumulative=False, 
         label=fr'prediction')
-    ax2.legend()
+    ax1.legend()
     # plot cdf 
+
+    ax2.set_title(r'$\rho_{norm}$')
+    ax2.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+    im_seq = ax2.imshow(norm_filtered[N//2], cmap='inferno')
+    # im_seq = ax_seq.imshow(norm_filtered[grid_size // 2, :, :], cmap='inferno')
+    divider = make_axes_locatable(ax2)
+    cax = divider.append_axes('bottom', size='5%', pad=0.03)
+    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
+
+    ax3.set_title(r'$\hat{\rho}_{norm}$')
+    ax3.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+    im_seq = ax3.imshow(norm_pred_filtered[N//2], cmap='inferno')
+    # im_seq = ax_seq.imshow(norm_filtered[grid_size // 2, :, :], cmap='inferno')
+    divider = make_axes_locatable(ax3)
+    cax = divider.append_axes('bottom', size='5%', pad=0.03)
+    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
 
     plt.savefig("img/high_modes.jpg")
