@@ -20,7 +20,7 @@ def modes(
     print(num_predictions)
 
     # Create figure
-    fig = plt.figure(layout='constrained', figsize=(10, 10),  constrained_layout=True)
+    fig = plt.figure(layout='constrained', figsize=(10, 4),  constrained_layout=True)
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3)
     
     frames = sequence.shape[0]
