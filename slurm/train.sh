@@ -2,7 +2,7 @@
 #SBATCH --gpus=A100:1
 #SBATCH --mem=16G
 #SBATCH --cpus-per-task=8
-#SBATCH --time=01:00:00
+#SBATCH --time=5:00:00
 #SBATCH --output=job.out
 
 # module load conda
