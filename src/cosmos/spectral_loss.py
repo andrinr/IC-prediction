@@ -23,10 +23,13 @@ class SpectralLoss(FrequencyOperation):
         true_k = jnp.fft.rfftn(true)
 
         complex_loss = jnp.zeros(self.n_bins)
-        complex_loss = complex_loss.at[self.index_grid].add((abs(pred_k) - abs(true_k))**2)
+        power = jnp.zeros(self.n_bins)
+        complex_loss = complex_loss.at[self.index_grid].add((abs(pred_k)**2 - abs(true_k)**2)**2)
+        power = power.at[self.index_grid].add(abs(true_k)**2)
 
         # compute the average power
         complex_loss = complex_loss / self.n_modes
+        complex_loss = complex_loss / power
 
         complex_loss = jnp.where(jnp.isnan(complex_loss), 0, complex_loss)
 

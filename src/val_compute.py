@@ -19,7 +19,7 @@ def main(argv) -> None:
     if param == "stride":
         folder = "models/stride"
     if param == "normalization":
-        folder = "models/normalization"
+        folder = "/data/arehma/models/normalization"
 
     files = os.listdir(folder)
     files.sort()
@@ -38,14 +38,14 @@ def main(argv) -> None:
 
         m_params = int(jnp.log2(parameter_count))
 
-        validation_loss = jnp.array(training_stats['metric_step']['val_mse'])[3:]
-        training_loss = jnp.array(training_stats['metric_step']['train_mse'])[3:]
+        validation_loss = jnp.array(training_stats['metric_step']['val_mse'])[2:]
+        training_loss = jnp.array(training_stats['metric_step']['train_mse'])[2:]
         print(validation_loss)
         n = len(validation_loss)
         if param == "stride" or param == "normalization":
             times = jnp.linspace(0, n-1,  n)
-            validation_loss = validation_loss / validation_loss.max()
-            training_loss = training_loss / training_loss.max(0)
+            validation_loss = validation_loss - validation_loss[0] + 100
+            training_loss = training_loss - training_loss[0] + 100
             print(times)
         else:
             times = training_stats['time']

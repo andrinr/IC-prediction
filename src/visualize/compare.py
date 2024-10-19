@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from config import Config
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from powerbox import get_power
-from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv
+from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv, SpectralLoss
 from matplotlib.cm import get_cmap
 
 def compare(
@@ -20,6 +20,8 @@ def compare(
 
     print(num_predictions)
 
+    N = sequences[0].shape[-1]
+
     # Create figure
     fig = plt.figure(layout='constrained', figsize=(4 + 3 * num_predictions, 10),  constrained_layout=True)
     subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.1, height_ratios=[2, 1] if num_predictions > 0 else [1, 1])
@@ -29,6 +31,8 @@ def compare(
     # Main sequence analysis part
     # ax_cdf = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
     ax_power = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
+    # ax_sl =  fig.add_subplot(spec_stats[1], adjustable='box', aspect=0.1)
+
     cmap = get_cmap('viridis')
     colors = cmap(jnp.linspace(0, 1, 6))
     
@@ -69,6 +73,8 @@ def compare(
         label=fr'sim $z = {to_redshift(step/100):.2f}$')
         # color=colors[frame])
     
+    spectral_loss = SpectralLoss(N, 20)
+    
     # Process predictions
     for idx in range(num_predictions):
 
@@ -94,7 +100,6 @@ def compare(
         delta = compute_overdensity(rho)
 
         rho_pred_normalized = pred_curr[frame]
-        attribs = jax.device_put(attributes_curr[frame + 1], device=jax.devices("gpu")[0])
         rho_pred = normalize_inv(rho_pred_normalized, attribs,  norm_functions[idx])
         delta_pred = compute_overdensity(rho_pred)
 
@@ -171,6 +176,13 @@ def compare(
             k_pred, p_pred,
             label=fr'pred {labels[idx]}')
         
+        # k, p = spectral_loss(delta_pred[:, :, :, 0], delta[:, :, :, 0])
+        # print(k)
+        # print(p)
+        # k *= 60
+        # ax_sl.plot(
+        #     k, p,  label=fr'pred {labels[idx]}')
+        
         # p_pred, k_pred = get_power(delta_pred_filtered[:, :, :, 0], config.box_size)
         # ax_power.plot(
         #     k_pred, p_pred,
@@ -179,6 +191,8 @@ def compare(
 
     # Finalize plots
     
+    # ax_sl.set_yscale('log')
+    # ax_sl.set_xscale('log')
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
     ax_power.legend(loc='center left', bbox_to_anchor=(1, 0.5))
