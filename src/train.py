@@ -11,8 +11,12 @@ import nn
 import data
 from config import load_config
 from datetime import datetime
+import os
 
 def main(argv) -> None:
+    # os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
+    # os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]=".XX"
+    # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"
    
     config = load_config(argv[0])
     print(config)
@@ -30,7 +34,7 @@ def main(argv) -> None:
         "stride" : config.file_index_stride,
         "normalizing_function" : config.normalizing_function,
         "flip" : config.flip,
-        "type" : "Test"}
+        "type" : "train"}
     
     train_dataset = data.DirectorySequence(**dataset_params)
     train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
@@ -66,7 +70,7 @@ def main(argv) -> None:
         "hidden_channels" : config.unet_hidden_channels,
         "num_levels" : config.unet_num_levels,
         "padding" : 'SAME',
-        "padding_mode" : 'CIRCULAR',
+        "padding_mode" : 'ZEROS',
         "activation" : config.activation}
 
     fno_hyperparams = {
@@ -108,6 +112,7 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,        
         n_epochs = config.stepwise_epochs,
+        add_potential = config.include_potential,
         sequential_mode = False,
         single_state_loss = False)
     
@@ -120,6 +125,7 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
         n_epochs = config.mixed_epochs,
+        add_potential = config.include_potential,
         sequential_mode = True,
         single_state_loss = False)
     
@@ -132,6 +138,7 @@ def main(argv) -> None:
         val_data_iterator = val_data_iterator,
         learning_rate = config.learning_rate,
         n_epochs = config.sequential_epochs,
+        add_potential = config.include_potential,
         sequential_mode = True,
         single_state_loss = True)
     

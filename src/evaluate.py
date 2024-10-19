@@ -39,10 +39,11 @@ def main(argv) -> None:
     # data_iterator = DALIGenericIterator(data_pipeline, ["data", "step", "attributes"])
 
     sample = next(data_iterator)
-    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[1]
-    attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[1]
-    pred = model(sequence, attributes, False)
-    pred_sequential = model(sequence, attributes, True)
+    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
+    attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[0]
+    pred = model(sequence, attributes, False, config.include_potential)
+    pred_seq = model(sequence, attributes, True, config.include_potential)
+    # pred_sequential = model(sequence, attributes, True)
 
     attributes = sample["attributes"][0]
 
@@ -50,23 +51,15 @@ def main(argv) -> None:
         "img/prediction_stepwise.jpg", 
         sequence = sequence, 
         config = config,
-        sequence_prediction = pred,
+        sequence_prediction = pred[:, 0:1],
         attributes = attributes)
 
     visualize.sequence(
         "img/prediction_sequential.jpg", 
         sequence = sequence, 
         config = config,
-        sequence_prediction = pred_sequential,
+        sequence_prediction = pred_seq[:, 0:1],
         attributes = attributes)
-    
-    # visualize.sequence(
-    #     "img/prediction_sequential.jpg", 
-    #     sequence = sequence, 
-    #     config = config,
-    #     sequence_prediction = pred_sequential,
-    #     timeline = timeline,
-    #     attributes = attributes)
 
     # Delete Data Pipeline
     del data_pipeline

@@ -18,7 +18,7 @@ class PowerSpectrum(FrequencyOperation):
         self.n_modes = self.n_modes.at[self.index_grid].add(1)
 
     def __call__(self, delta : jax.Array) -> Tuple[jax.Array, jax.Array]:
-        # get the density field in furier space
+        # get the density field in fourier space
         delta_k = jnp.fft.rfftn(delta)
 
         power = jnp.zeros(self.n_bins)

@@ -55,6 +55,9 @@ def cic_ma(
     yw = (pos[1] % 1.0 - coords[y]) / dx
     zw = (pos[2] % 1.0 - coords[z]) / dx
 
+    offsets = jnp.array([-1, 1])
+    oxs, oys, ozs = jnp.meshgrid(offsets, offsets, offsets)
+
     # assign the mass
     field = field.at[x, y, z].add(weight * (1 - xw) * (1 - yw) * (1 - zw))
     field = field.at[(x + 1) % grid_size, y, z].add(weight * xw * (1 - yw) * (1 - zw))

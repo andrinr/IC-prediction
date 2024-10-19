@@ -34,7 +34,7 @@ def generate_tipsy(
         pos : np.ndarray,
         vel : np.ndarray,
         mass : np.ndarray,
-        time : float):
+        time : float = 1.0):
     """
     Generate a tipsy file.
     """
@@ -58,9 +58,9 @@ def generate_tipsy(
     header['time'] = time
     header['N'] = N
     header['Dims'] = 3
-    header['Ngas'] = 0
+    # header['Ngas'] = 0
     header['Ndark'] = N
-    header['Nstar'] = 0
+    # header['Nstar'] = 0
 
     # empty gas and star arrays
     # gas = np.zeros(0, dtype=gas_type)

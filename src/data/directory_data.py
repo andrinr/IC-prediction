@@ -10,13 +10,9 @@ from nvidia.dali.auto_aug.core import augmentation
 from cosmos import to_expansion, normalize
 
 BATCH_SIZE = 2
-TRAIN_SIZE = 0.8
+TRAIN_SIZE = 0.9
 TEST_SIZE = 0.05
 VAL_SIZE = 0.05
-
-@augmentation(mag_range=(0, 30), randomly_negate=True)
-def rotate_aug(data, angle, fill_value=128, rotate_keep_size=True):
-   return fn.rotate(data, angle=angle, fill_value=fill_value, keep_size=True)
 
 @pipeline_def(
     batch_size=BATCH_SIZE,
@@ -86,15 +82,19 @@ class DirectorySequence:
 
         if type == 'train':
             self.grid_folders = self.grid_folders[0 : b]
+            print(len(self.grid_folders))
             # self.tipsy_folders = self.tipsy_folders[0 : b]
 
-        if type == 'val':
+        elif type == 'val':
             self.grid_folders = self.grid_folders[b : c]
             # self.tipsy_folders = self.tipsy_folders[0 : b]
 
-        if type == 'test':
+        elif type == 'test':
             self.grid_folders = self.grid_folders[c : -1]
             # self.tipsy_folders = self.tipsy_folders[0 : b]
+            
+        else :
+            raise NotImplementedError("type {type} not found")
 
     def __call__(self, sample_info : types.SampleInfo):
         sequence = jnp.zeros(
@@ -132,7 +132,7 @@ class DirectorySequence:
             if isinstance(self.stride, list): 
                 time += self.stride[i]
             else:
-                time =+ self.stride
+                time += self.stride
 
         if self.flip:
             sequence = jnp.flip(sequence, axis=0)

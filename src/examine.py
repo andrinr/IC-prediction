@@ -36,9 +36,9 @@ def main(argv) -> None:
 
     attributes = sample["attributes"][0]
 
-    visualize.sequence(
+    visualize.compare(
         "img/data_distr.jpg", 
-        sequence = sequence, 
+        sequence_curr = sequence, 
         sequence_prediction=None,
         config = config,
         attributes = attributes)
