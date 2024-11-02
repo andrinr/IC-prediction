@@ -6,6 +6,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from powerbox import get_power
 from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv, SpectralLoss
 from matplotlib.cm import get_cmap
+import scienceplots
 
 def compare(
         output_file: str,
@@ -17,6 +18,22 @@ def compare(
         norm_functions : list[str]):
     
     num_predictions = len(predictions)
+    
+    plt.rcParams.update({
+        'font.size': 12,                   # Global font size
+        'axes.labelsize': 14,              # X and Y label font size
+        'axes.titlesize': 16,              # Title font size
+        'xtick.labelsize': 12,             # X tick label font size
+        'ytick.labelsize': 12,             # Y tick label font size
+        'legend.fontsize': 12,             # Legend font size
+        # 'axes.grid': True,                 # Enable grid
+        'grid.alpha': 0.7,                 # Grid line transparency
+        'grid.linestyle': '--',            # Grid line style
+        'grid.color': 'gray',              # Grid line color
+        'text.usetex': False,              # Use TeX for text (set True if TeX is available)
+        'figure.figsize': [8, 6],          # Figure size
+        'axes.prop_cycle': plt.cycler('color', ['#0077BB', '#EE7733', '#33BBEE', '#EE3377'])
+    })
 
     print(num_predictions)
 
@@ -31,6 +48,7 @@ def compare(
     # Main sequence analysis part
     # ax_cdf = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
     ax_power = fig.add_subplot(spec_stats[0], adjustable='box', aspect=0.1)
+    # ax_phase = fig.add_subplot(spec_stats[1], adjustable='box', aspect=0.1)
     # ax_sl =  fig.add_subplot(spec_stats[1], adjustable='box', aspect=0.1)
 
     cmap = get_cmap('viridis')
@@ -45,21 +63,14 @@ def compare(
     sequence_curr = jnp.reshape(sequences[0], (frames, grid_size, grid_size, grid_size, 1))
     attributes_curr = attributes[0]
     attribs = jax.device_put(attributes_curr[1], device=jax.devices("gpu")[0])
-    normalized = sequence_curr[1]
+    normalized = sequence_curr[-1]
     rho = normalize_inv(normalized, attribs, norm_functions[0])
     delta = compute_overdensity(rho)
 
-    ax_seq = fig.add_subplot(spec_sequence[1, 0])
-    ax_seq.set_title(r'output $\rho_{norm}$')
-    ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
-    im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
-    divider = make_axes_locatable(ax_seq)
-    cax = divider.append_axes('bottom', size='5%', pad=0.03)
-    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
+    step = config.file_index_start
 
-    normalized = sequence_curr[0]
-    ax_seq = fig.add_subplot(spec_sequence[0, 0])
-    ax_seq.set_title(r'input $\rho_{norm}$')
+    ax_seq = fig.add_subplot(spec_sequence[1, 0])
+    ax_seq.set_title(r'$\rho_{norm}$' + fr' $z={to_redshift(step/100):.2f}$')
     ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
     im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
     divider = make_axes_locatable(ax_seq)
@@ -72,6 +83,21 @@ def compare(
         p,
         label=fr'sim $z = {to_redshift(step/100):.2f}$')
         # color=colors[frame])
+
+    if isinstance(file_index_stride, list): 
+        step = jnp.sum(jnp.array(file_index_stride)) + config.file_index_start
+        file_index_stride.reverse()
+    else:
+        step = config.file_index_start + config.file_index_stride * (frames - 1)
+
+    normalized = sequence_curr[0]
+    ax_seq = fig.add_subplot(spec_sequence[0, 0])
+    ax_seq.set_title(r'$\rho_{norm}$' + fr' $z={to_redshift(step/100):.2f}$')
+    ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
+    im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
+    divider = make_axes_locatable(ax_seq)
+    cax = divider.append_axes('bottom', size='5%', pad=0.03)
+    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
     
     spectral_loss = SpectralLoss(N, 20)
     
@@ -149,9 +175,6 @@ def compare(
         #     label=fr'sim $z = {to_redshift(step/100):.2f}$')
         #     # color=colors[frame])
 
-        # prediction
-        step += file_index_stride * (-1 if config.flip else 1)
-
         ax_seq_pred = fig.add_subplot(spec_sequence[1, idx+1])
         ax_seq_pred.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
         ax_seq_pred.set_title(r'$\hat{\rho}_{norm}$' + f' {labels[idx]}')
@@ -175,6 +198,11 @@ def compare(
         ax_power.plot(
             k_pred, p_pred,
             label=fr'pred {labels[idx]}')
+        
+        # k_pred, p_pred = spectral_loss(delta_pred[:, :, :, 0], delta[:, :, :, 0])
+        # ax_phase.plot(
+        #     k_pred, p_pred,
+        #     label=fr'pred {labels[idx]}')
         
         # k, p = spectral_loss(delta_pred[:, :, :, 0], delta[:, :, :, 0])
         # print(k)
@@ -202,6 +230,4 @@ def compare(
     # ax_cdf.set_title(r'pdf $\rho_{norm}$')
     # ax_cdf.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-    # plt.tight_layout()
-    plt.subplots_adjust(top=0.9, bottom=0.1, left=0.1, right=0.9, hspace=0.3, wspace=0.3)
-    plt.savefig(output_file)
+    plt.savefig(output_file, bbox_inches="tight")

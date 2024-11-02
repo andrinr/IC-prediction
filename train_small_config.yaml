@@ -4,13 +4,7 @@ input_grid_size : 128
 grid_size : 64
 file_index_stride : 
 - 1
-- 2
-- 4
-- 8
-- 16
-- 24
-- 45
-file_index_steps : 7
+file_index_steps : 1
 file_index_start : 0
 total_index_steps : 100
 flip : True 
@@ -18,21 +12,21 @@ normalizing_function : "log_growth" # log_growth, delta, none
 
 # Training parameters
 learning_rate : 0.002
-include_potential : True
-sequential_skip_channels : 1
-stepwise_epochs : 40
-mixed_epochs : 30
+include_potential : False
+sequential_skip_channels : 0
+stepwise_epochs : 20
+mixed_epochs : 0
 sequential_epochs : 0
 unique_networks : True
-model_dir : "models/ranges"
+model_dir : "/data/arehma/models/ranges-fd"
 model_type : "FNO" # UNet, FNO
 activation : "relu" # relu, tanh
 
 # FNO parameters
 fno_modes : 32
-fno_input_channels : 2
-fno_hidden_channels : 3
-fno_output_channels : 2
+fno_input_channels : 1
+fno_hidden_channels : 16
+fno_output_channels : 1
 fno_n_layers : 5
 fno_increasing_modes : True
 

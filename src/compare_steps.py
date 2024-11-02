@@ -11,7 +11,7 @@ from cosmos import to_redshift
 
 def main(argv) -> None:
 
-    folder = "models/ranges"
+    folder = "/data/arehma/models/ranges-fd"
     files = os.listdir(folder)
 
     configs = []
@@ -20,11 +20,13 @@ def main(argv) -> None:
 
     for i, file in enumerate(files):
         filename = os.path.join(folder, file)
-        model, config, training_stats = nn.load_sequential_model(filename, jax.nn.relu)
+        model, config, training_stats = nn.load_sequential_model(filename)
         
         parameter_count = nn.count_parameters(model)
         
         validation_loss = training_stats['metric_step']['val_RSE']
+        print(filename)
+        print(validation_loss)
         configs.append(config)
         losses.append(jnp.array(validation_loss).min())
         redshift = to_redshift(config.file_index_start / 100)
