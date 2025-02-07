@@ -7,13 +7,12 @@ from powerbox import get_power
 from nvidia.dali.plugin.jax import DALIGenericIterator
 
 import data
-from config import Config, load_config
+from config import load_config
 from cosmos import compute_overdensity, normalize_inv, to_redshift
 
 def main(argv) -> None:
 
-    # Loading the data
-    config = load_config(argv[0])
+    config = load_config(argv[0])   
 
     jax.config.update("jax_enable_x64", False)
     jax.config.update("jax_disable_jit", False)
@@ -39,12 +38,12 @@ def main(argv) -> None:
 
     # Plotting
     plt.rcParams.update({
-        'font.size': 18,                   # Global font size
-        'axes.labelsize': 18,              # X and Y label font size
-        'axes.titlesize': 18,              # Title font size
+        'font.size': 28,                   # Global font size
+        'axes.labelsize': 24,              # X and Y label font size
+        'axes.titlesize': 24,              # Title font size
         'xtick.labelsize': 14,             # X tick label font size
         'ytick.labelsize': 14,             # Y tick label font size
-        'legend.fontsize': 18,             # Legend font size
+        'legend.fontsize': 22,             # Legend font size
         # 'axes.grid': True,                 # Enable grid
         'grid.alpha': 0.7,                 # Grid line transparency
         'grid.linestyle': '--',            # Grid line style
@@ -60,7 +59,6 @@ def main(argv) -> None:
     fig = plt.figure(
         layout='constrained', 
         figsize=(4 + 3.5 * n_steps, 10),
-        constrained_layout=True, 
         dpi=300)
     
     subfigs = fig.subfigures(
@@ -78,8 +76,6 @@ def main(argv) -> None:
     sequence = jnp.reshape(sequence, (n_steps, grid_size, grid_size, grid_size, 1))
 
     step = config.file_index_start
-
-    # file_index_stride = config.file_index_stride.copy()
 
     if config.flip and isinstance(config.file_index_stride, list): 
         step = jnp.sum(jnp.array(config.file_index_stride)) + config.file_index_start
