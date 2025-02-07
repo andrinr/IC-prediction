@@ -1,0 +1,69 @@
+\contentsline {section}{\numberline {1}Introduction}{4}{section.1}%
+\contentsline {section}{\numberline {2}Dark Matter N-Body Simulations}{6}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Comoving Coordinates}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Time}{7}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Units and Scale}{7}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Power Spectrum}{7}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Mass Assignment}{8}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Governing Equations}{9}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Initial Conditions}{10}{subsection.2.7}%
+\contentsline {subsubsection}{\numberline {2.7.1}IC Generation}{10}{subsubsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.8}N-Body Simulations}{11}{subsection.2.8}%
+\contentsline {subsubsection}{\numberline {2.8.1}Particle Mesh Method}{12}{subsubsection.2.8.1}%
+\contentsline {subsubsection}{\numberline {2.8.2}Fast Multipole Method}{12}{subsubsection.2.8.2}%
+\contentsline {section}{\numberline {3}Neural Networks and Optimization}{13}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Gradient-Based Optimization}{13}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Automatic Differentiation}{14}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Discrete Convolutional Operator}{15}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}UNet}{16}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Spectral Convolution}{17}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}FNO Architecture}{18}{subsection.3.6}%
+\contentsline {section}{\numberline {4}Problem Statement and Related Work}{20}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Inverse Problem}{20}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Reverse Time Integration}{21}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Differentiable Solver for IC Optimization}{22}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Statistical Methods for Constrained IC's}{22}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Surrogate Model for IC Optimizationl}{23}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Our Method}{24}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Experimental Approach and Outcomes}{25}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Simulation}{25}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Default Hyperparameters}{25}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Normalization}{26}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Overdensity Normalization}{27}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Standard Score Normalization}{27}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Log Growth Normalization}{28}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Normalization Conclusion}{29}{subsubsection.5.3.4}%
+\contentsline {subsection}{\numberline {5.4}Network Architecture}{29}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}UNet}{30}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}FNO}{31}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}Adapted FNO}{31}{subsubsection.5.4.3}%
+\contentsline {subsubsection}{\numberline {5.4.4}Network Architecture Conclusion}{32}{subsubsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.5}Hyperparameters}{32}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}FNO Capabilities}{33}{subsection.5.6}%
+\contentsline {subsubsection}{\numberline {5.6.1}Prediction Time Intervals}{34}{subsubsection.5.6.1}%
+\contentsline {subsection}{\numberline {5.7}Further Enhancements}{35}{subsection.5.7}%
+\contentsline {subsubsection}{\numberline {5.7.1}Power Spectrum Loss}{35}{subsubsection.5.7.1}%
+\contentsline {subsubsection}{\numberline {5.7.2}Gravitational Potential Feature}{37}{subsubsection.5.7.2}%
+\contentsline {subsection}{\numberline {5.8}Large Dataset Training}{38}{subsection.5.8}%
+\contentsline {subsection}{\numberline {5.9}Auto-regressive Predictions}{39}{subsection.5.9}%
+\contentsline {subsubsection}{\numberline {5.9.1}Unique Network Parametrization}{42}{subsubsection.5.9.1}%
+\contentsline {subsubsection}{\numberline {5.9.2}Skip Connections}{43}{subsubsection.5.9.2}%
+\contentsline {section}{\numberline {6}Implementation}{45}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Model Serialization}{46}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Parallelization}{46}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Differentiable Power Spectrum}{46}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Performance}{49}{subsubsection.6.3.1}%
+\contentsline {subsection}{\numberline {6.4}3D FNO}{50}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Conclusion}{53}{section.7}%
+\contentsline {section}{Appendices}{55}{section*.30}%
+\contentsline {section}{\numberline {A}Exploratory Work in Differentiable Physics}{55}{appendix.1.A}%
+\contentsline {subsection}{\numberline {A.1}Reverse Time Integration}{55}{subsection.1.A.1}%
+\contentsline {subsection}{\numberline {A.2}Differentiable Physics with Enzyme}{56}{subsection.1.A.2}%
+\contentsline {subsection}{\numberline {A.3}Adjoint ODE}{56}{subsection.1.A.3}%
+\contentsline {section}{\numberline {B}Other Neural Network Architectures}{59}{appendix.1.B}%
+\contentsline {subsection}{\numberline {B.1}Generative Adversial Networks}{59}{subsection.1.B.1}%
+\contentsline {subsection}{\numberline {B.2}Encoder Decoder Methods}{59}{subsection.1.B.2}%
+\contentsline {section}{\numberline {C}IC Generation}{60}{appendix.1.C}%
+\contentsline {subsection}{\numberline {C.1}Optimizing over the Power Spectrum}{60}{subsection.1.C.1}%
+\contentsline {subsection}{\numberline {C.2}Conditional White Noise}{60}{subsection.1.C.2}%
+\contentsline {section}{\numberline {D}Differentiable CIC Mass Assignment}{62}{appendix.1.D}%

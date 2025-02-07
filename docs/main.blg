@@ -1,0 +1,58 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+Reallocating 'name_of_file' (item size: 1) to 9 items.
+The style file: plainnat.bst
+Reallocating 'name_of_file' (item size: 1) to 10 items.
+Database file #1: reference.bib
+Warning--entry type for "jax2018github" isn't style-file defined
+--line 26 of file reference.bib
+Warning--entry type for "dion_hafner_2021_5607491" isn't style-file defined
+--line 34 of file reference.bib
+Warning--entry type for "deepmind2020jax" isn't style-file defined
+--line 46 of file reference.bib
+Warning--entry type for "flax2020github" isn't style-file defined
+--line 67 of file reference.bib
+Warning--empty year in machinelearningsimulation
+You've used 73 entries,
+            2773 wiz_defined-function locations,
+            991 strings with 20576 characters,
+and the built_in function-call counts, 39592 in all, are:
+= -- 3300
+> -- 3146
+< -- 41
++ -- 1058
+- -- 984
+* -- 3450
+:= -- 6287
+add.period$ -- 233
+call.type$ -- 73
+change.case$ -- 533
+chr.to.int$ -- 72
+cite$ -- 147
+duplicate$ -- 1550
+empty$ -- 2709
+format.name$ -- 1087
+if$ -- 8105
+int.to.chr$ -- 2
+int.to.str$ -- 1
+missing$ -- 72
+newline$ -- 379
+num.names$ -- 298
+pop$ -- 1078
+preamble$ -- 1
+purify$ -- 466
+quote$ -- 0
+skip$ -- 1334
+stack$ -- 0
+substring$ -- 993
+swap$ -- 164
+text.length$ -- 12
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 773
+warning$ -- 1
+while$ -- 294
+width$ -- 0
+write$ -- 949
+(There were 5 warnings)

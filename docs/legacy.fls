@@ -1,0 +1,8 @@
+PWD C:\Users\andri\Documents\MThesis
+INPUT C:\Users\andri\AppData\Local\MiKTeX\miktex\data\le\pdftex\latex.fmt
+INPUT legacy.tex
+OUTPUT legacy.log
+INPUT C:\Users\andri\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx10.tfm
+INPUT C:\Users\andri\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx7.tfm
+INPUT C:\Users\andri\AppData\Local\Programs\MiKTeX\fonts\tfm\public\cm\cmbx5.tfm
+OUTPUT legacy.dvi
