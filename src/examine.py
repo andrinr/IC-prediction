@@ -37,11 +37,13 @@ def main(argv) -> None:
     attributes = sample["attributes"][0]
 
     visualize.compare(
-        "img/data_distr.jpg", 
-        sequence_curr = sequence, 
-        sequence_prediction=None,
+        output_file="img/data_distr.jpg", 
+        sequences = sequence, 
+        predictions=None,
         config = config,
-        attributes = attributes)
+        attributes = attributes,
+        labels=[] * len(sequence),
+        norm_functions=[config.normalizing_function] * len(sequence))
     
     # Delete Data Pipeline
     del data_pipeline

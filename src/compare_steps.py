@@ -11,7 +11,7 @@ from cosmos import to_redshift
 
 def main(argv) -> None:
 
-    folder = "models/ranges"
+    folder = "/data/arehma/models/ranges"
     files = os.listdir(folder)
 
     configs = []
@@ -20,11 +20,13 @@ def main(argv) -> None:
 
     for i, file in enumerate(files):
         filename = os.path.join(folder, file)
-        model, config, training_stats = nn.load_sequential_model(filename, jax.nn.relu)
+        model, config, training_stats = nn.load_sequential_model(filename)
         
         parameter_count = nn.count_parameters(model)
         
         validation_loss = training_stats['metric_step']['val_RSE']
+        print(filename)
+        print(validation_loss)
         configs.append(config)
         losses.append(jnp.array(validation_loss).min())
         redshift = to_redshift(config.file_index_start / 100)
@@ -51,10 +53,12 @@ def main(argv) -> None:
         start_index = start_indices[i]
         start_red = to_redshift(config.file_index_start / 100)
         end_red = to_redshift((config.file_index_start + config.file_index_stride[0])/100)
-        norm_loss = (loss - min_loss) / (max_loss - min_loss)  # Normalize loss
+        # norm_loss = (loss - min_loss) / (max_loss - min_loss)  # Normalize loss
+        norm_loss = loss
         color = cmap(norm_loss)
         
-        y = start_index + plots_in_bin[start_index] * height
+        # y = start_index + plots_in_bin[start_index] * height
+        y = i
         x_start = 1 / (1 + start_red)
         x_end = 1 / (1 + end_red)
         
