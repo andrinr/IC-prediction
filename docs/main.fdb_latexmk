@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1738954026.52344 "main.aux" "main.bbl" "main" 1738954031.99082 0
+["bibtex main"] 1738955290.62066 "main.aux" "main.bbl" "main" 1738955296.76347 0
   "./reference.bib" 1738952600 27634 80d470aed780cb66499676b6fe097aca ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/bibtex/bst/natbib/plainnat.bst" 1284455456 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1738954031 40723 b67b8366cd622f86d45104c27e5a3175 "pdflatex"
+  "main.aux" 1738955296 40504 14ef414418baa3104e0a3167a9efa64b "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1738954026.6983 "c:/Users/andri/Documents/MThesis/main.tex" "main.pdf" "main" 1738954031.99125 0
+["pdflatex"] 1738955290.79765 "c:/Users/andri/msc-thesis/docs/main.tex" "main.pdf" "main" 1738955296.76381 0
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1738953347 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi375/ecss0800.pk" 1738953357 10028 930bf3de6cacd1cbd469175ac0d537b1 ""
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi525/ecss0800.pk" 1738953361 14032 804bbc7122ac305e7656b3f54a97577b ""
@@ -157,7 +157,7 @@
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/tools/array.sty" 1730400552 14552 27664839421e418b87f56fa4c6f66b1a ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/andri/Documents/MThesis/main.tex" 1738954020 182831 694e2baa412d0dbd10d17840dc72799e ""
+  "c:/Users/andri/msc-thesis/docs/main.tex" 1738955273 182683 f7870768b246e8b0e0eadd3b54ffe5ba ""
   "img/IC_sine_corr.png" 1738952601 184067 be24e5b3d14fe1aa49269fee347e7f61 ""
   "img/IC_sine_res.png" 1738952601 261893 f3dac6ddb005e5cdb6b4062cc0769595 ""
   "img/IC_sine_setup.png" 1738952601 259996 aed17d4706b8846263cf8db95384fd3c ""
@@ -167,10 +167,10 @@
   "img/channels_compute.png" 1738952601 44423 367bcef02d4b046fe49dc051a8a29302 ""
   "img/cic.png" 1738952601 23540 51e7ca4ad8ba737df89ecfdee87c9d5e ""
   "img/cmp.jpg" 1738952601 14785 32dd82d30a35f0acff359eadc5b11c9e ""
-  "img/compare_channels_3.jpg" 1738952601 918398 689a04aebf246de36e81a10e979aa365 ""
+  "img/compare_channels.png" 1738954710 425441 809cdd390c7b29f5e0ec73dd1624960a ""
   "img/compare_filtered.jpg" 1738952601 189871 b3176f65fa647f7819a7a404b086a4cd ""
   "img/compare_ic_edit.png" 1738952601 1672020 7dcda26c7b14d4247ffeba68b5691950 ""
-  "img/compare_layer_4.jpg" 1738952601 914572 336f9d5dc0a367e33ce7e378feb261cb ""
+  "img/compare_layers_2.png" 1738954710 419703 1cdf6b59fca9e52b9b884e095e863460 ""
   "img/compare_potential.jpg" 1738952601 153411 6191890bbece741eb43ebd4b21785b4f ""
   "img/compare_power.jpg" 1738952601 155868 75b647a237a0dd9f4c5a103b6a1b5aa0 ""
   "img/cond_ic.png" 1738952601 44757 1cf603ffe48cdec2bb5e0bbf88194134 ""
@@ -199,11 +199,11 @@
   "img/schemes.png" 1738952601 52527 2bc376ba221dc80f518a7752dab2bd29 ""
   "img/ssm.png" 1738952601 912263 f119aa595d1189cb91972d92e5789bce ""
   "img/unet.png" 1738952601 103270 fcfd65b2069a81d0e5aef6aa69f2150d ""
-  "main.aux" 1738954031 40723 b67b8366cd622f86d45104c27e5a3175 "pdflatex"
-  "main.bbl" 1738954026 25373 c859972f4ae224538188c6b4974c89e8 "bibtex main"
-  "main.out" 1738954031 11656 5bbba1832f94c1654a308fc72f0d0048 "pdflatex"
-  "main.tex" 1738954020 182831 694e2baa412d0dbd10d17840dc72799e ""
-  "main.toc" 1738954031 6138 c6aab9190c73a432fd7b7932403fdf5d "pdflatex"
+  "main.aux" 1738955296 40504 14ef414418baa3104e0a3167a9efa64b "pdflatex"
+  "main.bbl" 1738955290 25373 c859972f4ae224538188c6b4974c89e8 "bibtex main"
+  "main.out" 1738955296 11656 a4dcb90d9181b7a69f293ad45f1b80a4 "pdflatex"
+  "main.tex" 1738955273 182683 f7870768b246e8b0e0eadd3b54ffe5ba ""
+  "main.toc" 1738955296 6138 e072997d05f0d80650d7537aea3a56f3 "pdflatex"
   (generated)
   "main.aux"
   "main.log"

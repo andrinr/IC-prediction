@@ -1089,7 +1089,7 @@ Instead of applying a gradient free hyperparameter optimization, we take a more 
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=0.7\linewidth]{img/compare_channels_3.jpg}
+    \includegraphics[width=0.95\linewidth]{img/compare_channels.png}
     \caption{Visual and Power Spectrum comparison of predicted density fields with FNOs of different channel numbers. The top row shows the residual between the predictions and the ground truth. Red areas highlight regions where the prediction deposits too much mass, while blue areas indicate the opposite.}
     \label{fig:channels-A}
 \end{figure}
@@ -1097,23 +1097,21 @@ Instead of applying a gradient free hyperparameter optimization, we take a more 
 
 In a next step, we examine the effect of the layer count on the validation loss in figure \ref{fig:layers}. In subplot (b) we can observe how the validation loss decreases most with a four layer setup, whereas more or less layers result in worse models. The Same is reflected in the subplot (a) as we can observe models with 
 
+
 \begin{figure}[h]
-\centering
-\subfloat[Visual and Power Spectrum comparison of predicted density fields with FNO's of different different FNO layer counts. The top column shows the residual between the predicted and the ground truth. Red areas highlight areas where the prediction deposits too much mass, blue areas the opposite. ]{\label{fig:capparatus}
-\centering
-\includegraphics[width=0.6\linewidth]{img/compare_layer_4.jpg}
-}
-%no space
-\hfill
-\subfloat[Validation loss against compute time for different layer counts in FNO's. The corresponding parameter count is denoted in the legend of the plot.]{\label{fig:cdiagram}
-\centering
-
-\includegraphics[width=0.35\linewidth]{img/layer_compute.png}
-}
-
-\caption{Comparison of Predictions and validation convergence using different layer counts in FNO networks. Predictions are made from $z=4.25$ to $z=49$.}
-\label{fig:layers}
+    \centering
+    \includegraphics[width=0.4\linewidth]{img/layer_compute.png}
+    \caption{Validation loss against compute time for different layer counts in FNO's. The corresponding parameter count is denoted in the legend of the plot.}
+    \label{fig:layer-B}
 \end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.95\linewidth]{img/compare_layers_2.png}
+    \caption{Visual and Power Spectrum comparison of predicted density fields with FNO's of different different FNO layer counts. The top column shows the residual between the predicted and the ground truth. Red areas highlight areas where the prediction deposits too much mass, blue areas the opposite. }
+    \label{fig:layer-A}
+\end{figure}
+
 
 
 \subsection{FNO Capabilities}
