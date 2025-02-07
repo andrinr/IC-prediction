@@ -19,6 +19,23 @@ def modes(
 
     print(num_predictions)
 
+    plt.rcParams.update({
+        'font.size': 14,                   # Global font size
+        'axes.labelsize': 16,              # X and Y label font size
+        'axes.titlesize': 16,              # Title font size
+        'xtick.labelsize': 12,             # X tick label font size
+        'ytick.labelsize': 12,             # Y tick label font size
+        'legend.fontsize': 14,             # Legend font size
+        # 'axes.grid': True,                 # Enable grid
+        'grid.alpha': 0.7,                 # Grid line transparency
+        'grid.linestyle': '--',            # Grid line style
+        'grid.color': 'gray',              # Grid line color
+        'text.usetex': False,              # Use TeX for text (set True if TeX is available)
+        'figure.figsize': [8, 6],          # Figure size
+        'axes.prop_cycle': plt.cycler('color', ['#0077BB', '#EE7733', '#33BBEE', '#EE3377'])
+    })
+
+
     # Create figure
     fig = plt.figure(layout='constrained', figsize=(10, 4),  constrained_layout=True)
     fig, (ax1, ax2, ax3) = plt.subplots(1, 3)

@@ -22,7 +22,7 @@ def compare(
     #     'size'   : 16}
 
     # matplotlib.rc('font', **font)
-    
+
     num_predictions = len(predictions)  
     
     plt.rcParams.update({
@@ -105,7 +105,6 @@ def compare(
     cax = divider.append_axes('bottom', size='5%', pad=0.03)
     fig.colorbar(im_seq, cax=cax, orientation='horizontal')
     
-    spectral_loss = SpectralLoss(N, 20)
     
     # Process predictions
     for idx in range(num_predictions):

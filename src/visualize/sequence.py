@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from config import Config
 from mpl_toolkits.axes_grid1 import make_axes_locatable
 from powerbox import get_power
-from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv, SpectralLoss
+from cosmos import compute_overdensity, to_redshift, normalize, normalize_inv
 from matplotlib.cm import get_cmap
 
 def sequence(
@@ -16,8 +16,6 @@ def sequence(
     
     frames = sequence.shape[0]
     grid_size = sequence.shape[2]
-
-    spectral_loss = SpectralLoss(grid_size, 20)
 
     pred = sequence_prediction is not None
     long = frames > 3

@@ -2,13 +2,19 @@
 # grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/" #"/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
 grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 input_grid_size : 128
-grid_size : 64
-file_index_stride : 1
-file_index_steps : 1
+grid_size : 128
+file_index_stride :
+- 2
+- 3
+- 5
+- 10
+- 30
+- 50
+file_index_steps : 6
 file_index_start : 0
 total_index_steps : 100
 flip : True 
-normalizing_function : "log_growth" # log_growth, delta, ssm
+normalizing_function : "ssm" # log_growth, delta, ssm
 
 # Training parameters
 learning_rate : 0.002
