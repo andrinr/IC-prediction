@@ -3,7 +3,7 @@
 grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
 input_grid_size : 128
 grid_size : 64
-file_index_stride : 10
+file_index_stride : 1
 file_index_steps : 1
 file_index_start : 0
 total_index_steps : 100
@@ -18,7 +18,7 @@ stepwise_epochs : 20
 mixed_epochs : 0
 sequential_epochs : 0
 unique_networks : False
-model_dir : "/data/arehma/models/large/"
+model_dir : "/data/arehma/models/layers2/"
 model_type : "FNO" # UNet, FNO
 activation : "tanh" # relu, tanh
 

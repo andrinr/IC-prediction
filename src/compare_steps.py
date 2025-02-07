@@ -11,7 +11,7 @@ from cosmos import to_redshift
 
 def main(argv) -> None:
 
-    folder = "/data/arehma/models/ranges-fd"
+    folder = "/data/arehma/models/ranges"
     files = os.listdir(folder)
 
     configs = []
@@ -53,10 +53,12 @@ def main(argv) -> None:
         start_index = start_indices[i]
         start_red = to_redshift(config.file_index_start / 100)
         end_red = to_redshift((config.file_index_start + config.file_index_stride[0])/100)
-        norm_loss = (loss - min_loss) / (max_loss - min_loss)  # Normalize loss
+        # norm_loss = (loss - min_loss) / (max_loss - min_loss)  # Normalize loss
+        norm_loss = loss
         color = cmap(norm_loss)
         
-        y = start_index + plots_in_bin[start_index] * height
+        # y = start_index + plots_in_bin[start_index] * height
+        y = i
         x_start = 1 / (1 + start_red)
         x_end = 1 / (1 + end_red)
         
