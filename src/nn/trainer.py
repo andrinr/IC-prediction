@@ -4,11 +4,10 @@ import optax
 import equinox as eqx
 from functools import partial
 import time
-from cosmos import PowerSpectrum, compute_overdensity, normalize_inv, SpectralLoss
-from typing import NamedTuple, Tuple
+from cosmos import PowerSpectrum
+from typing import Tuple
 from .metric import Metric
-from powerbox import get_power
-from .loss import power_loss
+import time
 
 # @partial(jax.jit)
 # def mse(prediction : jax.Array, truth : jax.Array):
@@ -128,6 +127,8 @@ def get_batch_loss(
 
     return loss, rae, rse
 
+value_and_grad = eqx.filter_value_and_grad(prediction_loss, has_aux=True)
+
 @partial(jax.jit, static_argnums=[3, 5, 6, 7, 8])
 def learn_batch(
         sequence : jax.Array,
@@ -145,8 +146,6 @@ def learn_batch(
     shape of sequence:
     [Batch, Frames, Channels, Depth, Height, Width]
     """
-
-    value_and_grad = eqx.filter_value_and_grad(prediction_loss, has_aux=True)
 
     (loss, _), grad = value_and_grad(
         model_params,
@@ -176,13 +175,15 @@ def train_model(
         add_potential : bool,
         single_state_loss : bool) -> Tuple[eqx.Module, Metric]:
     
+    start_total = time.time()
+    
     optimizer = optax.adam(learning_rate)
     optimizer_state = optimizer.init(model_params)
     
     metric = Metric()
 
-    start = time.time()
     for epoch in range(n_epochs):
+        start = time.time()
         epoch_train_loss = []
         epoch_val_loss = []
         epoch_rae = []
@@ -226,12 +227,15 @@ def train_model(
         print(f"epoch {epoch}, val loss {epoch_val_loss.mean()}")        
         print(f"epoch {epoch}, rae {epoch_rae.mean()}")
         print(f"epoch {epoch}, rse {epoch_rse.mean()}")
+        print(f"epoch {epoch}, time {time.time() - start}")
         
         metric.update(
             epoch_train_loss.mean(),
             epoch_val_loss.mean(),
             epoch_rse.mean(),
             epoch_rae.mean(),
-            time.time() - start)
+            time.time() - start_total)
+        
+    print(f"Training process done after {time.time() - start_total} s")
         
     return model_params, metric

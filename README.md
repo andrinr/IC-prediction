@@ -60,7 +60,7 @@ conda install -c bccp nbodykit
 
 ### Train & Eval
 
-1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
+1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l --gpus=A100:1``` 
 2. Load Conda ```module load anaconda3```
 3. Load env ```source activate myenv```
 4. Train model ```python src/train.py default_config.yaml```
@@ -122,7 +122,8 @@ This steps have to be repeated every day to get a new key.
 2. if not running start it with ```Get-Service ssh-agent | Set-Service -StartupType Automatic``` and ```Start-Service ssh-agent```
 3. Activate the python env ```.\venv\Scripts\activate```
 4. execute the ssh-gen script ```python .\sshservice-cli\cscs-keygen.py``` and enter credentials. No password needed. 
-5. add key ```ssh-add ~\.ssh\cscs-key```
+5. add key ```
+```
 6. connect with ```ssh cscs``` or use vs code remote ssh extension
 
 ### Run data generation on SLURM system
