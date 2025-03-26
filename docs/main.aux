@@ -177,13 +177,15 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Prediction from $z=19.2$ to $z=49$, compared with or without additional power loss term.}}{38}{figure.caption.21}\protected@file@percent }
 \newlabel{fig:power-loss}{{20}{38}{Prediction from $z=19.2$ to $z=49$, compared with or without additional power loss term}{figure.caption.21}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.7.2}Gravitational Potential Feature}{38}{subsubsection.5.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Large Dataset Training}{38}{subsection.5.8}\protected@file@percent }
 \citation{kaplan2020scaling}
-\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Prediction from $z=19.2$ to $z=49$. Comparison of identical FNO networks trained on the density fields, with and without the potential as an additional input channel.}}{39}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:potential}{{21}{39}{Prediction from $z=19.2$ to $z=49$. Comparison of identical FNO networks trained on the density fields, with and without the potential as an additional input channel}{figure.caption.22}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Large Dataset Training}{39}{subsection.5.8}\protected@file@percent }
 \citation{brandstetter2022message}
 \citation{brandstetter2022message}
 \citation{li2020fourier}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Prediction from $z=19.2$ to $z=49$. Comparison of identical FNO networks trained on the density fields, with and without the potential as an additional input channel.}}{39}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:potential}{{21}{39}{Prediction from $z=19.2$ to $z=49$. Comparison of identical FNO networks trained on the density fields, with and without the potential as an additional input channel}{figure.caption.22}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.9}Auto-regressive Predictions}{39}{subsection.5.9}\protected@file@percent }
+\newlabel{goal-2}{{76}{39}{Auto-regressive Predictions}{equation.76}{}}
 \newlabel{fig:large-A}{{22a}{40}{Subfigure 22a}{subfigure.22.1}{}}
 \newlabel{sub@fig:large-A}{{(a)}{a}{Subfigure 22a\relax }{subfigure.22.1}{}}
 \newlabel{fig:large-B}{{22b}{40}{Subfigure 22b}{subfigure.22.2}{}}
@@ -192,25 +194,21 @@
 \newlabel{fig:large}{{22}{40}{Training and prediction on large dataset}{figure.caption.23}{}}
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(a)}{\ignorespaces {Results from network trained on the range of $z=0$ to $z=49$.}}}{40}{subfigure.22.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {subfigure}{\numberline{(b)}{\ignorespaces {Results from network trained on the range of $z=4.25$ to $z=49$.}}}{40}{subfigure.22.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9}Auto-regressive Predictions}{40}{subsection.5.9}\protected@file@percent }
-\newlabel{goal-2}{{76}{40}{Auto-regressive Predictions}{equation.76}{}}
+\newlabel{goal-rec}{{77}{40}{Auto-regressive Predictions}{equation.77}{}}
+\newlabel{step}{{79}{40}{Auto-regressive Predictions}{equation.79}{}}
 \citation{brandstetter2022message}
 \citation{krishnapriyan2021characterizing}
 \@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Different training schemes. Figure from \cite  {brandstetter2022message}.}}{41}{figure.caption.24}\protected@file@percent }
 \newlabel{fig:enter-label}{{23}{41}{Different training schemes. Figure from \cite {brandstetter2022message}}{figure.caption.24}{}}
-\newlabel{goal-rec}{{77}{41}{Auto-regressive Predictions}{equation.77}{}}
-\newlabel{step}{{79}{41}{Auto-regressive Predictions}{equation.79}{}}
 \newlabel{seq}{{80}{41}{Auto-regressive Predictions}{equation.80}{}}
 \citation{thuerey2021physics}
 \citation{zhang2019gradient}
 \citation{li2020fourier,gopakumar2023fourier}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {5.9.1}Unique Network Parametrization}{42}{subsubsection.5.9.1}\protected@file@percent }
 \newlabel{mix}{{82}{42}{Unique Network Parametrization}{equation.82}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.9.2}Skip Connections}{42}{subsubsection.5.9.2}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Multistep Prediction on the large dataset using an FNO.}}{43}{figure.caption.25}\protected@file@percent }
 \newlabel{fig:multistep}{{24}{43}{Multistep Prediction on the large dataset using an FNO}{figure.caption.25}{}}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.9.2}Skip Connections}{43}{subsubsection.5.9.2}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Three-step prediction using an adaptive FNO with a three channel skip connections on the large dataset.}}{44}{figure.caption.26}\protected@file@percent }
-\newlabel{fig:mss}{{25}{44}{Three-step prediction using an adaptive FNO with a three channel skip connections on the large dataset}{figure.caption.26}{}}
 \citation{enzyme1,enzyme2,enzyme3}
 \citation{jax2018github}
 \citation{dion_hafner_2021_5607491}
@@ -219,34 +217,36 @@
 \citation{flax2020github}
 \citation{deepmind2020jax}
 \citation{kingma2014adam}
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Three-step prediction using an adaptive FNO with a three channel skip connections on the large dataset.}}{44}{figure.caption.26}\protected@file@percent }
+\newlabel{fig:mss}{{25}{44}{Three-step prediction using an adaptive FNO with a three channel skip connections on the large dataset}{figure.caption.26}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Implementation}{44}{section.6}\protected@file@percent }
+\newlabel{impl}{{6}{44}{Implementation}{section.6}{}}
 \citation{pytestx.y}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Implementation}{45}{section.6}\protected@file@percent }
-\newlabel{impl}{{6}{45}{Implementation}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Model Serialization}{45}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Configuration parameters for the volumetric training pipeline.}}{46}{table.caption.27}\protected@file@percent }
+\newlabel{table:config}{{2}{46}{Configuration parameters for the volumetric training pipeline}{table.caption.27}{}}
 \citation{jax2018github}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Model Serialization}{46}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Parallelization}{46}{subsection.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Differentiable Power Spectrum}{46}{subsection.6.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Configuration parameters for the volumetric training pipeline.}}{47}{table.caption.27}\protected@file@percent }
-\newlabel{table:config}{{2}{47}{Configuration parameters for the volumetric training pipeline}{table.caption.27}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Parallelization}{47}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Differentiable Power Spectrum}{47}{subsection.6.3}\protected@file@percent }
 \citation{jax2018github}
 \citation{murray2018powerbox}
 \citation{murray2018powerbox}
 \citation{frigo1999fftw}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.1}Performance}{49}{subsubsection.6.3.1}\protected@file@percent }
 \citation{jax2018github}
 \citation{kidger2021equinox}
 \citation{machinelearningsimulation,kossaifi2024neural}
 \citation{li2020fourier}
-\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Power spectrum computed on an overdensity field at $z=49$.}}{50}{figure.caption.28}\protected@file@percent }
-\newlabel{fig:powerspectrum}{{26}{50}{Power spectrum computed on an overdensity field at $z=49$}{figure.caption.28}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Power spectrum computed on an overdensity field at $z=49$.}}{49}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:powerspectrum}{{26}{49}{Power spectrum computed on an overdensity field at $z=49$}{figure.caption.28}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {6.3.1}Performance}{49}{subsubsection.6.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}3D FNO}{49}{subsection.6.4}\protected@file@percent }
+\citation{kossaifi2024neural}
+\citation{kossaifi2024neural}
 \@writefile{lof}{\contentsline {figure}{\numberline {27}{\ignorespaces Cosmax power spectrum benchmark.}}{50}{figure.caption.29}\protected@file@percent }
 \newlabel{fig:cosmax-bench}{{27}{50}{Cosmax power spectrum benchmark}{figure.caption.29}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}3D FNO}{50}{subsection.6.4}\protected@file@percent }
-\citation{kossaifi2024neural}
-\citation{kossaifi2024neural}
-\@writefile{lof}{\contentsline {figure}{\numberline {28}{\ignorespaces Spectral Convolution without and with Fourier Space Shifting. Figure from \cite  {kossaifi2024neural}.}}{51}{figure.caption.30}\protected@file@percent }
-\newlabel{fig:shifting}{{28}{51}{Spectral Convolution without and with Fourier Space Shifting. Figure from \cite {kossaifi2024neural}}{figure.caption.30}{}}
-\newlabel{spectral-conv}{{83}{51}{3D FNO}{equation.83}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {28}{\ignorespaces Spectral Convolution without and with Fourier Space Shifting. Figure from \cite  {kossaifi2024neural}.}}{50}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:shifting}{{28}{50}{Spectral Convolution without and with Fourier Space Shifting. Figure from \cite {kossaifi2024neural}}{figure.caption.30}{}}
+\newlabel{spectral-conv}{{83}{50}{3D FNO}{equation.83}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{53}{section.7}\protected@file@percent }
 \citation{hut1995building}
 \@writefile{toc}{\contentsline {section}{Appendices}{55}{section*.31}\protected@file@percent }

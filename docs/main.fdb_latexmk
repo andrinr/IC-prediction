@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1738955290.62066 "main.aux" "main.bbl" "main" 1738955296.76347 0
+["bibtex main"] 1738957192.49817 "main.aux" "main.bbl" "main" 1738957587.91336 0
   "./reference.bib" 1738952600 27634 80d470aed780cb66499676b6fe097aca ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/bibtex/bst/natbib/plainnat.bst" 1284455456 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1738955296 40504 14ef414418baa3104e0a3167a9efa64b "pdflatex"
+  "main.aux" 1738957587 40504 970aca9e03445a52e2282e304d3d8c1c "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1738955290.79765 "c:/Users/andri/msc-thesis/docs/main.tex" "main.pdf" "main" 1738955296.76381 0
+["pdflatex"] 1738957581.45323 "c:/Users/andri/msc-thesis/docs/main.tex" "main.pdf" "main" 1738957587.91374 0
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1738953347 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi375/ecss0800.pk" 1738953357 10028 930bf3de6cacd1cbd469175ac0d537b1 ""
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi525/ecss0800.pk" 1738953361 14032 804bbc7122ac305e7656b3f54a97577b ""
@@ -157,7 +157,7 @@
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/tools/array.sty" 1730400552 14552 27664839421e418b87f56fa4c6f66b1a ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/andri/msc-thesis/docs/main.tex" 1738955273 182683 f7870768b246e8b0e0eadd3b54ffe5ba ""
+  "c:/Users/andri/msc-thesis/docs/main.tex" 1738957575 181949 45d748aa39285181075fed09d2f43a1b ""
   "img/IC_sine_corr.png" 1738952601 184067 be24e5b3d14fe1aa49269fee347e7f61 ""
   "img/IC_sine_res.png" 1738952601 261893 f3dac6ddb005e5cdb6b4062cc0769595 ""
   "img/IC_sine_setup.png" 1738952601 259996 aed17d4706b8846263cf8db95384fd3c ""
@@ -171,8 +171,8 @@
   "img/compare_filtered.jpg" 1738952601 189871 b3176f65fa647f7819a7a404b086a4cd ""
   "img/compare_ic_edit.png" 1738952601 1672020 7dcda26c7b14d4247ffeba68b5691950 ""
   "img/compare_layers_2.png" 1738954710 419703 1cdf6b59fca9e52b9b884e095e863460 ""
-  "img/compare_potential.jpg" 1738952601 153411 6191890bbece741eb43ebd4b21785b4f ""
-  "img/compare_power.jpg" 1738952601 155868 75b647a237a0dd9f4c5a103b6a1b5aa0 ""
+  "img/compare_loss.png" 1738957131 329801 97866dca4b94c19960497e555a63176f ""
+  "img/compare_potential_4.png" 1738957131 331721 8e5f26399830124f3cea52a777520cbe ""
   "img/cond_ic.png" 1738952601 44757 1cf603ffe48cdec2bb5e0bbf88194134 ""
   "img/cond_ic_2.png" 1738952601 120506 61ab469db905472cf74bacbd6ed203d8 ""
   "img/delta.png" 1738952601 873061 24c0f3535de3ea5bbea4ab6e17435bf5 ""
@@ -199,11 +199,11 @@
   "img/schemes.png" 1738952601 52527 2bc376ba221dc80f518a7752dab2bd29 ""
   "img/ssm.png" 1738952601 912263 f119aa595d1189cb91972d92e5789bce ""
   "img/unet.png" 1738952601 103270 fcfd65b2069a81d0e5aef6aa69f2150d ""
-  "main.aux" 1738955296 40504 14ef414418baa3104e0a3167a9efa64b "pdflatex"
-  "main.bbl" 1738955290 25373 c859972f4ae224538188c6b4974c89e8 "bibtex main"
-  "main.out" 1738955296 11656 a4dcb90d9181b7a69f293ad45f1b80a4 "pdflatex"
-  "main.tex" 1738955273 182683 f7870768b246e8b0e0eadd3b54ffe5ba ""
-  "main.toc" 1738955296 6138 e072997d05f0d80650d7537aea3a56f3 "pdflatex"
+  "main.aux" 1738957587 40504 970aca9e03445a52e2282e304d3d8c1c "pdflatex"
+  "main.bbl" 1738957192 25373 c859972f4ae224538188c6b4974c89e8 "bibtex main"
+  "main.out" 1738957587 11656 a4dcb90d9181b7a69f293ad45f1b80a4 "pdflatex"
+  "main.tex" 1738957575 181949 45d748aa39285181075fed09d2f43a1b ""
+  "main.toc" 1738957587 6138 5021aa7ee0351d89d2779f1d20619c59 "pdflatex"
   (generated)
   "main.aux"
   "main.log"

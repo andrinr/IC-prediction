@@ -1066,25 +1066,7 @@ We found, when predicting from $z=4.25$ to $z=49$, that the adapted FNO achieved
 \end{figure}
 
 
-% \begin{figure}[h]
-% \centering
-% \subfloat[Visual and Power Spectrum comparison of predicted density fields with FNOs of different channel numbers. The top row shows the residual between the predictions and the ground truth. Red areas highlight regions where the prediction deposits too much mass, while blue areas indicate the opposite.]{\label{fig:channels-A}
-% \centering
-% \includegraphics[width=0.6\linewidth]{img/compare_channels_3.jpg}
-% }
-% %no space
-% \hfill
-% \subfloat[Validation loss against compute time for different channel numbers in FNOs. The corresponding parameter count is denoted in the label of the plot.]{\label{fig:channels-B}
-% \centering
-% \includegraphics[width=0.35\linewidth]{channels_compute.png}
-% }
-
-% \caption{Comparison of predictions and validation convergence using different hidden channel numbers in FNO networks. Predictions are made from $z=4.25$ to $z=49$.}
-% \label{fig:channels}
-% \end{figure}
-
-
-Instead of applying a gradient free hyperparameter optimization, we take a more nuanced approach, allowing us to balance network size with training efficiency. Training efficiency is often overlooked and becomes critical when training networks on datasets of this scale. The largest FNO we have tested has well over 30 million parameters. First we want to examine what the ideal number of channels is, that means how much should we lift the number of input channels in the first operation applied inside the FNO. To do so, we examine the predictions based on two observations. For one, we want to compare the actual predicted distribution visually and based on the power spectrum of predictions. But we are also interested in comparing the learning capacity of the model against its compute costs. Naturally, we favor a model which converges to the lowest validation loss after a certain time spent on training, whereas we assume time to be an equivalent measure to compute cost. When comparing models with different parameters, comparing the validation loss against the number of epochs can be misleading, as larger models usually require more computing time to finish a single epoch. We test train all models on 20 epochs with a learning rate of 0.002. In a first setup, we examine the effects on the training capacity of the model when using different numbers of channels, as seen in Figure \ref{fig:channels}. In subplot (b), we can observe how the networks with more channels take longer to complete the first epoch due to their significantly higher parameter count. However, even after completing the first epoch, the validation loss is lower compared to networks with fewer channels. Furthermore, the slope of the validation loss appears to correlate with the number of channels, meaning more channels result in a more negative slope. Finally, we observe more unstable training, evident in the wobbly validation loss curve. The more unstable training is likely rooted in the increased parameter count, which leads to a more complex loss surface topology. Since we rely on an identical learning rate, the trajectory of the optimizer passes multiple small hills and valleys, which then appear as a jagged line in the validation loss. After all, a gradient-based algorithm traces a specific path in the loss surface topology, whereas plotting the loss over the training time is equivalent to showing the height profile of the traced path. We conclude a hidden channel count of 16 is ideal, as the difference between the 8 channel setup already appears to show diminishing returns. In subplot (a) we can visually observe how the network with more hidden channels is capable of predicting a more detailed density field, which is also reflected in the power spectrum. There, the prediction made with 8 and 16 hidden layers has a power spectrum whose intensity falls off later than with 4 hidden channels.
+Instead of applying a gradient free hyperparameter optimization as it is common practice in machin learning, we take a more nuanced approach, allowing us to balance network size with training efficiency. Training efficiency is often overlooked and becomes critical when training networks on datasets of this scale. The largest FNO we have tested has well over 30 million parameters. First we want to examine what the ideal number of channels is, that means how much should we lift the number of input channels in the first operation applied inside the FNO. To do so, we examine the predictions based on two observations. For one, we want to compare the actual predicted distribution visually and based on the power spectrum of predictions. But we are also interested in comparing the learning capacity of the model against its compute costs. Naturally, we favor a model which converges to the lowest validation loss after a certain time spent on training, whereas we assume time to be an equivalent measure to compute cost. When comparing models with different parameters, comparing the validation loss against the number of epochs can be misleading, as larger models usually require more computing time to finish a single epoch. We test train all models on 20 epochs with a learning rate of 0.002. In a first setup, we examine the effects on the training capacity of the model when using different numbers of channels, as seen in Figure \ref{fig:channels-A}. We can observe how the networks with more channels take longer to complete the first epoch due to their significantly higher parameter count. However, even after completing the first epoch, the validation loss is lower compared to networks with fewer channels. Furthermore, the slope of the validation loss appears to correlate with the number of channels, meaning more channels result in a more negative slope. Finally, we observe more unstable training, evident in the wobbly validation loss curve. The more unstable training is likely rooted in the increased parameter count, which leads to a more complex loss surface topology. Since we rely on an identical learning rate, the trajectory of the optimizer passes multiple small hills and valleys, which then appear as a jagged line in the validation loss. After all, a gradient-based algorithm traces a specific path in the loss surface topology, whereas plotting the loss over the training time is equivalent to showing the height profile of the traced path. We conclude a hidden channel count of 16 is ideal, as the difference between the 8 channel setup already appears to show diminishing returns. In figure \ref{fig:channels-B} we can visually observe how the network with more hidden channels is capable of predicting a more detailed density field, which is also reflected in the power spectrum. There, the prediction made with 8 and 16 hidden layers has a power spectrum whose intensity falls off later than with 4 hidden channels.
 
 
 \begin{figure}[t]
@@ -1094,10 +1076,6 @@ Instead of applying a gradient free hyperparameter optimization, we take a more 
     \label{fig:channels-A}
 \end{figure}
 
-
-In a next step, we examine the effect of the layer count on the validation loss in figure \ref{fig:layers}. In subplot (b) we can observe how the validation loss decreases most with a four layer setup, whereas more or less layers result in worse models. The Same is reflected in the subplot (a) as we can observe models with 
-
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.4\linewidth]{img/layer_compute.png}
@@ -1105,14 +1083,15 @@ In a next step, we examine the effect of the layer count on the validation loss 
     \label{fig:layer-B}
 \end{figure}
 
+
+In a next step, we examine the effect of the layer count on the validation loss in figure \ref{fig:layer-B}. In figure \ref{fig:layer-B} we can observe how the validation loss decreases most with a four layer setup, whereas more or less layers result in worse models. From figure \ref{fig:layer-A} it becomes further evident that a mode with four layers perorforms better than a model with three. The model with 5 layer still performs better, however the effect is not that pronounced. 
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.95\linewidth]{img/compare_layers_2.png}
     \caption{Visual and Power Spectrum comparison of predicted density fields with FNO's of different different FNO layer counts. The top column shows the residual between the predicted and the ground truth. Red areas highlight areas where the prediction deposits too much mass, blue areas the opposite. }
     \label{fig:layer-A}
 \end{figure}
-
-
 
 \subsection{FNO Capabilities}
 
@@ -1169,7 +1148,7 @@ In order to improve the performance of the neural network, we have investigated 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\linewidth]{img/compare_power.jpg}
+    \includegraphics[width=0.95\linewidth]{img/compare_loss.png}
     \caption{Prediction from $z=19.2$ to $z=49$, compared with or without additional power loss term.}
     \label{fig:power-loss}
 \end{figure}
@@ -1202,7 +1181,7 @@ In the realm of the very small wavelengths, why the network still appears to be 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\linewidth]{img/compare_potential.jpg}
+    \includegraphics[width=0.95\linewidth]{img/compare_potential_4.png}
     \caption{Prediction from $z=19.2$ to $z=49$. Comparison of identical FNO networks trained on the density fields, with and without the potential as an additional input channel.}
     \label{fig:potential}
 \end{figure}
