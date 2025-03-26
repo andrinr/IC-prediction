@@ -49,9 +49,9 @@ def compare(
     subfigs = fig.subfigures(
         1, 
         2, 
-        wspace=0.05, 
+        wspace=0.15, 
         hspace=0.01,
-        width_ratios=[3, 1],
+        width_ratios=[2, 2],
         height_ratios=[1])
 
     spec_sequence = subfigs[0].add_gridspec(
@@ -74,11 +74,11 @@ def compare(
 
     step = config.file_index_start
 
-    p, k = get_power(delta[:, :, :, 0], config.box_size / 2)
-    ax_power.plot(
-        k,
-        p,
-        label=fr'sim $z = {to_redshift(step/100):.2f}$')
+    # p, k = get_power(delta[:, :, :, 0], config.box_size / 2)
+    # ax_power.plot(
+    #     k,
+    #     p,
+    #     label=fr'sim $z = {to_redshift(step/100):.2f}$')
 
     if isinstance(file_index_stride, list): 
         step = jnp.sum(jnp.array(file_index_stride)) + config.file_index_start
@@ -98,37 +98,22 @@ def compare(
         attributes_curr = attributes[idx]
         
         attribs = jax.device_put(attributes_curr[0], device=jax.devices("gpu")[0])
-        normalized = sequence_curr[0]
+        normalized = sequence_curr[1]
         rho = normalize_inv(normalized, attribs, norm_functions[idx])
         delta = compute_overdensity(rho)
 
-        N = normalized.shape[1]
-        norm_fs = jnp.fft.rfftn(normalized, s=(N, N, N), axes=(0, 1, 2))
-        kx = jnp.fft.fftfreq(N)[:, None, None]
-        ky = jnp.fft.fftfreq(N)[None, :, None]
-        kz = jnp.fft.rfftfreq(N)[None, None, :]
-        k_squared = kx**2 + ky**2 + kz**2
-        cutoff_k_squared = 0.05
-        # Mask out higher wavelengths
-        mask = (k_squared <= cutoff_k_squared)[:, :, :, None]
-        # mask = k_squared <= cutoff_k_squared
-        norm_fs_filtered = norm_fs * mask
-
-        # Transform back to real space
-        norm_filtered = jnp.fft.irfftn(norm_fs_filtered, s=(N, N, N), axes=(0, 1, 2))
-        rho_pred_filtered = normalize_inv(norm_filtered, attribs,  norm_functions[idx])
-        delta_pred_filtered = compute_overdensity(rho_pred_filtered)
-
-        rho_pred_normalized = pred_curr[0]
+        rho_pred_normalized = pred_curr[1]
         rho_pred = normalize_inv(rho_pred_normalized, attribs,  norm_functions[idx])
         delta_pred = compute_overdensity(rho_pred)
 
         ax_seq = fig.add_subplot(spec_sequence[0, idx])
-        ax_seq.set_title(r'input $\rho_{norm}$')
+        ax_seq.set_title(r'$\rho_{norm}$')
         ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
         im_seq = ax_seq.imshow(
-            delta_pred_filtered[grid_size // 2, :, :], 
-            cmap='inferno')
+            rho_pred_normalized[grid_size // 2, :, :] - normalized[grid_size // 2, :, :], 
+            cmap='RdYlBu',
+            vmin=-0.15,
+            vmax=0.15)
 
         divider = make_axes_locatable(ax_seq)
         cax = divider.append_axes('right', size='5%', pad=0.03)
@@ -147,9 +132,11 @@ def compare(
         divider_pred = make_axes_locatable(ax_seq_pred)
         cax_pred = divider_pred.append_axes('right', size='5%', pad=0.03)
         fig.colorbar(im_seq_pred, cax=cax_pred, orientation='vertical')
-        
+        print(config.box_size)
         p_pred, k_pred = get_power(
-            delta_pred[:, :, :, 0], config.box_size / 2)
+            delta_pred[:, :, :, 0],
+            config.box_size / 2,
+            delta[:, :, :, 0])
         ax_power.plot(
             k_pred, p_pred,
             label=fr'pred {labels[idx]}')
@@ -157,7 +144,7 @@ def compare(
     ax_power.set_yscale('log')
     ax_power.set_xscale('log')
     ax_power.legend(loc='center left', bbox_to_anchor=(0., -0.9))
-    ax_power.set_title(r'Power Spectrum of $\delta$')
+    ax_power.set_title(r'Cross correlation')
     ax_power.set_xlabel(r'$k$ [$h \ \mathrm{Mpc}^{-1}$]')
     ax_power.set_ylabel(r'$P(k)$ [$h^{-3} \ \mathrm{Mpc}^3$]')
 
@@ -182,8 +169,7 @@ def main(argv) -> None:
         filename = os.path.join(folder, file)
         model, config, _ = nn.load_sequential_model(filename)
 
-        labels.append(
-            f"from z={to_redshift((config.file_index_start + config.file_index_stride) / 100):.1f}")
+        labels.append("MSE" if i == 1 else "MP")
 
         norm_functions.append(config.normalizing_function)
 

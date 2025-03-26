@@ -74,11 +74,11 @@ def compare(
 
     step = config.file_index_start
 
-    p, k = get_power(delta[:, :, :, 0], config.box_size / 2)
-    ax_power.plot(
-        k,
-        p,
-        label=fr'sim $z = {to_redshift(step/100):.2f}$')
+    # p, k = get_power(delta[:, :, :, 0], config.box_size / 2)
+    # ax_power.plot(
+    #     k,
+    #     p,
+    #     label=fr'sim $z = {to_redshift(step/100):.2f}$')
 
     if isinstance(file_index_stride, list): 
         step = jnp.sum(jnp.array(file_index_stride)) + config.file_index_start
@@ -149,7 +149,9 @@ def compare(
         fig.colorbar(im_seq_pred, cax=cax_pred, orientation='vertical')
         
         p_pred, k_pred = get_power(
-            delta_pred[:, :, :, 0], config.box_size / 2)
+            delta_pred[:, :, :, 0],
+            config.box_size / 2,
+            delta[:, :, :, 0])
         ax_power.plot(
             k_pred, p_pred,
             label=fr'pred {labels[idx]}')
