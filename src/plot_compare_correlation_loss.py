@@ -86,6 +86,15 @@ def compare(
     else:
         step = config.file_index_start + config.file_index_stride * (frames - 1)
 
+    p_pred, k_pred = get_power(
+        delta[:, :, :, 0],
+        config.box_size)
+    
+    ax_power.plot(
+        k_pred, p_pred,
+        label=fr'sim z = 49')
+
+
     for idx in range(num_predictions):
 
         print(idx)
@@ -135,7 +144,7 @@ def compare(
         print(config.box_size)
         p_pred, k_pred = get_power(
             delta_pred[:, :, :, 0],
-            config.box_size / 2,
+            config.box_size,
             delta[:, :, :, 0])
         ax_power.plot(
             k_pred, p_pred,
