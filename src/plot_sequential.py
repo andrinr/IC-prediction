@@ -38,7 +38,7 @@ def plot(
         'grid.linestyle': '--',            # Grid line style
         'grid.color': 'gray',              # Grid line color
         'text.usetex': False,              # Use TeX for text (set True if TeX is available)
-        'figure.figsize': [8, 6],          # Figure size
+        'figure.figsize': [9, 7],          # Figure size
         # 'axes.prop_cycle': plt.cycler('color', ['#0077BB', '#EE7733', '#33BBEE', '#EE3377'])
     })
     
@@ -57,7 +57,7 @@ def plot(
     
     fig = plt.figure(
         layout='constrained', 
-        figsize=(2+2.5*frames, 9 ),
+        figsize=(3+2.9*frames, 11 ),
         dpi=300)
     subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.05, height_ratios=[1.6, 1])
 
