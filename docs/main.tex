@@ -57,7 +57,6 @@
    alsoother={},
    morecomment=[l]\#,%
    morecomment=[n]{\#=}{=\#},%
-   morestring=[s]{"}{"},%
    morestring=[m]{'}{'},%
 }[keywords,comments,strings]%
 
@@ -124,13 +123,6 @@ language         = Julia,
        \large
      \vspace*{0.5cm}
        
-
-
-          \vspace*{1cm}
-
-      \includegraphics[width=0.25\linewidth]{img/output.png}
-              
-
         \large
        \vspace{1.5cm}
 
@@ -1146,7 +1138,7 @@ Visually, we can appreciate this as the predicted density fields appear more bur
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\linewidth]{img/compare_ic_edit.png}
+    \includegraphics[width=0.9\linewidth]{img/compare_larger_scales.png}
     \caption{Comparison of identical FNO models trained on different time regions.}
     \label{fig:IC-comp}
 \end{figure}
@@ -1169,7 +1161,7 @@ In order to improve the performance of the neural network, we have investigated 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\linewidth]{img/compare_power.jpg}
+    \includegraphics[width=0.8\linewidth]{img/compare_loss.png}
     \caption{Prediction from $z=19.2$ to $z=49$, compared with or without additional power loss term.}
     \label{fig:power-loss}
 \end{figure}
@@ -1193,7 +1185,22 @@ and obtain the MP loss function
     L_{MP} = \alpha \cdot L_{MSE} + \cdot L_{power}.
 \end{equation}
 
-The above requires a differentiable method of obtaining the power spectrum, which is not entirely straightforward. We will explain the details of the code in section \ref{impl}. When training a network with this function, the choice of $\alpha$ controls how much we value accuracy in terms of finding the same distribution versus obtaining a correct power spectrum. In Figure \ref{fig:power-loss}, we have plotted results from two networks: one trained using only $L_{MSE}$ and another using $L_{MP}$. The model trained with the Power Loss generally performs worse than the pure MSE model. Furthermore, the training process is very sensitive to the parameter $\alpha$; a poor choice can quickly lead to unfavorable outcomes. In our case, we found a value of $\alpha=2$,  slightly favoring the accuracy of density, to be working well. The training with the $L_{MSE}$ loss function achieved a Relative Squared Error (RSE) of 0.54, whereas the combined MSE and Power Spectrum loss yielded an RSE of 0.85 after 20 training epochs. In other words, the prediction with the power spectrum loss performed worse. However, we can also notice how the power spectrum of the prediction incorporating the power loss is significantly more accurate. This is also reflected in the visual comparison of the two density field predictions in figure \ref{fig:power-loss}. Here we can observe an increased presence of small structures. These small-scale features have many differing features from the ground truth, reflecting the decreased RSE accuracy score. For example, in the center region of prediction a few diagonal rays can be seen, those are not seen in the ground truth. We can conclude, that prediction that are made using a network trained on the mixed MP loss function perform a hybrid function of accurate density field predictions and generating fantasy small-scale structures to fit the desired power spectrum. The experiment highlights the generative capabilities of the FNO, to do such a task it has to be capable of learning to imprint a power spectrum into a density field.
+The above requires a differentiable method of obtaining the power spectrum, which is not entirely straightforward. We will explain the details of the code in section \ref{impl}. When training a network with this function, the choice of $\alpha$ controls how much we value accuracy in terms of finding the same distribution versus obtaining a correct power spectrum. In Figure \ref{fig:power-loss}, we have plotted results from two networks: one trained using only $L_{MSE}$ and another using $L_{MP}$. The model trained with the Power Loss generally performs worse than the pure MSE model. Furthermore, the training process is very sensitive to the parameter $\alpha$; a poor choice can quickly lead to unfavorable outcomes. In our case, we found a value of $\alpha=2$,  slightly favoring the accuracy of density, to be working well. The training with the $L_{MSE}$ loss function achieved a Relative Squared Error (RSE) of 0.54, whereas the combined MSE and Power Spectrum loss yielded an RSE of 0.85 after 20 training epochs. In other words, the prediction with the power spectrum loss performed worse. However, we can also notice how the power spectrum of the prediction incorporating the power loss is significantly more accurate. This is also reflected in the visual comparison of the two density field predictions in figure \ref{fig:power-loss}. Here we can observe an increased presence of small structures. These small-scale features have many differing features from the ground truth, reflecting the decreased RSE accuracy score. For example, in the center region of prediction a few diagonal rays can be seen, those are not seen in the ground truth. Furthermore we can plot the Power Spectrum Correlation 
+
+
+\begin{equation}
+    P(\mathbf{k}) = \langle |\delta(\mathbf{k})| \cdot |\delta(\mathbf{k})_{pred}| \rangle,
+\end{equation}
+
+which gives us a measure of how well the predicted power spectrum correlates with the ground truth as seen in \ref{fig:power-loss-corr}. Interestingly when traied on the mean square error, the network does not appear to predict any fantasy structures, as the power spectrum falls of at an identical wavelength as the correlation function. This also means a mean squared error is good choice. We can conclude, that prediction that are made using a network trained on the mixed MP loss function perform a hybrid function of accurate density field predictions and generating fantasy small-scale structures to fit the desired power spectrum. The experiment highlights the generative capabilities of the FNO, to do such a task it has to be capable of learning to imprint a power spectrum into a density field.
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\linewidth]{img/compare_loss_correlation.png}
+    \caption{Prediction from $z=19.2$ to $z=49$, compared with or without additional power loss term.}
+    \label{fig:power-loss-corr}
+\end{figure}
 
 In the realm of the very small wavelengths, why the network still appears to be struggling. This shortcoming is likely rooted in those structures being less penalized in the loss term, as their original value is lower than the one from the loss term. Furthermore, the adaptive version of the FNO has fewer capabilities in the higher wavelength region, as the design of the architecture allocates less computing power towards higher wavelengths. Consequently, leading to an inability to generate structures that accurately reflect the power spectrum for very small structures. Another concern was, that the network is unable to generate the small structures due to an unavailability of sourcing such a Gaussian noise needed to generate the structures. Therefore, we have experimented with including a second  input channel composed of random Gaussian noise. Potentially, this channel could provide the network with a source for smaller-scale structures. However, the results were underwhelming and we have not further investigated the approach.
 
@@ -1202,7 +1209,7 @@ In the realm of the very small wavelengths, why the network still appears to be 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\linewidth]{img/compare_potential.jpg}
+    \includegraphics[width=0.7\linewidth]{img/compare_potential_4.png}
     \caption{Prediction from $z=19.2$ to $z=49$. Comparison of identical FNO networks trained on the density fields, with and without the potential as an additional input channel.}
     \label{fig:potential}
 \end{figure}
@@ -1242,10 +1249,11 @@ Interestingly, the power spectrum appears to drop less drastically on smaller wa
     \centering
     \includegraphics[width=0.75\linewidth]{img/schemes.png}
     \caption{Different training schemes. Figure from \cite {brandstetter2022message}.}
-    \label{fig:enter-label}
+    \label{fig:schemes-training}
 \end{figure}
 
-Previously, we have observed how training and inference perform better when the time interval between the input and output of the neural network is smaller. Hence, a logical thing to try is to split the prediction into multiple smaller time-steps, similarly to a numerical time integration like PKDGRAV3 does. This is a very common approach in surrogate training for non-steady state problems such as fluid simulations \citep{li2020fourier}. In literature, such a chained prediction is commonly termed as autoregressive training. Recall, our original goal was to learn a network $\mathbf{f}$ that is capable of the following prediction
+
+Previously, we have observed how training and inference perform better when the time interval between the input and output of the neural network is smaller. Hence, a logical thing is to split the prediction into multiple smaller time-steps, similarly to a numerical time integration like PKDGRAV3 does. This is a very common approach in surrogate training for non-steady state problems such as fluid simulations \citep{li2020fourier}. In literature, such a chained prediction is commonly termed as autoregressive training. Recall, our original goal was to learn a network $\mathbf{f}$ that is capable of the following prediction
 
 \begin{equation}
 \label{goal-2}
@@ -1273,31 +1281,38 @@ Here the loss is computed for the i-th step of the complete autoregressive predi
     L_{step} = \sum_{i \in \{0, \dots n\}}\sum_{\mathbf{x} \in 1 \Omega} \Biggl(\mathbf{f}_i(\rho(\mathbf{x}, t_{i})) - \rho(\mathbf{x}, t_{i+1})\Biggr)^2.
 \end{equation}
 
-A disadvantage of the one-step learning procedure is that the network does not learn to deal with accumulating errors that are present when the network called recursively. Another training scheme is the unrolled training, where the entire chain of chained neural networks is evaluated, the loss is evaluated and then back propagated through the entire chain. The corresponding MSE loss function is 
+We denote the above loss, and its subsequent neural network training as stepwise training, it can also be seen as an illustration in \ref{fig:schemes-training}. A disadvantage of the stepwise learning procedure is that the network does not learn to deal with accumulating errors that are present when the network called recursively. Another training scheme is the unrolled training, where the entire chain of chained neural networks is evaluated, the loss is evaluated and then back propagated through the entire chain. The corresponding MSE loss function is 
 
 \begin{equation}
 \label{seq}
     L_{seq} = \sum_{i \in \{0, \dots n\}}\sum_{\mathbf{x} \in \Omega} \Biggl(\mathbf{f}_{i-1} \circ \mathbf{f}_{i-2} \circ \dots \circ \mathbf{f}_0 (\rho(\mathbf{x}, t_{i})) - \rho(\mathbf{x}, t_{0})\Biggr)^2.
 \end{equation}
 
-
-Finally, we have push forward training, where the loss function is equivalent to the $L_{seq}$ loss function; however, the gradient is only propagated through the very last step. Besides some advantages to convergence \citep{brandstetter2022message}, having to pull the gradient only over a single iteration of the solver drastically reduces the memory footprint of the AD over the program. As we have learned in section \ref{ad}, the only feasible AD method, that is backward mode differentiation, is required to store all inputs of all atomic operations in the function that is to be differentiated. In this case, the unrolled training procedure means all $n$ recursive invocations of the neural network $\mathbf{f}$ can be considered one large function $\mathbf{g}$ that is 
+Sequential training is illustrated in figure \ref{fig:schemes-training}. Finally, there is push forward training, where the loss function is equivalent to the $L_{seq}$ loss function; however, the gradient is only propagated through the very last step. Besides some advantages to convergence \citep{brandstetter2022message}, having to pull the gradient only over a single iteration of the solver drastically reduces the memory footprint of the AD over the program. As we have learned in section \ref{ad}, the only feasible AD method, that is backward mode differentiation, is required to store all inputs of all atomic operations in the function that is to be differentiated. In this case, the unrolled training procedure means all $n$ recursive invocations of the neural network $\mathbf{f}$ can be considered one large function $\mathbf{g}$ that is 
 
 \begin{equation}
     \mathbf{g} = \mathbf{f}_{n-1} \circ \mathbf{f}_{n-2} \circ \dots \circ \mathbf{f}_0.
 \end{equation}
 
-Therefore push forward training drastically reduces the memory footprint of the training procedure. Another notable training scheme is curriculum learning, where the number of training steps is gradually increased over the course of the training \citep{krishnapriyan2021characterizing}, increasing the convergence speed of the training process. Unfortunately, in our experience, using a single network that is recursively applied to predict the underlying data did not work whatsoever. We have tested all described learning modes and curriculum learning; however, the network did not converge. With curriculum learning, the network was capable of learning a single step, but as soon as the recursive training procedure for multiple time steps started, the performance of the network drastically decreased. We think our data is especially tricky to learn, as the dynamics at play are non-homogenous over time. In other words, initially linear effects are the dominant driver of the physics, which are then replaced by non-linear dynamics later on. One idea was to include a time embedding layers as an additional input channels. This would enable the network to know at which point in time its predictions are to be made. To achieve this, we extended the input channel size of the FNO by two and gave it the density field, the growth factor at the starting point of the time step and the endpoint of the prediction. However, even with this approach we were not successful. Before we go on with the solution that has worked for us, we would like to point out some advantages of the autoregressive approach. Overfitting is almost impossible. Because the task at hand can only be solved by understanding the actual dynamics, and not by memorization. Furthermore, the dataset size is increased by the number of time steps, potentially increasing the number of samples the network can be trained on without having to run more simulations. 
+Therefore push forward training drastically reduces the memory footprint of the training procedure. Another notable training scheme is curriculum learning, where the number of training steps is gradually increased over the course of the training \citep{krishnapriyan2021characterizing}, increasing the convergence speed of the training process. Unfortunately, in our experience, using a single network that is recursively applied to predict the underlying data did not work. With curriculum learning, the network is capable of learning a single step, but as soon as the recursive training procedure for multiple time steps starts, the performance of the network drastically decreases. We think the time aggregated density data is especially tricky to learn, as the dynamics at play are highly non-homogenous over time. In other words, initially linear effects are the dominant driver of the physics, which are then replaced by non-linear dynamics later on. One idea was to include a time embedding layers as an additional input channels. This would enable the network to know at which point in time its predictions are to be made. To achieve this, we extended the input channel size of the FNO by two and gave it the density field, the growth factor at the starting point of the time step and the endpoint of the prediction. However, even with this approach we were not successful. Before we go on with the solution that has worked for us, we would like to point out some advantages of the autoregressive approach. Overfitting is almost impossible. Because the task at hand can only be solved by understanding the actual dynamics, and not by memorization. Furthermore, the dataset size is increased by the number of time steps, potentially increasing the number of samples the network can be trained on without having to run more simulations. 
 
 \subsubsection{Unique Network Parametrization}
-In our case, however, we have resorted to unique parametrization. That is we have identical neural networks, but their learnable parameters are initialized and learned independently of each other. This approach is probably not to be called autoregressive training, since we do not call the same function recursively, but instead we have a unique function for each time step. Everything we have stated before still holds, with minor differences. We now have $\mathbf{f}_i \neq \mathbf{f}_j$ and push forward training does not really make sense as it would only train the parameter of the very last network. Instead, we introduce a mixed mode training, where the loss is only evaluated on the very last iteration instead of the entire chain of predictions. The loss is then back propagated through the entire chain of networks.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/training.png}
+    \caption{Different training schemes for unique network parametrization. Here the blue boxes denote the sequence of ground truths, the orange boxes are the predictions, green is the loss and and purple denotes the parameters of the invidivual neural networks.}
+    \label{fig:autoreg}
+\end{figure}
+
+In our case, however, we have resorted to unique network parametrization. That is we have identical neural network architectures for each timestep, but their learnable parameters are initialized and learned independently of each other. This approach is not autoregressive training, since we do not call the same function recursively, but instead we have a unique function for each time step. Everything we have stated before still holds, with minor differences. We now have $\mathbf{f}_i \neq \mathbf{f}_j$ and push forward training does not really make sense as it would only train the parameter of the very last network. Instead, we introduce a mixed mode training, where the loss is only evaluated on the very last iteration instead of the entire chain of predictions. The loss is then back propagated through the entire chain of networks, that is the loss is evaluated as
 
 \begin{equation}
 \label{mix}
     L_{mix} = \sum_{\mathbf{x} \in 1 \Omega} \Biggl(\mathbf{f}_i \circ \mathbf{f}_{i-1} \circ \dots \circ \mathbf{f}_0 (\rho(\mathbf{x}, t_{n})) - \rho(\mathbf{x}, t_{0})\Biggr)^2.
 \end{equation}
 
-We have found that training a network for several epochs using $L_{step}$ followed by a smaller number of epochs using $L_{seq}$ and $L_{mix}$ yields the best results. Gradients obtained by differentiating the $L_{seq}$ and $L_{mix}$ loss function are suffering from vanishing and exploding gradients problem because the loss needs to be propagated through the whole chain of networks \citep{thuerey2021physics}. We reduce contain the vanishing gradients problem by implementing gradient clipping as described in literature \citep{zhang2019gradient}. In a first experiment, we trained two networks, one network $\mathbf{f}_0$ is trained on the Redshift range 0 to 4.25, the other  $\mathbf{f}_1$ on 4.25 to 49. The time ranges are selected based on the learning from section \ref{timeintervals}, where we have observed, that learning ranges that are closer to $z=0$ is easier. While the redshift numbers might be deceiving, the second network  $\mathbf{f}_i$ learns a larger timespan than the first one. The network was trained for ten epochs using the $L_{step}$ loss and 5 epochs on each of the $L_{seq}$ and $L_{mix}$ loss. As the data, we opted for the large dataset, down scaled to a $128^3$ density field using cubic spline interpolation, with the same learning rate of $0.002$. The results are depicted in figure \ref{fig:multistep}. If we compare this to \ref{fig:large}, we can clearly observe how the power spectrum tends to fall off more slowly, which is also reflected by the presence of clearer smaller structures than in the direct prediction. 
+We have found that training a network for several epochs using $L_{step}$ followed by a smaller number of epochs using $L_{seq}$ and $L_{mix}$ yields the best results. An illustration of the individual loss functions can be seen in \ref{fig:autoreg}. Gradients obtained by differentiating the $L_{seq}$ and $L_{mix}$ loss function are suffering from vanishing and exploding gradients problem because the loss needs to be propagated through the whole chain of networks \citep{thuerey2021physics}. We reduce contain the vanishing gradients problem by implementing gradient clipping as described in literature \citep{zhang2019gradient}. In a first experiment, we trained two networks, one network $\mathbf{f}_0$ is trained on the Redshift range 0 to 4.25, the other  $\mathbf{f}_1$ on 4.25 to 49. The time ranges are selected based on the learning from section \ref{timeintervals}, where we have observed, that learning ranges that are closer to $z=0$ is easier. While the redshift numbers might be deceiving, the second network  $\mathbf{f}_i$ learns a larger timespan than the first one. The network was trained for ten epochs using the $L_{step}$ loss and 5 epochs on each of the $L_{seq}$ and $L_{mix}$ loss. As the data, we opted for the large dataset, down scaled to a $128^3$ density field using cubic spline interpolation, with the same learning rate of $0.002$. The results are depicted in figure \ref{fig:multistep}. If we compare this to \ref{fig:large}, we can clearly observe how the power spectrum tends to fall off more slowly, which is also reflected by the presence of clearer smaller structures than in the direct prediction. 
 
 \begin{figure}[h]
     \centering
