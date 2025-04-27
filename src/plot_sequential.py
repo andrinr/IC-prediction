@@ -57,11 +57,11 @@ def plot(
     
     fig = plt.figure(
         layout='constrained', 
-        figsize=(3+2.9*frames, 11 ),
+        figsize=(3+2.3*frames, 9 ),
         dpi=300)
     subfigs = fig.subfigures(2, 1, wspace=0.07, hspace=0.05, height_ratios=[1.6, 1])
 
-    spec_sequence = subfigs[0].add_gridspec(2 , frames,  wspace=0.1, hspace=0.0)
+    spec_sequence = subfigs[0].add_gridspec(2 , frames,  wspace=0.0, hspace=0.06)
     spec_stats = subfigs[1].add_gridspec(1, 2)
 
     ax_cdf = fig.add_subplot(spec_stats[0], adjustable='box')
@@ -70,9 +70,8 @@ def plot(
     cmap = get_cmap('viridis') 
     colors = cmap(jnp.linspace(0, 1, frames))
 
-    file_index_stride = config.file_index_stride.copy()
-
-    if config.flip and isinstance(file_index_stride, list): 
+    if config.flip and isinstance(config.file_index_stride, list): 
+        file_index_stride = config.file_index_stride.copy()
         step = jnp.sum(jnp.array(file_index_stride)) + config.file_index_start
         file_index_stride.reverse()
     elif config.flip:
@@ -95,8 +94,8 @@ def plot(
 
         im_seq = ax_seq.imshow(normalized[grid_size // 2, : , :], cmap='inferno')
         divider = make_axes_locatable(ax_seq)
-        cax = divider.append_axes('right', size='5%', pad=0.03)
-        fig.colorbar(im_seq, cax=cax, orientation='vertical')
+        cax = divider.append_axes('bottom', size='5%', pad=0.03)
+        fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
         ax_cdf.hist(
             normalized.flatten(),
@@ -123,10 +122,10 @@ def plot(
         legend_names.append(fr'sim $z = {to_redshift(step/t_steps):.2f}$')
         
         if frame < frames-1:
-            if isinstance(file_index_stride, list): 
+            if isinstance(config.file_index_stride, list): 
                 step += file_index_stride[frame] * (-1 if config.flip else 1)
             else:
-                step += file_index_stride * (-1 if config.flip else 1)
+                step += config.file_index_stride * (-1 if config.flip else 1)
 
         if frame < frames-1:
             rho_pred_normalized = sequence_prediction[frame]
@@ -144,8 +143,8 @@ def plot(
 
             im_seq = ax_seq.imshow(rho_pred_normalized[grid_size // 2, : , :], cmap='inferno')
             divider = make_axes_locatable(ax_seq)
-            cax = divider.append_axes('right', size='5%', pad=0.03)
-            fig.colorbar(im_seq, cax=cax, orientation='vertical')
+            cax = divider.append_axes('bottom', size='5%', pad=0.03)
+            fig.colorbar(im_seq, cax=cax, orientation='horizontal')
 
             ax_cdf.hist(
                 rho_pred_normalized.flatten(),

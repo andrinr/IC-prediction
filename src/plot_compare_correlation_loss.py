@@ -143,7 +143,7 @@ def compare(
         fig.colorbar(im_seq_pred, cax=cax_pred, orientation='vertical')
         print(config.box_size)
         p_pred, k_pred = get_power(
-            delta_pred[:, :, :, 0],
+            delta[:, :, :, 0],
             config.box_size,
             delta[:, :, :, 0])
         ax_power.plot(
