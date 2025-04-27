@@ -11,3 +11,14 @@ core_*
 
 /models
 /ml-env
+
+/docs/**.fls
+/docs/**.fdb_latexmk
+/docs/**.fls.lock
+/docs/**.fdb_latexmk.lock
+/docs/**.synctex.gz
+/docs/**.synctex.gz.lock
+/docs/**.bbl
+/docs/**.bbl.lock
+/docs/**.blg
+/docs/**.blg.lock

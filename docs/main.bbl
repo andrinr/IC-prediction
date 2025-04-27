@@ -7,10 +7,8 @@
 
 \bibitem[Asher et~al.(2015)Asher, Croke, Jakeman, and Peeters]{asher2015review}
 Michael~J Asher, Barry~FW Croke, Anthony~J Jakeman, and Luk~JM Peeters.
-\newblock A review of surrogate models and their application to groundwater
-  modeling.
-\newblock \emph{Water Resources Research}, 51\penalty0 (8):\penalty0
-  5957--5973, 2015.
+\newblock A review of surrogate models and their application to groundwater modeling.
+\newblock \emph{Water Resources Research}, 51\penalty0 (8):\penalty0 5957--5973, 2015.
 
 \bibitem[Barnes and Hut(1986)]{barnes1986hierarchical}
 Josh Barnes and Piet Hut.
@@ -22,19 +20,14 @@ Itzhak Bars, John Terning, and Farzad Nekoogar.
 \newblock \emph{Extra dimensions in space and time}, volume~66.
 \newblock Springer, 2010.
 
-\bibitem[Bernardini et~al.(2022)Bernardini, Feldmann, Angl{\'e}s-Alc{\'a}zar,
-  Boylan-Kolchin, Bullock, Mayer, and Stadel]{bernardini2022ember}
-Mauro Bernardini, Robert Feldmann, Daniel Angl{\'e}s-Alc{\'a}zar, Mike
-  Boylan-Kolchin, James Bullock, Lucio Mayer, and Joachim Stadel.
-\newblock From ember to fire: predicting high resolution baryon fields from
-  dark matter simulations with deep learning.
-\newblock \emph{Monthly Notices of the Royal Astronomical Society},
-  509\penalty0 (1):\penalty0 1323--1341, 2022.
+\bibitem[Bernardini et~al.(2022)Bernardini, Feldmann, Angl{\'e}s-Alc{\'a}zar, Boylan-Kolchin, Bullock, Mayer, and Stadel]{bernardini2022ember}
+Mauro Bernardini, Robert Feldmann, Daniel Angl{\'e}s-Alc{\'a}zar, Mike Boylan-Kolchin, James Bullock, Lucio Mayer, and Joachim Stadel.
+\newblock From ember to fire: predicting high resolution baryon fields from dark matter simulations with deep learning.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society}, 509\penalty0 (1):\penalty0 1323--1341, 2022.
 
 \bibitem[Bertschinger(1995)]{bertschinger1995cosmics}
 Edmund Bertschinger.
-\newblock Cosmics: cosmological initial conditions and microwave anisotropy
-  codes.
+\newblock Cosmics: cosmological initial conditions and microwave anisotropy codes.
 \newblock \emph{arXiv preprint astro-ph/9506070}, 1995.
 
 \bibitem[Bottou and Bousquet(2007)]{bottou2007tradeoffs}
@@ -42,18 +35,12 @@ L{\'e}on Bottou and Olivier Bousquet.
 \newblock The tradeoffs of large scale learning.
 \newblock \emph{Advances in neural information processing systems}, 20, 2007.
 
-\bibitem[Bradbury et~al.(2018)Bradbury, Frostig, Hawkins, Johnson, Leary,
-  Maclaurin, Necula, Paszke, Vander{P}las, Wanderman-{M}ilne, and
-  Zhang]{jax2018github}
-James Bradbury, Roy Frostig, Peter Hawkins, Matthew~James Johnson, Chris Leary,
-  Dougal Maclaurin, George Necula, Adam Paszke, Jake Vander{P}las, Skye
-  Wanderman-{M}ilne, and Qiao Zhang.
-\newblock {JAX}: composable transformations of {P}ython+{N}um{P}y programs,
-  2018.
+\bibitem[Bradbury et~al.(2018)Bradbury, Frostig, Hawkins, Johnson, Leary, Maclaurin, Necula, Paszke, Vander{P}las, Wanderman-{M}ilne, and Zhang]{jax2018github}
+James Bradbury, Roy Frostig, Peter Hawkins, Matthew~James Johnson, Chris Leary, Dougal Maclaurin, George Necula, Adam Paszke, Jake Vander{P}las, Skye Wanderman-{M}ilne, and Qiao Zhang.
+\newblock {JAX}: composable transformations of {P}ython+{N}um{P}y programs, 2018.
 \newblock URL \url{http://github.com/google/jax}.
 
-\bibitem[Brandstetter et~al.(2022)Brandstetter, Worrall, and
-  Welling]{brandstetter2022message}
+\bibitem[Brandstetter et~al.(2022)Brandstetter, Worrall, and Welling]{brandstetter2022message}
 Johannes Brandstetter, Daniel Worrall, and Max Welling.
 \newblock Message passing neural pde solvers.
 \newblock \emph{arXiv preprint arXiv:2202.03376}, 2022.
@@ -66,70 +53,44 @@ Bradley~W Carroll and Dale~A Ostlie.
 \bibitem[Carroll(2001)]{carroll2001cosmological}
 Sean~M Carroll.
 \newblock The cosmological constant.
-\newblock \emph{Living reviews in relativity}, 4\penalty0 (1):\penalty0 1--56,
-  2001.
+\newblock \emph{Living reviews in relativity}, 4\penalty0 (1):\penalty0 1--56, 2001.
 
 \bibitem[Carroll(2007)]{carroll2007dark}
 Sean~M Carroll.
-\newblock \emph{Dark Matter, Dark Energy: The Dark Side of the Universe. Parts
-  1 \& 2}.
+\newblock \emph{Dark Matter, Dark Energy: The Dark Side of the Universe. Parts 1 \& 2}.
 \newblock Teaching Company, 2007.
 
-\bibitem[Chen et~al.(2018)Chen, Rubanova, Bettencourt, and
-  Duvenaud]{chen2018neural}
+\bibitem[Chen et~al.(2018)Chen, Rubanova, Bettencourt, and Duvenaud]{chen2018neural}
 Ricky~TQ Chen, Yulia Rubanova, Jesse Bettencourt, and David~K Duvenaud.
 \newblock Neural ordinary differential equations.
 \newblock \emph{Advances in neural information processing systems}, 31, 2018.
 
-\bibitem[Cui et~al.(2008)Cui, Liu, Yang, Wang, Feng, and
-  Springel]{cui2008ideal}
-Weiguang Cui, Lei Liu, Xiaohu Yang, Yu~Wang, Longlong Feng, and Volker
-  Springel.
-\newblock An ideal mass assignment scheme for measuring the power spectrum with
-  fast fourier transforms.
-\newblock \emph{The Astrophysical Journal}, 687\penalty0 (2):\penalty0 738,
-  2008.
+\bibitem[Cui et~al.(2008)Cui, Liu, Yang, Wang, Feng, and Springel]{cui2008ideal}
+Weiguang Cui, Lei Liu, Xiaohu Yang, Yu~Wang, Longlong Feng, and Volker Springel.
+\newblock An ideal mass assignment scheme for measuring the power spectrum with fast fourier transforms.
+\newblock \emph{The Astrophysical Journal}, 687\penalty0 (2):\penalty0 738, 2008.
 
-\bibitem[DeepMind et~al.(2020)DeepMind, Babuschkin, Baumli, Bell, Bhupatiraju,
-  Bruce, Buchlovsky, Budden, Cai, Clark, Danihelka, Dedieu, Fantacci, Godwin,
-  Jones, Hemsley, Hennigan, Hessel, Hou, Kapturowski, Keck, Kemaev, King,
-  Kunesch, Martens, Merzic, Mikulik, Norman, Papamakarios, Quan, Ring, Ruiz,
-  Sanchez, Sartran, Schneider, Sezener, Spencer, Srinivasan, Stanojevi\'{c},
-  Stokowiec, Wang, Zhou, and Viola]{deepmind2020jax}
-DeepMind, Igor Babuschkin, Kate Baumli, Alison Bell, Surya Bhupatiraju, Jake
-  Bruce, Peter Buchlovsky, David Budden, Trevor Cai, Aidan Clark, Ivo
-  Danihelka, Antoine Dedieu, Claudio Fantacci, Jonathan Godwin, Chris Jones,
-  Ross Hemsley, Tom Hennigan, Matteo Hessel, Shaobo Hou, Steven Kapturowski,
-  Thomas Keck, Iurii Kemaev, Michael King, Markus Kunesch, Lena Martens, Hamza
-  Merzic, Vladimir Mikulik, Tamara Norman, George Papamakarios, John Quan,
-  Roman Ring, Francisco Ruiz, Alvaro Sanchez, Laurent Sartran, Rosalia
-  Schneider, Eren Sezener, Stephen Spencer, Srivatsan Srinivasan, Milo\v{s}
-  Stanojevi\'{c}, Wojciech Stokowiec, Luyu Wang, Guangyao Zhou, and Fabio
-  Viola.
+\bibitem[DeepMind et~al.(2020)DeepMind, Babuschkin, Baumli, Bell, Bhupatiraju, Bruce, Buchlovsky, Budden, Cai, Clark, Danihelka, Dedieu, Fantacci, Godwin, Jones, Hemsley, Hennigan, Hessel, Hou, Kapturowski, Keck, Kemaev, King, Kunesch, Martens, Merzic, Mikulik, Norman, Papamakarios, Quan, Ring, Ruiz, Sanchez, Sartran, Schneider, Sezener, Spencer, Srinivasan, Stanojevi\'{c}, Stokowiec, Wang, Zhou, and Viola]{deepmind2020jax}
+DeepMind, Igor Babuschkin, Kate Baumli, Alison Bell, Surya Bhupatiraju, Jake Bruce, Peter Buchlovsky, David Budden, Trevor Cai, Aidan Clark, Ivo Danihelka, Antoine Dedieu, Claudio Fantacci, Jonathan Godwin, Chris Jones, Ross Hemsley, Tom Hennigan, Matteo Hessel, Shaobo Hou, Steven Kapturowski, Thomas Keck, Iurii Kemaev, Michael King, Markus Kunesch, Lena Martens, Hamza Merzic, Vladimir Mikulik, Tamara Norman, George Papamakarios, John Quan, Roman Ring, Francisco Ruiz, Alvaro Sanchez, Laurent Sartran, Rosalia Schneider, Eren Sezener, Stephen Spencer, Srivatsan Srinivasan, Milo\v{s} Stanojevi\'{c}, Wojciech Stokowiec, Luyu Wang, Guangyao Zhou, and Fabio Viola.
 \newblock The {D}eep{M}ind {JAX} {E}cosystem, 2020.
 \newblock URL \url{http://github.com/google-deepmind}.
 
 \bibitem[Demmel(1996)]{demmel1996solving}
 Jim Demmel.
-\newblock Solving the discrete poisson equation using jacobi, sor, conjugate
-  gradients, and the fft.
-\newblock \emph{Retrieved from Lecture Notes Online Website: http://www. eecs.
-  berkeley. edu/\~{} demmel/cs267/lecture24/lecture24. html}, 1996.
+\newblock Solving the discrete poisson equation using jacobi, sor, conjugate gradients, and the fft.
+\newblock \emph{Retrieved from Lecture Notes Online Website: http://www. eecs. berkeley. edu/\~{} demmel/cs267/lecture24/lecture24. html}, 1996.
 
 \bibitem[Djolonga et~al.(2013)Djolonga, Krause, and Cevher]{djolonga2013high}
 Josip Djolonga, Andreas Krause, and Volkan Cevher.
 \newblock High-dimensional gaussian process bandits.
 \newblock \emph{Advances in neural information processing systems}, 26, 2013.
 
-\bibitem[Escamilla-Rivera et~al.(2020)Escamilla-Rivera, Quintero, and
-  Capozziello]{escamilla2020deep}
+\bibitem[Escamilla-Rivera et~al.(2020)Escamilla-Rivera, Quintero, and Capozziello]{escamilla2020deep}
 Celia Escamilla-Rivera, Maryi A~Carvajal Quintero, and Salvatore Capozziello.
 \newblock A deep learning approach to cosmological dark energy models.
-\newblock \emph{Journal of Cosmology and Astroparticle Physics}, 2020\penalty0
-  (03):\penalty0 008, 2020.
+\newblock \emph{Journal of Cosmology and Astroparticle Physics}, 2020\penalty0 (03):\penalty0 008, 2020.
 
-\bibitem[Forrester et~al.(2008)Forrester, Sobester, and
-  Keane]{forrester2008engineering}
+\bibitem[Forrester et~al.(2008)Forrester, Sobester, and Keane]{forrester2008engineering}
 Alexander Forrester, Andras Sobester, and Andy Keane.
 \newblock \emph{Engineering design via surrogate modelling: a practical guide}.
 \newblock John Wiley \& Sons, 2008.
@@ -137,64 +98,48 @@ Alexander Forrester, Andras Sobester, and Andy Keane.
 \bibitem[Forrester and Keane(2009)]{forrester2009recent}
 Alexander~IJ Forrester and Andy~J Keane.
 \newblock Recent advances in surrogate-based optimization.
-\newblock \emph{Progress in aerospace sciences}, 45\penalty0 (1-3):\penalty0
-  50--79, 2009.
+\newblock \emph{Progress in aerospace sciences}, 45\penalty0 (1-3):\penalty0 50--79, 2009.
 
 \bibitem[Frigo and Johnson(1999)]{frigo1999fftw}
 Matteo Frigo and Steven~G Johnson.
 \newblock Fftw user’s manual.
 \newblock \emph{Massachusetts Institute of Technology}, 1999.
 
-\bibitem[Garrison et~al.(2021)Garrison, Eisenstein, Ferrer, Maksimova, and
-  Pinto]{garrison2021abacus}
-Lehman~H Garrison, Daniel~J Eisenstein, Douglas Ferrer, Nina~A Maksimova, and
-  Philip~A Pinto.
+\bibitem[Garrison et~al.(2021)Garrison, Eisenstein, Ferrer, Maksimova, and Pinto]{garrison2021abacus}
+Lehman~H Garrison, Daniel~J Eisenstein, Douglas Ferrer, Nina~A Maksimova, and Philip~A Pinto.
 \newblock The abacus cosmological n-body code.
-\newblock \emph{Monthly Notices of the Royal Astronomical Society},
-  508\penalty0 (1):\penalty0 575--596, 2021.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society}, 508\penalty0 (1):\penalty0 575--596, 2021.
 
 \bibitem[Gauthier(2014)]{gauthier2014conditional}
 Jon Gauthier.
-\newblock Conditional generative adversarial nets for convolutional face
-  generation.
-\newblock \emph{Class project for Stanford CS231N: convolutional neural
-  networks for visual recognition, Winter semester}, 2014\penalty0
-  (5):\penalty0 2, 2014.
+\newblock Conditional generative adversarial nets for convolutional face generation.
+\newblock \emph{Class project for Stanford CS231N: convolutional neural networks for visual recognition, Winter semester}, 2014\penalty0 (5):\penalty0 2, 2014.
 
-\bibitem[Gopakumar et~al.(2023)Gopakumar, Pamela, and
-  Zanisi]{gopakumar2023fourier}
+\bibitem[Gopakumar et~al.(2023)Gopakumar, Pamela, and Zanisi]{gopakumar2023fourier}
 Vignesh Gopakumar, Stanislas Pamela, and Lorenzo Zanisi.
 \newblock Fourier-rnns for modelling noisy physics data.
 \newblock \emph{arXiv preprint arXiv:2302.06534}, 2023.
 
 \bibitem[Griewank and Walther(2000)]{griewank2000algorithm}
 Andreas Griewank and Andrea Walther.
-\newblock Algorithm 799: revolve: an implementation of checkpointing for the
-  reverse or adjoint mode of computational differentiation.
-\newblock \emph{ACM Transactions on Mathematical Software (TOMS)}, 26\penalty0
-  (1):\penalty0 19--45, 2000.
+\newblock Algorithm 799: revolve: an implementation of checkpointing for the reverse or adjoint mode of computational differentiation.
+\newblock \emph{ACM Transactions on Mathematical Software (TOMS)}, 26\penalty0 (1):\penalty0 19--45, 2000.
 
-\bibitem[Heek et~al.(2024)Heek, Levskaya, Oliver, Ritter, Rondepierre, Steiner,
-  and van {Z}ee]{flax2020github}
-Jonathan Heek, Anselm Levskaya, Avital Oliver, Marvin Ritter, Bertrand
-  Rondepierre, Andreas Steiner, and Marc van {Z}ee.
+\bibitem[Heek et~al.(2024)Heek, Levskaya, Oliver, Ritter, Rondepierre, Steiner, and van {Z}ee]{flax2020github}
+Jonathan Heek, Anselm Levskaya, Avital Oliver, Marvin Ritter, Bertrand Rondepierre, Andreas Steiner, and Marc van {Z}ee.
 \newblock {F}lax: A neural network library and ecosystem for {JAX}, 2024.
 \newblock URL \url{http://github.com/google/flax}.
 
 \bibitem[Ho et~al.(2020)Ho, Jain, and Abbeel]{denoising}
 Jonathan Ho, Ajay Jain, and Pieter Abbeel.
 \newblock Denoising diffusion probabilistic models.
-\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.F. Balcan, and H.~Lin,
-  editors, \emph{Advances in Neural Information Processing Systems}, volume~33,
-  pages 6840--6851. Curran Associates, Inc., 2020.
-\newblock URL
-  \url{https://proceedings.neurips.cc/paper_files/paper/2020/file/4c5bcfec8584af0d967f1ab10179ca4b-Paper.pdf}.
+\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.F. Balcan, and H.~Lin, editors, \emph{Advances in Neural Information Processing Systems}, volume~33, pages 6840--6851. Curran Associates, Inc., 2020.
+\newblock URL \url{https://proceedings.neurips.cc/paper_files/paper/2020/file/4c5bcfec8584af0d967f1ab10179ca4b-Paper.pdf}.
 
 \bibitem[Hut et~al.(1995)Hut, Makino, and McMillan]{hut1995building}
 Piet Hut, Jun Makino, and Steve McMillan.
 \newblock Building a better leapfrog.
-\newblock \emph{Astrophysical Journal, Part 2-Letters (ISSN 0004-637X), vol.
-  443, no. 2, p. L93-L96}, 443:\penalty0 L93--L96, 1995.
+\newblock \emph{Astrophysical Journal, Part 2-Letters (ISSN 0004-637X), vol. 443, no. 2, p. L93-L96}, 443:\penalty0 L93--L96, 1995.
 
 \bibitem[Häfner and Moldovan(2021)]{dion_hafner_2021_5607491}
 Dion Häfner and Dan Moldovan.
@@ -203,39 +148,28 @@ Dion Häfner and Dan Moldovan.
 
 \bibitem[Jasche and Wandelt(2013)]{jasche2013bayesian}
 Jens Jasche and Benjamin~D Wandelt.
-\newblock Bayesian physical reconstruction of initial conditions from
-  large-scale structure surveys.
-\newblock \emph{Monthly Notices of the Royal Astronomical Society},
-  432\penalty0 (2):\penalty0 894--913, 2013.
+\newblock Bayesian physical reconstruction of initial conditions from large-scale structure surveys.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society}, 432\penalty0 (2):\penalty0 894--913, 2013.
 
-\bibitem[Jiang et~al.(2023)Jiang, Sablayrolles, Mensch, Bamford, Chaplot,
-  Casas, Bressand, Lengyel, Lample, Saulnier, et~al.]{jiang2023mistral}
-Albert~Q Jiang, Alexandre Sablayrolles, Arthur Mensch, Chris Bamford,
-  Devendra~Singh Chaplot, Diego de~las Casas, Florian Bressand, Gianna Lengyel,
-  Guillaume Lample, Lucile Saulnier, et~al.
+\bibitem[Jiang et~al.(2023)Jiang, Sablayrolles, Mensch, Bamford, Chaplot, Casas, Bressand, Lengyel, Lample, Saulnier, et~al.]{jiang2023mistral}
+Albert~Q Jiang, Alexandre Sablayrolles, Arthur Mensch, Chris Bamford, Devendra~Singh Chaplot, Diego de~las Casas, Florian Bressand, Gianna Lengyel, Guillaume Lample, Lucile Saulnier, et~al.
 \newblock Mistral 7b.
 \newblock \emph{arXiv preprint arXiv:2310.06825}, 2023.
 
-\bibitem[Kadupitiya et~al.(2020)Kadupitiya, Sun, Fox, and
-  Jadhao]{kadupitiya2020machine}
+\bibitem[Kadupitiya et~al.(2020)Kadupitiya, Sun, Fox, and Jadhao]{kadupitiya2020machine}
 JCS Kadupitiya, Fanbo Sun, Geoffrey Fox, and Vikram Jadhao.
-\newblock Machine learning surrogates for molecular dynamics simulations of
-  soft materials.
+\newblock Machine learning surrogates for molecular dynamics simulations of soft materials.
 \newblock \emph{Journal of Computational Science}, 42:\penalty0 101107, 2020.
 
-\bibitem[Kaplan et~al.(2020)Kaplan, McCandlish, Henighan, Brown, Chess, Child,
-  Gray, Radford, Wu, and Amodei]{kaplan2020scaling}
-Jared Kaplan, Sam McCandlish, Tom Henighan, Tom~B Brown, Benjamin Chess, Rewon
-  Child, Scott Gray, Alec Radford, Jeffrey Wu, and Dario Amodei.
+\bibitem[Kaplan et~al.(2020)Kaplan, McCandlish, Henighan, Brown, Chess, Child, Gray, Radford, Wu, and Amodei]{kaplan2020scaling}
+Jared Kaplan, Sam McCandlish, Tom Henighan, Tom~B Brown, Benjamin Chess, Rewon Child, Scott Gray, Alec Radford, Jeffrey Wu, and Dario Amodei.
 \newblock Scaling laws for neural language models.
 \newblock \emph{arXiv preprint arXiv:2001.08361}, 2020.
 
 \bibitem[Kidger and Garcia(2021)]{kidger2021equinox}
 Patrick Kidger and Cristian Garcia.
-\newblock {E}quinox: neural networks in {JAX} via callable {P}y{T}rees and
-  filtered transformations.
-\newblock \emph{Differentiable Programming workshop at Neural Information
-  Processing Systems 2021}, 2021.
+\newblock {E}quinox: neural networks in {JAX} via callable {P}y{T}rees and filtered transformations.
+\newblock \emph{Differentiable Programming workshop at Neural Information Processing Systems 2021}, 2021.
 
 \bibitem[Kingma(2014)]{kingma2014adam}
 Diederik~P Kingma.
@@ -245,103 +179,71 @@ Diederik~P Kingma.
 \bibitem[Kitaura(2013)]{kitaura2013initial}
 Francisco-Shu Kitaura.
 \newblock The initial conditions of the universe from constrained simulations.
-\newblock \emph{Monthly Notices of the Royal Astronomical Society: Letters},
-  429\penalty0 (1):\penalty0 L84--L88, 2013.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society: Letters}, 429\penalty0 (1):\penalty0 L84--L88, 2013.
 
-\bibitem[Koehler et~al.(2024)Koehler, Niedermayr, Westermann, and
-  Thuerey]{koehler2024apebench}
+\bibitem[Koehler et~al.(2024)Koehler, Niedermayr, Westermann, and Thuerey]{koehler2024apebench}
 Felix Koehler, Simon Niedermayr, R{\"u}diger Westermann, and Nils Thuerey.
 \newblock Apebench: A benchmark for autoregressive neural emulators of pdes.
 \newblock \emph{arXiv preprint arXiv:2411.00180}, 2024.
 
-\bibitem[Kossaifi et~al.(2024)Kossaifi, Kovachki, Li, Pitt, Liu-Schiaffini,
-  George, Bonev, Azizzadenesheli, Berner, and Anandkumar]{kossaifi2024neural}
-Jean Kossaifi, Nikola Kovachki, Zongyi Li, Davit Pitt, Miguel Liu-Schiaffini,
-  Robert~Joseph George, Boris Bonev, Kamyar Azizzadenesheli, Julius Berner, and
-  Anima Anandkumar.
+\bibitem[Kossaifi et~al.(2024)Kossaifi, Kovachki, Li, Pitt, Liu-Schiaffini, George, Bonev, Azizzadenesheli, Berner, and Anandkumar]{kossaifi2024neural}
+Jean Kossaifi, Nikola Kovachki, Zongyi Li, Davit Pitt, Miguel Liu-Schiaffini, Robert~Joseph George, Boris Bonev, Kamyar Azizzadenesheli, Julius Berner, and Anima Anandkumar.
 \newblock A library for learning neural operators, 2024.
 
-\bibitem[Krekel et~al.(2004)Krekel, Oliveira, Pfannschmidt, Bruynooghe,
-  Laugher, and Bruhin]{pytestx.y}
-Holger Krekel, Bruno Oliveira, Ronny Pfannschmidt, Floris Bruynooghe, Brianna
-  Laugher, and Florian Bruhin.
+\bibitem[Krekel et~al.(2004)Krekel, Oliveira, Pfannschmidt, Bruynooghe, Laugher, and Bruhin]{pytestx.y}
+Holger Krekel, Bruno Oliveira, Ronny Pfannschmidt, Floris Bruynooghe, Brianna Laugher, and Florian Bruhin.
 \newblock pytest x.y, 2004.
 \newblock URL \url{https://github.com/pytest-dev/pytest}.
 
-\bibitem[Krishnapriyan et~al.(2021)Krishnapriyan, Gholami, Zhe, Kirby, and
-  Mahoney]{krishnapriyan2021characterizing}
-Aditi Krishnapriyan, Amir Gholami, Shandian Zhe, Robert Kirby, and Michael~W
-  Mahoney.
-\newblock Characterizing possible failure modes in physics-informed neural
-  networks.
-\newblock \emph{Advances in neural information processing systems},
-  34:\penalty0 26548--26560, 2021.
+\bibitem[Krishnapriyan et~al.(2021)Krishnapriyan, Gholami, Zhe, Kirby, and Mahoney]{krishnapriyan2021characterizing}
+Aditi Krishnapriyan, Amir Gholami, Shandian Zhe, Robert Kirby, and Michael~W Mahoney.
+\newblock Characterizing possible failure modes in physics-informed neural networks.
+\newblock \emph{Advances in neural information processing systems}, 34:\penalty0 26548--26560, 2021.
 
-\bibitem[Krizhevsky et~al.(2012)Krizhevsky, Sutskever, and
-  Hinton]{krizhevsky2012imagenet}
+\bibitem[Krizhevsky et~al.(2012)Krizhevsky, Sutskever, and Hinton]{krizhevsky2012imagenet}
 Alex Krizhevsky, Ilya Sutskever, and Geoffrey~E Hinton.
 \newblock Imagenet classification with deep convolutional neural networks.
 \newblock \emph{Advances in neural information processing systems}, 25, 2012.
 
 \bibitem[Köhler()]{machinelearningsimulation}
 Felix Köhler.
-\newblock All the handwritten notes and source code files used in my youtube
-  videos on machine learning and simulation.
+\newblock All the handwritten notes and source code files used in my youtube videos on machine learning and simulation.
 \newblock URL \url{https://github.com/Ceyron/machine-learning-and-simulation/}.
 
-\bibitem[LeCun et~al.(1998)LeCun, Bottou, Bengio, and
-  Haffner]{lecun1998gradient}
+\bibitem[LeCun et~al.(1998)LeCun, Bottou, Bengio, and Haffner]{lecun1998gradient}
 Yann LeCun, L{\'e}on Bottou, Yoshua Bengio, and Patrick Haffner.
 \newblock Gradient-based learning applied to document recognition.
-\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0
-  2278--2324, 1998.
+\newblock \emph{Proceedings of the IEEE}, 86\penalty0 (11):\penalty0 2278--2324, 1998.
 
-\bibitem[Li et~al.(2024)Li, Modi, Jamieson, Zhang, Lu, Feng, Lanusse, and
-  Greengard]{li2024differentiable}
-Yin Li, Chirag Modi, Drew Jamieson, Yucheng Zhang, Libin Lu, Yu~Feng,
-  Fran{\c{c}}ois Lanusse, and Leslie Greengard.
+\bibitem[Li et~al.(2024)Li, Modi, Jamieson, Zhang, Lu, Feng, Lanusse, and Greengard]{li2024differentiable}
+Yin Li, Chirag Modi, Drew Jamieson, Yucheng Zhang, Libin Lu, Yu~Feng, Fran{\c{c}}ois Lanusse, and Leslie Greengard.
 \newblock Differentiable cosmological simulation with the adjoint method.
-\newblock \emph{The Astrophysical Journal Supplement Series}, 270\penalty0
-  (2):\penalty0 36, 2024.
+\newblock \emph{The Astrophysical Journal Supplement Series}, 270\penalty0 (2):\penalty0 36, 2024.
 
-\bibitem[Li et~al.(2020)Li, Kovachki, Azizzadenesheli, Liu, Bhattacharya,
-  Stuart, and Anandkumar]{li2020fourier}
-Zongyi Li, Nikola Kovachki, Kamyar Azizzadenesheli, Burigede Liu, Kaushik
-  Bhattacharya, Andrew Stuart, and Anima Anandkumar.
-\newblock Fourier neural operator for parametric partial differential
-  equations.
+\bibitem[Li et~al.(2020)Li, Kovachki, Azizzadenesheli, Liu, Bhattacharya, Stuart, and Anandkumar]{li2020fourier}
+Zongyi Li, Nikola Kovachki, Kamyar Azizzadenesheli, Burigede Liu, Kaushik Bhattacharya, Andrew Stuart, and Anima Anandkumar.
+\newblock Fourier neural operator for parametric partial differential equations.
 \newblock \emph{arXiv preprint arXiv:2010.08895}, 2020.
 
-\bibitem[Liu et~al.(2023)Liu, Li, Hu, Yu, Shiau, Ai, Zeng, and
-  Zhang]{liu2023deepoheat}
-Ziyue Liu, Yixing Li, Jing Hu, Xinling Yu, Shinyu Shiau, Xin Ai, Zhiyu Zeng,
-  and Zheng Zhang.
-\newblock Deepoheat: operator learning-based ultra-fast thermal simulation in
-  3d-ic design.
-\newblock In \emph{2023 60th ACM/IEEE Design Automation Conference (DAC)},
-  pages 1--6. IEEE, 2023.
+\bibitem[Liu et~al.(2023)Liu, Li, Hu, Yu, Shiau, Ai, Zeng, and Zhang]{liu2023deepoheat}
+Ziyue Liu, Yixing Li, Jing Hu, Xinling Yu, Shinyu Shiau, Xin Ai, Zhiyu Zeng, and Zheng Zhang.
+\newblock Deepoheat: operator learning-based ultra-fast thermal simulation in 3d-ic design.
+\newblock In \emph{2023 60th ACM/IEEE Design Automation Conference (DAC)}, pages 1--6. IEEE, 2023.
 
 \bibitem[Long and Zhe(2024)]{long2024invertible}
 Da~Long and Shandian Zhe.
-\newblock Invertible fourier neural operators for tackling both forward and
-  inverse problems.
+\newblock Invertible fourier neural operators for tackling both forward and inverse problems.
 \newblock \emph{arXiv preprint arXiv:2402.11722}, 2024.
 
 \bibitem[Mack et~al.(2007)Mack, Goel, Shyy, and Haftka]{mack2007surrogate}
 Yolanda Mack, Tushar Goel, Wei Shyy, and Raphael Haftka.
-\newblock Surrogate model-based optimization framework: a case study in
-  aerospace design.
-\newblock \emph{Evolutionary computation in dynamic and uncertain
-  environments}, pages 323--342, 2007.
+\newblock Surrogate model-based optimization framework: a case study in aerospace design.
+\newblock \emph{Evolutionary computation in dynamic and uncertain environments}, pages 323--342, 2007.
 
-\bibitem[Mathuriya et~al.(2018)Mathuriya, Bard, Mendygral, Meadows, Arnemann,
-  Shao, He, K{\"a}rn{\"a}, Moise, Pennycook, et~al.]{mathuriya2018cosmoflow}
-Amrita Mathuriya, Deborah Bard, Peter Mendygral, Lawrence Meadows, James
-  Arnemann, Lei Shao, Siyu He, Tuomas K{\"a}rn{\"a}, Diana Moise, Simon~J
-  Pennycook, et~al.
+\bibitem[Mathuriya et~al.(2018)Mathuriya, Bard, Mendygral, Meadows, Arnemann, Shao, He, K{\"a}rn{\"a}, Moise, Pennycook, et~al.]{mathuriya2018cosmoflow}
+Amrita Mathuriya, Deborah Bard, Peter Mendygral, Lawrence Meadows, James Arnemann, Lei Shao, Siyu He, Tuomas K{\"a}rn{\"a}, Diana Moise, Simon~J Pennycook, et~al.
 \newblock Cosmoflow: Using deep learning to learn the universe at scale.
-\newblock In \emph{SC18: International Conference for High Performance
-  Computing, Networking, Storage and Analysis}, pages 819--829. IEEE, 2018.
+\newblock In \emph{SC18: International Conference for High Performance Computing, Networking, Storage and Analysis}, pages 819--829. IEEE, 2018.
 
 \bibitem[McCormick(1987)]{mccormick1987multigrid}
 Stephen~F McCormick.
@@ -350,83 +252,53 @@ Stephen~F McCormick.
 
 \bibitem[McGreivy and Hakim(2024)]{mcgreivy2024weak}
 Nick McGreivy and Ammar Hakim.
-\newblock Weak baselines and reporting biases lead to overoptimism in machine
-  learning for fluid-related partial differential equations.
+\newblock Weak baselines and reporting biases lead to overoptimism in machine learning for fluid-related partial differential equations.
 \newblock \emph{arXiv preprint arXiv:2407.07218}, 2024.
 
 \bibitem[Moses and Churavy(2020{\natexlab{a}})]{NEURIPS2020_9332c513}
 William Moses and Valentin Churavy.
-\newblock Instead of rewriting foreign code for machine learning, automatically
-  synthesize fast gradients.
-\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.~F. Balcan, and H.~Lin,
-  editors, \emph{Advances in Neural Information Processing Systems}, volume~33,
-  pages 12472--12485. Curran Associates, Inc., 2020{\natexlab{a}}.
-\newblock URL
-  \url{https://proceedings.neurips.cc/paper/2020/file/9332c513ef44b682e9347822c2e457ac-Paper.pdf}.
+\newblock Instead of rewriting foreign code for machine learning, automatically synthesize fast gradients.
+\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.~F. Balcan, and H.~Lin, editors, \emph{Advances in Neural Information Processing Systems}, volume~33, pages 12472--12485. Curran Associates, Inc., 2020{\natexlab{a}}.
+\newblock URL \url{https://proceedings.neurips.cc/paper/2020/file/9332c513ef44b682e9347822c2e457ac-Paper.pdf}.
 
 \bibitem[Moses and Churavy(2020{\natexlab{b}})]{enzyme1}
 William Moses and Valentin Churavy.
-\newblock Instead of rewriting foreign code for machine learning, automatically
-  synthesize fast gradients.
-\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.~F. Balcan, and H.~Lin,
-  editors, \emph{Advances in Neural Information Processing Systems}, volume~33,
-  pages 12472--12485. Curran Associates, Inc., 2020{\natexlab{b}}.
-\newblock URL
-  \url{https://proceedings.neurips.cc/paper/2020/file/9332c513ef44b682e9347822c2e457ac-Paper.pdf}.
+\newblock Instead of rewriting foreign code for machine learning, automatically synthesize fast gradients.
+\newblock In H.~Larochelle, M.~Ranzato, R.~Hadsell, M.~F. Balcan, and H.~Lin, editors, \emph{Advances in Neural Information Processing Systems}, volume~33, pages 12472--12485. Curran Associates, Inc., 2020{\natexlab{b}}.
+\newblock URL \url{https://proceedings.neurips.cc/paper/2020/file/9332c513ef44b682e9347822c2e457ac-Paper.pdf}.
 
-\bibitem[Moses et~al.(2021)Moses, Churavy, Paehler, H\"{u}ckelheim, Narayanan,
-  Schanen, and Doerfert]{enzyme2}
-William~S. Moses, Valentin Churavy, Ludger Paehler, Jan H\"{u}ckelheim, Sri
-  Hari~Krishna Narayanan, Michel Schanen, and Johannes Doerfert.
-\newblock Reverse-mode automatic differentiation and optimization of gpu
-  kernels via enzyme.
-\newblock In \emph{Proceedings of the International Conference for High
-  Performance Computing, Networking, Storage and Analysis}, SC '21, New York,
-  NY, USA, 2021. Association for Computing Machinery.
+\bibitem[Moses et~al.(2021)Moses, Churavy, Paehler, H\"{u}ckelheim, Narayanan, Schanen, and Doerfert]{enzyme2}
+William~S. Moses, Valentin Churavy, Ludger Paehler, Jan H\"{u}ckelheim, Sri Hari~Krishna Narayanan, Michel Schanen, and Johannes Doerfert.
+\newblock Reverse-mode automatic differentiation and optimization of gpu kernels via enzyme.
+\newblock In \emph{Proceedings of the International Conference for High Performance Computing, Networking, Storage and Analysis}, SC '21, New York, NY, USA, 2021. Association for Computing Machinery.
 \newblock ISBN 9781450384421.
 \newblock \doi{10.1145/3458817.3476165}.
 \newblock URL \url{https://doi.org/10.1145/3458817.3476165}.
 
-\bibitem[Moses et~al.(2022)Moses, Narayanan, Paehler, Churavy, Schanen,
-  H\"{u}ckelheim, Doerfert, and Hovland]{enzyme3}
-William~S. Moses, Sri Hari~Krishna Narayanan, Ludger Paehler, Valentin Churavy,
-  Michel Schanen, Jan H\"{u}ckelheim, Johannes Doerfert, and Paul Hovland.
-\newblock Scalable automatic differentiation of multiple parallel paradigms
-  through compiler augmentation.
-\newblock In \emph{Proceedings of the International Conference on High
-  Performance Computing, Networking, Storage and Analysis}, SC '22. IEEE Press,
-  2022.
+\bibitem[Moses et~al.(2022)Moses, Narayanan, Paehler, Churavy, Schanen, H\"{u}ckelheim, Doerfert, and Hovland]{enzyme3}
+William~S. Moses, Sri Hari~Krishna Narayanan, Ludger Paehler, Valentin Churavy, Michel Schanen, Jan H\"{u}ckelheim, Johannes Doerfert, and Paul Hovland.
+\newblock Scalable automatic differentiation of multiple parallel paradigms through compiler augmentation.
+\newblock In \emph{Proceedings of the International Conference on High Performance Computing, Networking, Storage and Analysis}, SC '22. IEEE Press, 2022.
 \newblock ISBN 9784665454445.
 
 \bibitem[Murray(2018)]{murray2018powerbox}
 Steven~G Murray.
-\newblock powerbox: A python package for creating structured fields with
-  isotropic power spectra.
+\newblock powerbox: A python package for creating structured fields with isotropic power spectra.
 \newblock \emph{arXiv preprint arXiv:1809.05030}, 2018.
 
 \bibitem[Nusser and Dekel(1992)]{nusser1992tracing}
 Adi Nusser and Avishai Dekel.
 \newblock Tracing large-scale fluctuations back in time.
-\newblock \emph{Astrophysical Journal, Part 1 (ISSN 0004-637X), vol. 391, no.
-  2, June 1, 1992, p. 443-452. Research supported by USIBSF.}, 391:\penalty0
-  443--452, 1992.
+\newblock \emph{Astrophysical Journal, Part 1 (ISSN 0004-637X), vol. 391, no. 2, June 1, 1992, p. 443-452. Research supported by USIBSF.}, 391:\penalty0 443--452, 1992.
 
 \bibitem[Orabi et~al.(2018)Orabi, Buddhitha, Orabi, and Inkpen]{orabi2018deep}
-Ahmed~Husseini Orabi, Prasadith Buddhitha, Mahmoud~Husseini Orabi, and Diana
-  Inkpen.
+Ahmed~Husseini Orabi, Prasadith Buddhitha, Mahmoud~Husseini Orabi, and Diana Inkpen.
 \newblock Deep learning for depression detection of twitter users.
-\newblock In \emph{Proceedings of the fifth workshop on computational
-  linguistics and clinical psychology: from keyboard to clinic}, pages 88--97,
-  2018.
+\newblock In \emph{Proceedings of the fifth workshop on computational linguistics and clinical psychology: from keyboard to clinic}, pages 88--97, 2018.
 
-\bibitem[Pathak et~al.(2022)Pathak, Subramanian, Harrington, Raja,
-  Chattopadhyay, Mardani, Kurth, Hall, Li, Azizzadenesheli,
-  et~al.]{pathak2022fourcastnet}
-Jaideep Pathak, Shashank Subramanian, Peter Harrington, Sanjeev Raja, Ashesh
-  Chattopadhyay, Morteza Mardani, Thorsten Kurth, David Hall, Zongyi Li, Kamyar
-  Azizzadenesheli, et~al.
-\newblock Fourcastnet: A global data-driven high-resolution weather model using
-  adaptive fourier neural operators.
+\bibitem[Pathak et~al.(2022)Pathak, Subramanian, Harrington, Raja, Chattopadhyay, Mardani, Kurth, Hall, Li, Azizzadenesheli, et~al.]{pathak2022fourcastnet}
+Jaideep Pathak, Shashank Subramanian, Peter Harrington, Sanjeev Raja, Ashesh Chattopadhyay, Morteza Mardani, Thorsten Kurth, David Hall, Zongyi Li, Kamyar Azizzadenesheli, et~al.
+\newblock Fourcastnet: A global data-driven high-resolution weather model using adaptive fourier neural operators.
 \newblock \emph{arXiv preprint arXiv:2202.11214}, 2022.
 
 \bibitem[Patro(2015)]{patro2015normalization}
@@ -436,17 +308,13 @@ S~Patro.
 
 \bibitem[Potter et~al.(2017)Potter, Stadel, and Teyssier]{potter2017pkdgrav3}
 Douglas Potter, Joachim Stadel, and Romain Teyssier.
-\newblock Pkdgrav3: beyond trillion particle cosmological simulations for the
-  next era of galaxy surveys.
-\newblock \emph{Computational Astrophysics and Cosmology}, 4\penalty0
-  (1):\penalty0 2, 2017.
+\newblock Pkdgrav3: beyond trillion particle cosmological simulations for the next era of galaxy surveys.
+\newblock \emph{Computational Astrophysics and Cosmology}, 4\penalty0 (1):\penalty0 2, 2017.
 
-\bibitem[Prunet et~al.(2008)Prunet, Pichon, Aubert, Pogosyan, Teyssier, and
-  Gottloeber]{prunet2008initial}
+\bibitem[Prunet et~al.(2008)Prunet, Pichon, Aubert, Pogosyan, Teyssier, and Gottloeber]{prunet2008initial}
 S~Prunet, C~Pichon, D~Aubert, D~Pogosyan, R~Teyssier, and S~Gottloeber.
 \newblock Initial conditions for large cosmological simulations.
-\newblock \emph{The astrophysical journal supplement series}, 178\penalty0
-  (2):\penalty0 179, 2008.
+\newblock \emph{The astrophysical journal supplement series}, 178\penalty0 (2):\penalty0 179, 2008.
 
 \bibitem[Qian(1999)]{qian1999momentum}
 Ning Qian.
@@ -456,77 +324,56 @@ Ning Qian.
 \bibitem[Rokhlin(1985)]{rokhlin1985rapid}
 Vladimir Rokhlin.
 \newblock Rapid solution of integral equations of classical potential theory.
-\newblock \emph{Journal of computational physics}, 60\penalty0 (2):\penalty0
-  187--207, 1985.
+\newblock \emph{Journal of computational physics}, 60\penalty0 (2):\penalty0 187--207, 1985.
 
-\bibitem[Ronneberger et~al.(2015)Ronneberger, Fischer, and
-  Brox]{ronneberger2015u}
+\bibitem[Ronneberger et~al.(2015)Ronneberger, Fischer, and Brox]{ronneberger2015u}
 Olaf Ronneberger, Philipp Fischer, and Thomas Brox.
 \newblock U-net: Convolutional networks for biomedical image segmentation.
-\newblock In \emph{Medical image computing and computer-assisted
-  intervention--MICCAI 2015: 18th international conference, Munich, Germany,
-  October 5-9, 2015, proceedings, part III 18}, pages 234--241. Springer, 2015.
+\newblock In \emph{Medical image computing and computer-assisted intervention--MICCAI 2015: 18th international conference, Munich, Germany, October 5-9, 2015, proceedings, part III 18}, pages 234--241. Springer, 2015.
 
 \bibitem[Schneider and Bartelmann(1995)]{schneider1995power}
 Peter Schneider and Matthias Bartelmann.
-\newblock The power spectrum of density fluctuations in the zel'dovich
-  approximation.
-\newblock \emph{Monthly Notices of the Royal Astronomical Society},
-  273\penalty0 (2):\penalty0 475--483, 1995.
+\newblock The power spectrum of density fluctuations in the zel'dovich approximation.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society}, 273\penalty0 (2):\penalty0 475--483, 1995.
 
 \bibitem[Schutz(2003)]{schutz2003gravity}
 Bernard Schutz.
-\newblock \emph{Gravity from the ground up: An introductory guide to gravity
-  and general relativity}.
+\newblock \emph{Gravity from the ground up: An introductory guide to gravity and general relativity}.
 \newblock Cambridge university press, 2003.
 
-\bibitem[Springel et~al.(2021)Springel, Pakmor, Zier, and
-  Reinecke]{springel2021simulating}
+\bibitem[Springel et~al.(2021)Springel, Pakmor, Zier, and Reinecke]{springel2021simulating}
 Volker Springel, R{\"u}diger Pakmor, Oliver Zier, and Martin Reinecke.
 \newblock Simulating cosmic structure formation with the gadget-4 code.
-\newblock \emph{Monthly Notices of the Royal Astronomical Society},
-  506\penalty0 (2):\penalty0 2871--2949, 2021.
+\newblock \emph{Monthly Notices of the Royal Astronomical Society}, 506\penalty0 (2):\penalty0 2871--2949, 2021.
 
-\bibitem[Thuerey et~al.(2021)Thuerey, Holl, Mueller, Schnell, Trost, and
-  Um]{thuerey2021physics}
-Nils Thuerey, Philipp Holl, Maximilian Mueller, Patrick Schnell, Felix Trost,
-  and Kiwon Um.
+\bibitem[Thuerey et~al.(2021)Thuerey, Holl, Mueller, Schnell, Trost, and Um]{thuerey2021physics}
+Nils Thuerey, Philipp Holl, Maximilian Mueller, Patrick Schnell, Felix Trost, and Kiwon Um.
 \newblock Physics-based deep learning.
 \newblock \emph{arXiv preprint arXiv:2109.05237}, 2021.
 
 \bibitem[Wang et~al.(2019)Wang, Casalino, and Khullar]{wang2019deep}
 Fei Wang, Lawrence~Peter Casalino, and Dhruv Khullar.
 \newblock Deep learning in medicine—promise, progress, and challenges.
-\newblock \emph{JAMA internal medicine}, 179\penalty0 (3):\penalty0 293--294,
-  2019.
+\newblock \emph{JAMA internal medicine}, 179\penalty0 (3):\penalty0 293--294, 2019.
 
 \bibitem[Wang et~al.(2014)Wang, Mo, Yang, Jing, and Lin]{wang2014elucid}
 Huiyuan Wang, HJ~Mo, Xiaohu Yang, YP~Jing, and WP~Lin.
-\newblock Elucid—exploring the local universe with the reconstructed initial
-  density field. i. hamiltonian markov chain monte carlo method with particle
-  mesh dynamics.
-\newblock \emph{The Astrophysical Journal}, 794\penalty0 (1):\penalty0 94,
-  2014.
+\newblock Elucid—exploring the local universe with the reconstructed initial density field. i. hamiltonian markov chain monte carlo method with particle mesh dynamics.
+\newblock \emph{The Astrophysical Journal}, 794\penalty0 (1):\penalty0 94, 2014.
 
 \bibitem[Wang et~al.(2009)Wang, Moin, and Iaccarino]{wang2009minimal}
 Qiqi Wang, Parviz Moin, and Gianluca Iaccarino.
-\newblock Minimal repetition dynamic checkpointing algorithm for unsteady
-  adjoint calculation.
-\newblock \emph{SIAM Journal on Scientific Computing}, 31\penalty0
-  (4):\penalty0 2549--2567, 2009.
+\newblock Minimal repetition dynamic checkpointing algorithm for unsteady adjoint calculation.
+\newblock \emph{SIAM Journal on Scientific Computing}, 31\penalty0 (4):\penalty0 2549--2567, 2009.
 
-\bibitem[Wu et~al.(2020)Wu, Pan, Chen, Long, Zhang, and
-  Philip]{wu2020comprehensive}
-Zonghan Wu, Shirui Pan, Fengwen Chen, Guodong Long, Chengqi Zhang, and S~Yu
-  Philip.
+\bibitem[Wu et~al.(2020)Wu, Pan, Chen, Long, Zhang, and Philip]{wu2020comprehensive}
+Zonghan Wu, Shirui Pan, Fengwen Chen, Guodong Long, Chengqi Zhang, and S~Yu Philip.
 \newblock A comprehensive survey on graph neural networks.
-\newblock \emph{IEEE transactions on neural networks and learning systems},
-  32\penalty0 (1):\penalty0 4--24, 2020.
+\newblock \emph{IEEE transactions on neural networks and learning systems}, 32\penalty0 (1):\penalty0 4--24, 2020.
 
 \bibitem[Zhang et~al.(2019)Zhang, He, Sra, and Jadbabaie]{zhang2019gradient}
 Jingzhao Zhang, Tianxing He, Suvrit Sra, and Ali Jadbabaie.
-\newblock Why gradient clipping accelerates training: A theoretical
-  justification for adaptivity.
+\newblock Why gradient clipping accelerates training: A theoretical justification for adaptivity.
 \newblock \emph{arXiv preprint arXiv:1905.11881}, 2019.
 
 \end{thebibliography}

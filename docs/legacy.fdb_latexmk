@@ -1,9 +1,0 @@
-# Fdb version 4
-["latex"] 0 "legacy.tex" "legacy.dvi" "legacy" 0 -1
-  "legacy.aux" 0 -1 0 "latex"
-  "legacy.tex" 0 -1 0 ""
-  (generated)
-  "legacy.aux"
-  "legacy.dvi"
-  "legacy.log"
-  (rewritten before read)
