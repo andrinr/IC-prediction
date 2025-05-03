@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex main"] 1745751914.86365 "main.aux" "main.bbl" "main" 1746269428.32069 0
+["bibtex main"] 1746299666.63221 "main.aux" "main.bbl" "main" 1746299679.62752 0
   "./reference.bib" 1742630338 28404 80d470aed780cb66499676b6fe097aca ""
   "c:/texlive/2025/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1745745003 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1746269426 41545 75b2280f3204366921282235829694f0 "pdflatex"
+  "main.aux" 1746299678 41545 75b2280f3204366921282235829694f0 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1746269415.71901 "c:/Users/andri/msc-thesis/docs/main.tex" "main.pdf" "main" 1746269428.3214 0
-  "c:/Users/andri/msc-thesis/docs/main.tex" 1746269415 186190 c183238ec14fb703043d88afa446e161 ""
+["pdflatex"] 1746299667.24863 "c:/Users/andri/msc-thesis/docs/main.tex" "main.pdf" "main" 1746299679.62831 0
+  "c:/Users/andri/msc-thesis/docs/main.tex" 1746280869 186182 b12745aecda72dac8e4e2ca7bb7688bd ""
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1745743174 2971 def0b6c1f0b107b3b936def894055589 ""
   "c:/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1745743174 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "c:/texlive/2025/texmf-dist/fonts/map/fontname/texfonts.map" 1745743804 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -193,19 +193,19 @@
   "img/particles.png" 1742630338 271138 6d51caea0e6cb487ba32988828b69687 ""
   "img/power.png" 1742630338 221652 3fd9a6f02a30863506fae27914017cb5 ""
   "img/power_spectrum.png" 1742630338 73927 bc32f46221bdb7b979098dc33514ddf8 ""
-  "img/prediction_sequential(1).jpg" 1742630338 168188 ad8619f6c3d9df963b35a05ff589e2a7 ""
   "img/prediction_sequential_two.jpg" 1746269034 663304 ff3baa31c882931f388e19b93b1af4ca ""
   "img/ranges.png" 1742630338 36232 63bc3451c6fc7077738eed7539ca3ce5 ""
   "img/reconstruction.png" 1742630338 74685 28f872af6efa2a7c18b887e6f0d27a9d ""
   "img/schemes.png" 1742630338 52527 2bc376ba221dc80f518a7752dab2bd29 ""
   "img/ssm.png" 1742630338 936966 57cb0f11c254be7dc41ef8980ffd3fee ""
+  "img/three_steps_pred.jpg" 1746280781 907242 198469be0569f566d0b9b41952eb2b3d ""
   "img/training.png" 1745745454 45139 3d9099a092fa630c2243100c3b6d125b ""
   "img/unet.png" 1742630338 103270 fcfd65b2069a81d0e5aef6aa69f2150d ""
-  "main.aux" 1746269426 41545 75b2280f3204366921282235829694f0 "pdflatex"
-  "main.bbl" 1745751915 24535 3589489f354102b0fb66693abb860fb5 "bibtex main"
-  "main.out" 1746269426 11656 262ec799256a0d23751521b95cc1b2a2 "pdflatex"
-  "main.tex" 1746269415 186190 c183238ec14fb703043d88afa446e161 ""
-  "main.toc" 1746269426 6138 78b17398e2c0abcfaff0e861b638d077 "pdflatex"
+  "main.aux" 1746299678 41545 75b2280f3204366921282235829694f0 "pdflatex"
+  "main.bbl" 1746299667 24535 3589489f354102b0fb66693abb860fb5 "bibtex main"
+  "main.out" 1746299678 11656 262ec799256a0d23751521b95cc1b2a2 "pdflatex"
+  "main.tex" 1746280869 186182 b12745aecda72dac8e4e2ca7bb7688bd ""
+  "main.toc" 1746299678 6138 78b17398e2c0abcfaff0e861b638d077 "pdflatex"
   (generated)
   "main.aux"
   "main.log"
