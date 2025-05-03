@@ -22,3 +22,9 @@ core_*
 /docs/**.bbl.lock
 /docs/**.blg
 /docs/**.blg.lock
+/docs/**.aux
+/docs/**.log
+/docs/**.fls
+/docs/**.fdb_latexmk
+/docs/**.toc
+/docs/**.out

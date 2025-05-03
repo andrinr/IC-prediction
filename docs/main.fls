@@ -352,11 +352,11 @@ INPUT ./img/prediction_sequential_two.jpg
 INPUT ./img/prediction_sequential_two.jpg
 INPUT ./img/prediction_sequential_two.jpg
 INPUT ./img/prediction_sequential_two.jpg
-INPUT ./img/prediction_sequential(1).jpg
-INPUT ./img/prediction_sequential(1).jpg
-INPUT ./img/prediction_sequential(1).jpg
-INPUT ./img/prediction_sequential(1).jpg
-INPUT ./img/prediction_sequential(1).jpg
+INPUT ./img/three_steps_pred.jpg
+INPUT ./img/three_steps_pred.jpg
+INPUT ./img/three_steps_pred.jpg
+INPUT ./img/three_steps_pred.jpg
+INPUT ./img/three_steps_pred.jpg
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/jknappen/ec/ecss0900.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmr9.tfm
 INPUT c:/texlive/2025/texmf-dist/fonts/tfm/public/cm/cmmi9.tfm
