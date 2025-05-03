@@ -22,9 +22,9 @@ from config import Config
 def plot(
         ouput_file : str,
         config : Config,
-        sequence : jax.Array,
-        sequence_prediction : jax.Array | None,
-        attributes : jax.Array):
+        sequence : list[jax.Array],
+        sequence_prediction : list[jax.Array] | None,
+        attributes : list[jax.Array]):
     
     plt.rcParams.update({
         'font.size': 28,                   # Global font size
@@ -33,13 +33,10 @@ def plot(
         'xtick.labelsize': 14,             # X tick label font size
         'ytick.labelsize': 14,             # Y tick label font size
         'legend.fontsize': 18,             # Legend font size
-        # 'axes.grid': True,                 # Enable grid
         'grid.alpha': 0.7,                 # Grid line transparency
         'grid.linestyle': '--',            # Grid line style
         'grid.color': 'gray',              # Grid line color
         'text.usetex': False,              # Use TeX for text (set True if TeX is available)
-        'figure.figsize': [9, 7],          # Figure size
-        # 'axes.prop_cycle': plt.cycler('color', ['#0077BB', '#EE7733', '#33BBEE', '#EE3377'])
     })
     
     frames = sequence.shape[0]
@@ -196,6 +193,8 @@ def main(argv) -> None:
 
     model, config, training_stats = nn.load_sequential_model(
         model_name)
+
+    n_shots = 10
     
     # Data Pipeline
     dataset = data.DirectorySequence(
@@ -211,24 +210,23 @@ def main(argv) -> None:
     data_pipeline = data.directory_sequence_pipe(dataset, config.grid_size)
     data_iterator = DALIGenericIterator(data_pipeline, ["data", "attributes"])
 
-    sample = next(data_iterator)
-    sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
-    attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[0]
+    predictions = []
+    attributes = []
+    sequences = []
+    for i in range(n_shots):
+        sample = next(data_iterator)
+        sequence = jax.device_put(sample['data'], jax.devices('gpu')[0])[0]
+        attributes = jax.device_put(sample['attributes'], jax.devices('gpu')[0])[0]
 
-    print(sample.shape)
-    pred = model(sequence, attributes, False, config.include_potential)
+        pred_seq = model(sequence, attributes, True, config.include_potential)
+        print(pred_seq.shape)
 
-    print(pred.shape)
-    pred_seq = model(sequence, attributes, True, config.include_potential)
+        attributes = sample["attributes"][0]
 
-    attributes = sample["attributes"][0]
+        predictions.append(pred_seq)
+        attributes.append(attributes)
+        sequences.append(sequence)
 
-    plot(
-        "img/prediction_stepwise.jpg", 
-        sequence = sequence, 
-        config = config,
-        sequence_prediction = pred[:, 0:1],
-        attributes = attributes)
 
     plot(
         "img/prediction_sequential.jpg", 
