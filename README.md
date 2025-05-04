@@ -39,6 +39,7 @@ To learn some techniques I have made some smaller projects:
 1. Create a new interactive session ```srun --pty -n 1 -c 8 --time=01:00:00 --mem=16G --gres=gpu:1 bash -l``` 
 2. Load Conda ```module load anaconda3```
 3. Create env 
+
 ```
 python -m venv ml-env
 source .env/bin/activate
