@@ -1338,6 +1338,19 @@ Finally, we have tested another promising approach that is frequently used in ne
 Specifically, we increase the number of input and output channels for all networks $\{\mathbf{f}_i, \dots \{\mathbf{f}_{n-2}$ to $b$, representing the number of skip connection channels. The first network $\{\mathbf{f}_i$ has a single input channel and $b$ output channels, whereas the network $\{\mathbf{f}_i$ has $b$ input channels and one output channel. We then trained the network on the large dataset using the regular procedure to downscale the dataset to $128^3$ using cubic spline interpolation. We used $b=3$, meaning 3 skip connections. Furthermore, we added another intermediate step, meaning we used three unique neural networks $\mathbf{f}_0$, $\mathbf{f}_1$ and $\mathbf{f}_2$. Here network 0 predicts from $z=0$ to $z=1.53$, network 1 from $z=1.53$ to $z=4.25$ and finally network 2 from $z=4.25$ to $z=49$. The results are depicted in figure \ref{fig:mss}. We can observe the way the power spectrum falls off later, and we can make out a lot more details in the predicted distribution. The results from the experiment with two and three uniquely parametrized networks hint towards a positive correlation between the number of unique networks and the training accuracy. However, this approach becomes unfeasible to train on a single GPU machine. Even with a powerful H100 NVIDIA GPU boasting 100 GB of GPU memory and a batch size of just one, we have hit the memory limit with this implementation. Splitting the prediction into more timestep would require either a multi GPU setup or advanced gradient check pointing techniques, as briefly described in section \ref{IC-opt}. 
 
 
+\begin{equation}
+    \label{equation-corr}
+    \frac{ \langle |\delta(\mathbf{k})| \cdot |\delta(\mathbf{k})_{pred}| \rangle }{ \sqrt{ \langle |\delta(\mathbf{k})| \rangle \cdot  \langle |\delta(\mathbf{k})_{pred}| \rangle }}
+\end{equation}
+
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\linewidth]{img/eval_stats.jpg}
+    \caption{Three-step prediction using an adaptive FNO with a three channel skip connections on the large dataset. In the top row: Comparision of input, output and ground truth from sample from validation set. Bottom left power spectrum and Power spectrum correlation of the prediction.Bottom right: Correlation as evaluated with the equation \ref{equation-corr}.}
+    \label{fig:eval-stats}
+\end{figure}
+
 
 \newpage
 \section{Implementation}
