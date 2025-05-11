@@ -49,12 +49,16 @@ def compare(
     subfigs = fig.subfigures(
         1, 
         2, 
-        wspace=0.01, 
+        wspace=0.05, 
         hspace=0.01,
         width_ratios=[2, 1.5],
         height_ratios=[1])
 
-    spec_sequence = subfigs[0].add_gridspec(2, num_predictions + 1, wspace=0.1, hspace=0.15)
+    spec_sequence = subfigs[0].add_gridspec(
+        2, 
+        num_predictions + 1, 
+        wspace=0.2, 
+        hspace=0.00)
     spec_stats = subfigs[1].add_gridspec(3, 1)
     ax_power = fig.add_subplot(spec_stats[0:2], adjustable='box')
 
@@ -78,8 +82,8 @@ def compare(
     ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
     im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
     divider = make_axes_locatable(ax_seq)
-    cax = divider.append_axes('bottom', size='5%', pad=0.03)
-    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
+    cax = divider.append_axes('right', size='5%', pad=0.03)
+    fig.colorbar(im_seq, cax=cax, orientation='vertical')
 
     p, k = get_power(delta[:, :, :, 0], config.box_size)
     ax_power.plot(
@@ -99,8 +103,8 @@ def compare(
     ax_seq.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
     im_seq = ax_seq.imshow(normalized[grid_size // 2, :, :], cmap='inferno')
     divider = make_axes_locatable(ax_seq)
-    cax = divider.append_axes('bottom', size='5%', pad=0.03)
-    fig.colorbar(im_seq, cax=cax, orientation='horizontal')
+    cax = divider.append_axes('right', size='5%', pad=0.03)
+    fig.colorbar(im_seq, cax=cax, orientation='vertical')
     
     for idx in range(num_predictions):
 
@@ -131,11 +135,11 @@ def compare(
             vmax=0.15)
 
         divider = make_axes_locatable(ax_seq)
-        cax = divider.append_axes('bottom', size='5%', pad=0.03)
+        cax = divider.append_axes('right', size='5%', pad=0.03)
         fig.colorbar(
             im_seq, 
             cax=cax, 
-            orientation='horizontal')
+            orientation='vertical')
     
         ax_seq_pred = fig.add_subplot(spec_sequence[1, idx+1])
         ax_seq_pred.tick_params(left=False, bottom=False, labelleft=False, labelbottom=False)
@@ -143,8 +147,8 @@ def compare(
         im_seq_pred = ax_seq_pred.imshow(rho_pred_normalized[grid_size // 2, :, :], cmap='inferno')
         
         divider_pred = make_axes_locatable(ax_seq_pred)
-        cax_pred = divider_pred.append_axes('bottom', size='5%', pad=0.03)
-        fig.colorbar(im_seq_pred, cax=cax_pred, orientation='horizontal')
+        cax_pred = divider_pred.append_axes('right', size='5%', pad=0.03)
+        fig.colorbar(im_seq_pred, cax=cax_pred, orientation='vertical')
         
         p_pred, k_pred = get_power(delta_pred[:, :, :, 0], config.box_size)
         ax_power.plot(

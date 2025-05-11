@@ -1,18 +1,16 @@
 # Dataset
 # grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/" #"/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
-grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
-input_grid_size : 128
+# grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/IC_GEN/grid/"
+grid_dir : "/shares/feldmann.ics.mnf.uzh/Andrin/firefly/"
+input_grid_size : 256
 grid_size : 128
 file_index_stride :
+- 1
 - 2
-- 3
-- 5
-- 10
-- 30
-- 50
-file_index_steps : 6
+- 7
+file_index_steps : 3
 file_index_start : 0
-total_index_steps : 100
+total_index_steps : 10
 flip : True 
 normalizing_function : "delta" # log_growth, delta, ssm
 
@@ -21,10 +19,10 @@ learning_rate : 0.002
 include_potential : False
 sequential_skip_channels : 0
 stepwise_epochs : 20
-mixed_epochs : 0
-sequential_epochs : 0
-unique_networks : False
-model_dir : "/data/arehma/models/layers2/"
+mixed_epochs : 10
+sequential_epochs : 10
+unique_networks : True
+model_dir : "/data/arehma/models/skips/"
 model_type : "FNO" # UNet, FNO
 activation : "tanh" # relu, tanh
 

@@ -5,7 +5,7 @@ grid_size : 64
 file_index_stride : 
 - 1
 file_index_steps : 1
-file_index_start : 0
+file_index_start : 20
 total_index_steps : 100
 flip : True 
 normalizing_function : "log_growth" # log_growth, delta, none
@@ -18,7 +18,7 @@ stepwise_epochs : 20
 mixed_epochs : 0
 sequential_epochs : 0
 unique_networks : True
-model_dir : "/data/arehma/models/ranges-fd"
+model_dir : "/data/arehma/models/times"
 model_type : "FNO" # UNet, FNO
 activation : "relu" # relu, tanh
 
@@ -27,7 +27,7 @@ fno_modes : 32
 fno_input_channels : 1
 fno_hidden_channels : 16
 fno_output_channels : 1
-fno_n_layers : 5
+fno_n_layers : 3
 fno_increasing_modes : True
 
 # UNet parameters
@@ -37,7 +37,7 @@ unet_output_channels : 2
 unet_num_levels : 4
 
 # cosmology parameters
-box_size : 60 # Mpc/h
+box_size : 30 # Mpc/h
 num_particles : 16777216 # 256^3
 omega_M : 0.32
 omega_L : 0.68
