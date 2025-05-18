@@ -728,7 +728,7 @@ Here $\mathbf{f}$ would be equal to
     \mathbf{f} = \mathcal{P}_{n-1}^{-1} \circ \dots \circ \mathcal{P}_1^{-1}
 \end{equation}.
 
-In practice, however, the method forward solver suffers from errors introduced in the discretization method and due to the finite numerical precision and oftentimes cannot be inverted perfectly. Many interesting processes are subject to non-linear dynamics, hence chaos theory does apply, and small inconsistencies can produce very different results. Therefore, instead of relying on $\mathcal{P}^{-1}$, we are forced to rely on different approaches. This is especially problematic for large simulations, as the error increases with the number of variables, time steps size and number of time steps as seen in figure \ref{fig:error_inverse}.
+In practice, however, the method forward solver suffers from errors introduced in the discretization method and due to the finite numerical precision and oftentimes cannot be inverted perfectly. Many interesting processes are subject to non-linear dynamics, hence chaos theory does apply, and small inconsistencies can produce very different results. Therefore, instead of relying on $\mathcal{P}^{-1}$, we are forced to rely on different approaches. This is especially problematic for large simulations, as the error increases exponentially with the number of variables, time steps size and number of time steps as seen in figure \ref{fig:error_inverse}.
 
 \begin{figure}
     \centering
@@ -1052,28 +1052,11 @@ We found, when predicting from $z=4.25$ to $z=49$, that the adapted FNO achieved
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.4\linewidth]{img/channels_compute.png}
+    \includegraphics[width=0.6\linewidth]{img/channels_compute.png}
     \caption{Validation loss against compute time for different channel numbers in FNOs. The corresponding parameter count is denoted in the label of the plot.}
     \label{fig:channels-B}
 \end{figure}
 
-
-% \begin{figure}[h]
-% \centering
-% \subfloat[Visual and Power Spectrum comparison of predicted density fields with FNOs of different channel numbers. The top row shows the residual between the predictions and the ground truth. Red areas highlight regions where the prediction deposits too much mass, while blue areas indicate the opposite.]{\label{fig:channels-A}
-% \centering
-% \includegraphics[width=0.6\linewidth]{img/compare_channels_3.jpg}
-% }
-% %no space
-% \hfill
-% \subfloat[Validation loss against compute time for different channel numbers in FNOs. The corresponding parameter count is denoted in the label of the plot.]{\label{fig:channels-B}
-% \centering
-% \includegraphics[width=0.35\linewidth]{channels_compute.png}
-% }
-
-% \caption{Comparison of predictions and validation convergence using different hidden channel numbers in FNO networks. Predictions are made from $z=4.25$ to $z=49$.}
-% \label{fig:channels}
-% \end{figure}
 
 
 Instead of applying a gradient free hyperparameter optimization, we take a more nuanced approach, allowing us to balance network size with training efficiency. Training efficiency is often overlooked and becomes critical when training networks on datasets of this scale. The largest FNO we have tested has well over 30 million parameters. First we want to examine what the ideal number of channels is, that means how much should we lift the number of input channels in the first operation applied inside the FNO. To do so, we examine the predictions based on two observations. For one, we want to compare the actual predicted distribution visually and based on the power spectrum of predictions. But we are also interested in comparing the learning capacity of the model against its compute costs. Naturally, we favor a model which converges to the lowest validation loss after a certain time spent on training, whereas we assume time to be an equivalent measure to compute cost. When comparing models with different parameters, comparing the validation loss against the number of epochs can be misleading, as larger models usually require more computing time to finish a single epoch. We test train all models on 20 epochs with a learning rate of 0.002. In a first setup, we examine the effects on the training capacity of the model when using different numbers of channels, as seen in Figure \ref{fig:channels-B}. We can observe how the networks with more channels take longer to complete the first epoch due to their significantly higher parameter count. However, even after completing the first epoch, the validation loss is lower compared to networks with fewer channels. Furthermore, the slope of the validation loss appears to correlate with the number of channels, meaning more channels result in a more negative slope. Finally, we observe more unstable training, evident in the wobbly validation loss curve. The more unstable training is likely rooted in the increased parameter count, which leads to a more complex loss surface topology. Since we rely on an identical learning rate, the trajectory of the optimizer passes multiple small hills and valleys, which then appear as a jagged line in the validation loss. After all, a gradient-based algorithm traces a specific path in the loss surface topology, whereas plotting the loss over the training time is equivalent to showing the height profile of the traced path. We conclude a hidden channel count of 16 is ideal, as the difference between the 8 channel setup already appears to show diminishing returns. In figure \ref{fig:channels-A} we can visually observe how the network with more hidden channels is capable of predicting a more detailed density field, which is also reflected in the power spectrum. There, the prediction made with 8 and 16 hidden layers has a power spectrum whose intensity falls off later than with 4 hidden channels.
@@ -1096,14 +1079,15 @@ In a next step, we examine the effect of the layer count on the validation loss 
     \label{fig:layer-B}
 \end{figure}
 
+
+In a next step, we examine the effect of the layer count on the validation loss in figure \ref{fig:layer-B}. In figure \ref{fig:layer-B} we can observe how the validation loss decreases most with a four layer setup, whereas more or less layers result in worse models. From figure \ref{fig:layer-A} it becomes further evident that a mode with four layers perorforms better than a model with three. The model with 5 layer still performs better, however the effect is not that pronounced. 
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.95\linewidth]{img/compare_layers_2.png}
     \caption{Visual and Power Spectrum comparison of predicted density fields with FNO's of different different FNO layer counts. The top column shows the residual between the predicted and the ground truth. Red areas highlight areas where the prediction deposits too much mass, blue areas the opposite. }
     \label{fig:layer-A}
 \end{figure}
-
-
 
 \subsection{FNO Capabilities}
 
@@ -1334,7 +1318,8 @@ We have found that training a network for several epochs using $L_{step}$ follow
 
 Finally, we have tested another promising approach that is frequently used in neural networks and auto-regressive training, skip connections. The idea of skip connections is to have an alternative data pathway, where the data from previous timesteps can pass through unaltered.  This approach is inspired to current effort on applying FNO's in an autoregresive manner \citep{li2020fourier, gopakumar2023fourier}. A common approach is to train the FNO operators using similar step-wise loss functions as seen with the equation $L_{step}$ in a first training sequence. Then a Recursive Neural Network (RNN) is trained on the sequential loss function $L_{seq}$, where the parameters of the FNO are frozen. That means the RNN is responsible for correcting the accumulating errors. The setup helps to reduce the vanishing and exploding gradients problem. The architecture of RNN's almost always includes skip connections that can pass the data unaltered through the network. However, due to the time limitations of the thesis, we did not have time to implement a RNN and adapt the training regime. Instead, we borrow the idea of skip connections and just apply them to our FNO training.
 
-Specifically, we increase the number of input and output channels for all networks $\{\mathbf{f}_i, \dots \{\mathbf{f}_{n-2}$ to $b$, representing the number of skip connection channels. The first network $\{\mathbf{f}_i$ has a single input channel and $b$ output channels, whereas the network $\{\mathbf{f}_i$ has $b$ input channels and one output channel. We then trained the network on the large dataset using the regular procedure to downscale the dataset to $128^3$ using cubic spline interpolation. We used $b=3$, meaning 3 skip connections. Furthermore, we added another intermediate step, meaning we used three unique neural networks $\mathbf{f}_0$, $\mathbf{f}_1$ and $\mathbf{f}_2$. Here network 0 predicts from $z=0$ to $z=1.53$, network 1 from $z=1.53$ to $z=4.25$ and finally network 2 from $z=4.25$ to $z=49$. The results are depicted in figure \ref{fig:mss}. We can observe the way the power spectrum falls off later, and we can make out a lot more details in the predicted distribution. The results from the experiment with two and three uniquely parametrized networks hint towards a positive correlation between the number of unique networks and the training accuracy. However, this approach becomes unfeasible to train on a single GPU machine. Even with a powerful H100 NVIDIA GPU boasting 100 GB of GPU memory and a batch size of just one, we have hit the memory limit with this implementation. Splitting the prediction into more timestep would require either a multi GPU setup or advanced gradient check pointing techniques, as briefly described in section \ref{IC-opt}. 
+Specifically, we increase the number of input and output channels for all networks $\{\mathbf{f}_i, \dots \{\mathbf{f}_{n-2}$ to $b$, representing the number of skip connection channels. The first network $\{\mathbf{f}_i$ has a single input channel and $b$ output channels, whereas the network $\{\mathbf{f}_i$ has $b$ input channels and one output channel. We then trained the network on the large dataset using the regular procedure to downscale the dataset to $128^3$ using cubic spline interpolation. We used $b=3$, meaning 3 skip connections. Furthermore, we added another intermediate step, meaning we used three unique neural networks $\mathbf{f}_0$, $\mathbf{f}_1$ and $\mathbf{f}_2$. Here network 0 predicts from $z=0$ to $z=1.53$, network 1 from $z=1.53$ to $z=4.25$ and finally network 2 from $z=4.25$ to $z=49$. In figure \ref{fig:mss} we can observe how the power spectrum falls of later than in the previous experiment where we have used two neural networks. This is evident from the plot depicting the power spectrum but also becomes evident visually from looking at the predicted distribution. Furthermore in figure \ref{fig:eval-corr} we are comparing power spectrum of prediction against the ground truth and the cross correlation. We can see how the cross correlation tends to fall off slightly sooner than the power spectrum. The effect of this becomes clearer if we look at the right bottom part of the plot, where the correlation function for 16 samples is plotted. The prediction and the ground truth display a ~30\% correlation at $k=1$. Whereas the power spectrum plots are somehwat explainable due to the gravitational effects becoming more non linear when stuctures cross the $k=1$ threshold, the cross correlation indices a more smooth fallof of the prediction accuracies that starts way earlier than with $k=1$. Another int
+Overall the results from the experiment with two and three uniquely parametrized networks hint towards a positive correlation between the number of unique networks and the training accuracy. However, this approach becomes unfeasible to train on a single GPU machine. Even with a powerful H100 NVIDIA GPU boasting 100GB of GPU memory and a batch size of just one, we have hit the memory limit with this implementation. Splitting the prediction into more timestep would require either a multi GPU setup or advanced gradient check pointing techniques, as briefly described in section \ref{IC-opt}. 
 
 
 \begin{equation}
@@ -1346,8 +1331,8 @@ Specifically, we increase the number of input and output channels for all networ
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.9\linewidth]{img/eval_stats.jpg}
-    \caption{Three-step prediction using an adaptive FNO with a three channel skip connections on the large dataset. In the top row: Comparision of input, output and ground truth from sample from validation set. Bottom left power spectrum and Power spectrum correlation of the prediction.Bottom right: Correlation as evaluated with the equation \ref{equation-corr}.}
-    \label{fig:eval-stats}
+    \caption{Three-step prediction using an adaptive FNO with a three channel skip connections on the large dataset. In the top row: Comparision of input, output and ground truth from sample from validation set. Bottom left power spectrum and Power spectrum correlation of the prediction. The prediction was made over 20 samples, where the grey area indicates the minimum and maximum range the power spectrum  correlation reaches. Bottom right: Correlation as evaluated with the equation \ref{equation-corr}. Each line represents a different sample, where in total 20 samples are used.}
+    \label{fig:eval-corr}
 \end{figure}
 
 

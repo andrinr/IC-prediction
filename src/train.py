@@ -6,6 +6,7 @@ from nvidia.dali.plugin.jax import DALIGenericIterator
 import equinox as eqx
 # other
 import sys
+import numpy as np
 # Local
 import nn
 import data
@@ -14,17 +15,24 @@ from datetime import datetime
 import os
 
 def main(argv) -> None:
-    # os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
-    # os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]=".XX"
-    # os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"
+    # Memory and performance optimizations
+    os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"]="false"
+    os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"]=".85"  # Use 85% of available GPU memory
+    os.environ["XLA_PYTHON_CLIENT_ALLOCATOR"]="platform"
+    os.environ["XLA_FLAGS"] = "--xla_gpu_autotune_level=4"  # Maximum autotuning
    
     config = load_config(argv[0])
     print(config)
 
     # JAX Settings / Device Info
+    devices = jax.devices()
+    print(f"Available devices: {devices}")
     print("Jax is using %s" % xla_bridge.get_backend().platform)
-    jax.config.update("jax_enable_x64", False)
+    jax.config.update("jax_enable_x64", False)  # Use 32-bit for better performance
     jax.config.update("jax_disable_jit", False)
+    # Enable memory defragmentation
+    jax.config.update("jax_debug_nans", False)
+    jax.config.update("jax_debug_infs", False)
 
     dataset_params = {
         "grid_size" : config.input_grid_size,
@@ -36,14 +44,25 @@ def main(argv) -> None:
         "flip" : config.flip,
         "type" : "train"}
     
+    # Optimize data pipeline with prefetch and parallel processing
     train_dataset = data.DirectorySequence(**dataset_params)
-    train_data_pipeline = data.directory_sequence_pipe(train_dataset, config.grid_size)
+    train_data_pipeline = data.directory_sequence_pipe(
+        train_dataset, 
+        config.grid_size,
+        num_threads=4,  # Increase number of CPU threads for data loading
+        prefetch_queue_depth=2  # Enable prefetching
+    )
     train_data_iterator = DALIGenericIterator(train_data_pipeline, ["data", "attributes"])
 
     dataset_params["type"] = "val"
 
     val_dataset = data.DirectorySequence(**dataset_params)
-    val_data_pipeline = data.directory_sequence_pipe(val_dataset, config.grid_size)
+    val_data_pipeline = data.directory_sequence_pipe(
+        val_dataset, 
+        config.grid_size,
+        num_threads=4,
+        prefetch_queue_depth=2
+    )
     val_data_iterator = DALIGenericIterator(val_data_pipeline, ["data", "attributes"])
 
     # dummy_train_dataset = data.CubeData(
