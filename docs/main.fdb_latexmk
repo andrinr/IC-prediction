@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex main"] 1747676877.88569 "main.aux" "main.bbl" "main" 1747676889.02542 0
+["bibtex main"] 1747681928.24627 "main.aux" "main.bbl" "main" 1747682178.94208 0
   "./reference.bib" 1738952600 27634 80d470aed780cb66499676b6fe097aca ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/bibtex/bst/natbib/plainnat.bst" 1284455456 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "main.aux" 1747676888 42385 f6b5974b57a36f46d5b157e7c98ce939 "pdflatex"
+  "main.aux" 1747682177 42385 f6b5974b57a36f46d5b157e7c98ce939 "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1747676878.11988 "c:/Users/andri/msc-thesis/docs/main.tex" "main.pdf" "main" 1747676889.02623 0
+["pdflatex"] 1747682166.06042 "c:/Users/andri/msc-thesis/docs/main.tex" "main.pdf" "main" 1747682178.94323 0
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1738965561 80909 eab91d9745dd2edfd62a31d53cd5fe15 ""
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi375/ecss0800.pk" 1738953357 10028 930bf3de6cacd1cbd469175ac0d537b1 ""
   "C:/Users/andri/AppData/Local/MiKTeX/fonts/pk/ljfour/jknappen/ec/dpi525/ecss0800.pk" 1738953361 14032 804bbc7122ac305e7656b3f54a97577b ""
@@ -157,7 +157,7 @@
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/tools/array.sty" 1730400552 14552 27664839421e418b87f56fa4c6f66b1a ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/andri/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/andri/msc-thesis/docs/main.tex" 1747676860 188313 5647b250ad79d9ffc8fd61b1da3d9222 ""
+  "c:/Users/andri/msc-thesis/docs/main.tex" 1747682156 188350 36abd22934aec16e5e385b8715ef55c1 ""
   "img/IC_sine_corr.png" 1738952601 184067 be24e5b3d14fe1aa49269fee347e7f61 ""
   "img/IC_sine_res.png" 1738952601 261893 f3dac6ddb005e5cdb6b4062cc0769595 ""
   "img/IC_sine_setup.png" 1738952601 259996 aed17d4706b8846263cf8db95384fd3c ""
@@ -201,11 +201,11 @@
   "img/three_steps_pred.jpg" 1746952602 907242 198469be0569f566d0b9b41952eb2b3d ""
   "img/training.png" 1746952602 45139 3d9099a092fa630c2243100c3b6d125b ""
   "img/unet.png" 1738952601 103270 fcfd65b2069a81d0e5aef6aa69f2150d ""
-  "main.aux" 1747676888 42385 f6b5974b57a36f46d5b157e7c98ce939 "pdflatex"
-  "main.bbl" 1747676878 23407 637a1ad6aeeb08203d5b8747193b534c "bibtex main"
-  "main.out" 1747676888 11656 f3c9bcd643273284b21e555dd1f975f6 "pdflatex"
-  "main.tex" 1747676860 188313 5647b250ad79d9ffc8fd61b1da3d9222 ""
-  "main.toc" 1747676888 6138 715572025919accf06c3505a8d7ff992 "pdflatex"
+  "main.aux" 1747682177 42385 f6b5974b57a36f46d5b157e7c98ce939 "pdflatex"
+  "main.bbl" 1747681928 23407 637a1ad6aeeb08203d5b8747193b534c "bibtex main"
+  "main.out" 1747682177 11656 f3c9bcd643273284b21e555dd1f975f6 "pdflatex"
+  "main.tex" 1747682156 188350 36abd22934aec16e5e385b8715ef55c1 ""
+  "main.toc" 1747682177 6138 715572025919accf06c3505a8d7ff992 "pdflatex"
   (generated)
   "main.aux"
   "main.log"

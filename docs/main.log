@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.2.7)  19 MAY 2025 19:47
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.2.7)  19 MAY 2025 21:16
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -499,15 +499,15 @@ l.160 \newpage
 [6]
 
 [7]
-<img/power_spectrum.png, id=450, 578.16pt x 361.35pt>
+<img/power_spectrum.png, id=451, 578.16pt x 361.35pt>
 File: img/power_spectrum.png Graphic file (type png)
 <use img/power_spectrum.png>
-Package pdftex.def Info: img/power_spectrum.png  used on input line 253.
+Package pdftex.def Info: img/power_spectrum.png  used on input line 256.
 (pdftex.def)             Requested size: 308.95407pt x 193.09703pt.
-<img/cic.png, id=452, 354.8457pt x 299.9205pt>
+<img/cic.png, id=453, 354.8457pt x 299.9205pt>
 File: img/cic.png Graphic file (type png)
 <use img/cic.png>
-Package pdftex.def Info: img/cic.png  used on input line 263.
+Package pdftex.def Info: img/cic.png  used on input line 266.
 (pdftex.def)             Requested size: 205.96938pt x 174.08672pt.
 
 
@@ -518,23 +518,23 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [8 <./img/power_spectrum.png>]
 
 [9 <./img/cic.png>]
-<img/IC_sine_setup.png, id=480, 715.2321pt x 281.853pt>
+<img/IC_sine_setup.png, id=481, 715.2321pt x 281.853pt>
 File: img/IC_sine_setup.png Graphic file (type png)
 <use img/IC_sine_setup.png>
-Package pdftex.def Info: img/IC_sine_setup.png  used on input line 349.
+Package pdftex.def Info: img/IC_sine_setup.png  used on input line 352.
 (pdftex.def)             Requested size: 288.35587pt x 113.63374pt.
 
 
 [10 <./img/IC_sine_setup.png>]
-<img/IC_sine_corr.png, id=501, 641.2758pt x 370.986pt>
+<img/IC_sine_corr.png, id=502, 641.2758pt x 370.986pt>
 File: img/IC_sine_corr.png Graphic file (type png)
 <use img/IC_sine_corr.png>
-Package pdftex.def Info: img/IC_sine_corr.png  used on input line 376.
+Package pdftex.def Info: img/IC_sine_corr.png  used on input line 379.
 (pdftex.def)             Requested size: 288.35587pt x 166.82327pt.
-<img/IC_sine_res.png, id=503, 622.0038pt x 281.853pt>
+<img/IC_sine_res.png, id=504, 622.0038pt x 281.853pt>
 File: img/IC_sine_res.png Graphic file (type png)
 <use img/IC_sine_res.png>
-Package pdftex.def Info: img/IC_sine_res.png  used on input line 392.
+Package pdftex.def Info: img/IC_sine_res.png  used on input line 395.
 (pdftex.def)             Requested size: 288.35587pt x 130.66461pt.
 
 
@@ -551,20 +551,20 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [14]
 
 [15]
-<img/unet.png, id=591, 1560.83125pt x 1039.885pt>
+<img/unet.png, id=592, 1560.83125pt x 1039.885pt>
 File: img/unet.png Graphic file (type png)
 <use img/unet.png>
-Package pdftex.def Info: img/unet.png  used on input line 599.
+Package pdftex.def Info: img/unet.png  used on input line 602.
 (pdftex.def)             Requested size: 329.55226pt x 219.55647pt.
 
 
 [16]
 
 [17 <./img/unet.png>]
-<img/Screenshot 2024-09-22 062730.png, id=623, 1025.33063pt x 368.1253pt>
+<img/Screenshot 2024-09-22 062730.png, id=624, 1025.33063pt x 368.1253pt>
 File: img/Screenshot 2024-09-22 062730.png Graphic file (type png)
 <use img/Screenshot 2024-09-22 062730.png>
-Package pdftex.def Info: img/Screenshot 2024-09-22 062730.png  used on input line 654.
+Package pdftex.def Info: img/Screenshot 2024-09-22 062730.png  used on input line 657.
 (pdftex.def)             Requested size: 370.74237pt x 133.10919pt.
 
 
@@ -573,10 +573,10 @@ Package pdftex.def Info: img/Screenshot 2024-09-22 062730.png  used on input lin
 [19]
 
 [20]
-<img/error.png, id=663, 1003.75pt x 301.125pt>
+<img/error.png, id=664, 1003.75pt x 301.125pt>
 File: img/error.png Graphic file (type png)
 <use img/error.png>
-Package pdftex.def Info: img/error.png  used on input line 733.
+Package pdftex.def Info: img/error.png  used on input line 736.
 (pdftex.def)             Requested size: 329.55226pt x 98.86612pt.
 
 
@@ -595,23 +595,23 @@ LaTeX Warning: `!h' float specifier changed to `!ht'.
 [25]
 
 [26]
-<img/delta.png, id=788, 2074.8717pt x 737.154pt>
+<img/delta.png, id=789, 2074.8717pt x 737.154pt>
 File: img/delta.png Graphic file (type png)
 <use img/delta.png>
-Package pdftex.def Info: img/delta.png  used on input line 890.
+Package pdftex.def Info: img/delta.png  used on input line 893.
 (pdftex.def)             Requested size: 411.93877pt x 146.34837pt.
 
 
 [27 <./img/delta.png>]
-<img/ssm.png, id=801, 2074.8717pt x 737.154pt>
+<img/ssm.png, id=802, 2074.8717pt x 737.154pt>
 File: img/ssm.png Graphic file (type png)
 <use img/ssm.png>
-Package pdftex.def Info: img/ssm.png  used on input line 913.
+Package pdftex.def Info: img/ssm.png  used on input line 916.
 (pdftex.def)             Requested size: 411.93877pt x 146.34837pt.
-<img/log_growth.png, id=803, 2074.149pt x 737.154pt>
+<img/log_growth.png, id=804, 2074.149pt x 737.154pt>
 File: img/log_growth.png Graphic file (type png)
 <use img/log_growth.png>
-Package pdftex.def Info: img/log_growth.png  used on input line 940.
+Package pdftex.def Info: img/log_growth.png  used on input line 943.
 (pdftex.def)             Requested size: 411.93877pt x 146.40462pt.
 
 
@@ -622,7 +622,7 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [28 <./img/ssm.png>]
 
 [29 <./img/log_growth.png>]
-Overfull \hbox (3.61063pt too wide) in paragraph at lines 980--981
+Overfull \hbox (3.61063pt too wide) in paragraph at lines 983--984
 []$\OT1/cmr/m/n/10 (32\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 32\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 32\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 32) \OMS/cmsy/m/n/10 ! \OT1/cmr/m/n/10 (64\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 32\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 32\OML/cmm/m/it/10 ; \OT1/cmr/m/n/10 32)$\T1/cmss/m/n/10 : Dou-ble the num-ber of chan-nels and ap-ply a shape-preserving
  []
 
@@ -631,10 +631,10 @@ Overfull \hbox (3.61063pt too wide) in paragraph at lines 980--981
 [30]
 
 [31]
-<img/channels_compute.png, id=851, 462.528pt x 346.896pt>
+<img/channels_compute.png, id=852, 462.528pt x 346.896pt>
 File: img/channels_compute.png Graphic file (type png)
 <use img/channels_compute.png>
-Package pdftex.def Info: img/channels_compute.png  used on input line 1053.
+Package pdftex.def Info: img/channels_compute.png  used on input line 1056.
 (pdftex.def)             Requested size: 247.16577pt x 185.37843pt.
 
 
@@ -643,36 +643,36 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 [32]
-<img/compare_channels.png, id=865, 1156.32pt x 361.35pt>
+<img/compare_channels.png, id=866, 1156.32pt x 361.35pt>
 File: img/compare_channels.png Graphic file (type png)
 <use img/compare_channels.png>
-Package pdftex.def Info: img/compare_channels.png  used on input line 1065.
+Package pdftex.def Info: img/compare_channels.png  used on input line 1068.
 (pdftex.def)             Requested size: 391.34056pt x 122.28946pt.
 
 
 [33 <./img/channels_compute.png> <./img/compare_channels.png>]
-<img/layer_compute.png, id=876, 462.528pt x 346.896pt>
+<img/layer_compute.png, id=877, 462.528pt x 346.896pt>
 File: img/layer_compute.png Graphic file (type png)
 <use img/layer_compute.png>
-Package pdftex.def Info: img/layer_compute.png  used on input line 1075.
+Package pdftex.def Info: img/layer_compute.png  used on input line 1078.
 (pdftex.def)             Requested size: 164.77298pt x 123.58032pt.
-<img/compare_layers_2.png, id=880, 1156.32pt x 361.35pt>
+<img/compare_layers_2.png, id=881, 1156.32pt x 361.35pt>
 File: img/compare_layers_2.png Graphic file (type png)
 <use img/compare_layers_2.png>
-Package pdftex.def Info: img/compare_layers_2.png  used on input line 1085.
+Package pdftex.def Info: img/compare_layers_2.png  used on input line 1088.
 (pdftex.def)             Requested size: 391.34056pt x 122.28946pt.
 
 
 [34 <./img/layer_compute.png> <./img/compare_layers_2.png>]
-<img/compare_filtered.jpg, id=889, 1156.32pt x 495.0495pt>
+<img/compare_filtered.jpg, id=890, 1156.32pt x 495.0495pt>
 File: img/compare_filtered.jpg Graphic file (type jpg)
 <use img/compare_filtered.jpg>
-Package pdftex.def Info: img/compare_filtered.jpg  used on input line 1099.
+Package pdftex.def Info: img/compare_filtered.jpg  used on input line 1102.
 (pdftex.def)             Requested size: 370.74237pt x 158.72122pt.
-<img/distr_cmp.jpg, id=892, 462.528pt x 203.0787pt>
+<img/distr_cmp.jpg, id=893, 462.528pt x 203.0787pt>
 File: img/distr_cmp.jpg Graphic file (type jpg)
 <use img/distr_cmp.jpg>
-Package pdftex.def Info: img/distr_cmp.jpg  used on input line 1108.
+Package pdftex.def Info: img/distr_cmp.jpg  used on input line 1111.
 (pdftex.def)             Requested size: 205.96938pt x 90.43326pt.
 
 
@@ -681,24 +681,24 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 [35 <./img/compare_filtered.jpg>]
-<img/compare_larger_scales.png, id=901, 1243.044pt x 361.35pt>
+<img/compare_larger_scales.png, id=902, 1243.044pt x 361.35pt>
 File: img/compare_larger_scales.png Graphic file (type png)
 <use img/compare_larger_scales.png>
-Package pdftex.def Info: img/compare_larger_scales.png  used on input line 1122.
+Package pdftex.def Info: img/compare_larger_scales.png  used on input line 1125.
 (pdftex.def)             Requested size: 370.74237pt x 107.77174pt.
-<img/ranges.png, id=903, 462.528pt x 346.896pt>
+<img/ranges.png, id=904, 462.528pt x 346.896pt>
 File: img/ranges.png Graphic file (type png)
 <use img/ranges.png>
-Package pdftex.def Info: img/ranges.png  used on input line 1131.
+Package pdftex.def Info: img/ranges.png  used on input line 1134.
 (pdftex.def)             Requested size: 288.35587pt x 216.27484pt.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-<img/compare_loss.png, id=904, 867.24pt x 361.35pt>
+<img/compare_loss.png, id=905, 867.24pt x 361.35pt>
 File: img/compare_loss.png Graphic file (type png)
 <use img/compare_loss.png>
-Package pdftex.def Info: img/compare_loss.png  used on input line 1145.
+Package pdftex.def Info: img/compare_loss.png  used on input line 1148.
 (pdftex.def)             Requested size: 329.55226pt x 137.31442pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -708,28 +708,28 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [36 <./img/distr_cmp.jpg> <./img/compare_larger_scales.png>]
 
 [37 <./img/ranges.png> <./img/compare_loss.png>]
-<img/compare_loss_correlation.png, id=926, 766.062pt x 361.35pt>
+<img/compare_loss_correlation.png, id=927, 766.062pt x 361.35pt>
 File: img/compare_loss_correlation.png Graphic file (type png)
 <use img/compare_loss_correlation.png>
-Package pdftex.def Info: img/compare_loss_correlation.png  used on input line 1181.
+Package pdftex.def Info: img/compare_loss_correlation.png  used on input line 1184.
 (pdftex.def)             Requested size: 329.55226pt x 155.45467pt.
 
 
 [38 <./img/compare_loss_correlation.png>]
-<img/compare_potential_4.png, id=934, 867.24pt x 361.35pt>
+<img/compare_potential_4.png, id=935, 867.24pt x 361.35pt>
 File: img/compare_potential_4.png Graphic file (type png)
 <use img/compare_potential_4.png>
-Package pdftex.def Info: img/compare_potential_4.png  used on input line 1193.
+Package pdftex.def Info: img/compare_potential_4.png  used on input line 1196.
 (pdftex.def)             Requested size: 288.35587pt x 120.15012pt.
-<img/large_z0_to_z49(1).jpg, id=937, 578.16pt x 722.7pt>
+<img/large_z0_to_z49(1).jpg, id=938, 578.16pt x 722.7pt>
 File: img/large_z0_to_z49(1).jpg Graphic file (type jpg)
 <use img/large_z0_to_z49(1).jpg>
-Package pdftex.def Info: img/large_z0_to_z49(1).jpg  used on input line 1211.
+Package pdftex.def Info: img/large_z0_to_z49(1).jpg  used on input line 1214.
 (pdftex.def)             Requested size: 185.37119pt x 231.70982pt.
-<img/large_z4_to_z49.jpg, id=938, 578.16pt x 722.7pt>
+<img/large_z4_to_z49.jpg, id=939, 578.16pt x 722.7pt>
 File: img/large_z4_to_z49.jpg Graphic file (type jpg)
 <use img/large_z4_to_z49.jpg>
-Package pdftex.def Info: img/large_z4_to_z49.jpg  used on input line 1218.
+Package pdftex.def Info: img/large_z4_to_z49.jpg  used on input line 1221.
 (pdftex.def)             Requested size: 185.37119pt x 231.70982pt.
 
 
@@ -738,33 +738,33 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 [39 <./img/compare_potential_4.png>]
-<img/schemes.png, id=949, 1023.825pt x 389.95688pt>
+<img/schemes.png, id=950, 1023.825pt x 389.95688pt>
 File: img/schemes.png Graphic file (type png)
 <use img/schemes.png>
-Package pdftex.def Info: img/schemes.png  used on input line 1231.
+Package pdftex.def Info: img/schemes.png  used on input line 1234.
 (pdftex.def)             Requested size: 308.95407pt x 117.67224pt.
 
 
 [40 <./img/large_z0_to_z49(1).jpg> <./img/large_z4_to_z49.jpg> <./img/schemes.png>]
 
 [41]
-<img/training.png, id=987, 963.6pt x 323.2075pt>
+<img/training.png, id=988, 963.6pt x 323.2075pt>
 File: img/training.png Graphic file (type png)
 <use img/training.png>
-Package pdftex.def Info: img/training.png  used on input line 1284.
+Package pdftex.def Info: img/training.png  used on input line 1287.
 (pdftex.def)             Requested size: 370.74237pt x 124.34897pt.
 
 
 [42 <./img/training.png>]
-<img/prediction_sequential_two.jpg, id=1004, 715.2321pt x 650.43pt>
+<img/prediction_sequential_two.jpg, id=1005, 715.2321pt x 650.43pt>
 File: img/prediction_sequential_two.jpg Graphic file (type jpg)
 <use img/prediction_sequential_two.jpg>
-Package pdftex.def Info: img/prediction_sequential_two.jpg  used on input line 1300.
+Package pdftex.def Info: img/prediction_sequential_two.jpg  used on input line 1303.
 (pdftex.def)             Requested size: 329.55226pt x 299.69766pt.
-<img/three_steps_pred.jpg, id=1005, 881.694pt x 650.43pt>
+<img/three_steps_pred.jpg, id=1006, 881.694pt x 650.43pt>
 File: img/three_steps_pred.jpg Graphic file (type jpg)
 <use img/three_steps_pred.jpg>
-Package pdftex.def Info: img/three_steps_pred.jpg  used on input line 1311.
+Package pdftex.def Info: img/three_steps_pred.jpg  used on input line 1314.
 (pdftex.def)             Requested size: 370.74237pt x 273.49632pt.
 
 
@@ -775,17 +775,17 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [43 <./img/prediction_sequential_two.jpg>]
 
 [44 <./img/three_steps_pred.jpg>]
-<img/eval_stats.jpg, id=1028, 1084.05pt x 650.43pt>
+<img/eval_stats.jpg, id=1029, 1084.05pt x 650.43pt>
 File: img/eval_stats.jpg Graphic file (type jpg)
 <use img/eval_stats.jpg>
-Package pdftex.def Info: img/eval_stats.jpg  used on input line 1331.
+Package pdftex.def Info: img/eval_stats.jpg  used on input line 1334.
 (pdftex.def)             Requested size: 370.74237pt x 222.4434pt.
 
 
 [45 <./img/eval_stats.jpg>]
 
 [46]
-Overfull \hbox (18.91748pt too wide) in paragraph at lines 1359--1412
+Overfull \hbox (18.91748pt too wide) in paragraph at lines 1362--1415
  [][] 
  []
 
@@ -801,26 +801,26 @@ File: lstlang1.sty 2024/09/23 1.10c listings language file
 [48]
 
 [49]
-<img/power.png, id=1161, 625.1355pt x 349.7868pt>
+<img/power.png, id=1162, 625.1355pt x 349.7868pt>
 File: img/power.png Graphic file (type png)
 <use img/power.png>
-Package pdftex.def Info: img/power.png  used on input line 1516.
+Package pdftex.def Info: img/power.png  used on input line 1519.
 (pdftex.def)             Requested size: 308.95407pt x 172.87013pt.
 
 
 [50]
-<img/benchmark.png, id=1188, 417.7206pt x 315.8199pt>
+<img/benchmark.png, id=1189, 417.7206pt x 315.8199pt>
 File: img/benchmark.png Graphic file (type png)
 <use img/benchmark.png>
-Package pdftex.def Info: img/benchmark.png  used on input line 1527.
+Package pdftex.def Info: img/benchmark.png  used on input line 1530.
 (pdftex.def)             Requested size: 205.96938pt x 155.72173pt.
 
 
 [51 <./img/power.png> <./img/benchmark.png>]
-<img/image.png, id=1208, 1207.51125pt x 503.8825pt>
+<img/image.png, id=1209, 1207.51125pt x 503.8825pt>
 File: img/image.png Graphic file (type png)
 <use img/image.png>
-Package pdftex.def Info: img/image.png  used on input line 1539.
+Package pdftex.def Info: img/image.png  used on input line 1542.
 (pdftex.def)             Requested size: 308.95407pt x 128.92274pt.
 
 
@@ -833,39 +833,39 @@ Package pdftex.def Info: img/image.png  used on input line 1539.
 [55]
 
 [56]
-<img/particles.png, id=1365, 1204.5pt x 602.25pt>
+<img/particles.png, id=1366, 1204.5pt x 602.25pt>
 File: img/particles.png Graphic file (type png)
 <use img/particles.png>
-Package pdftex.def Info: img/particles.png  used on input line 1745.
+Package pdftex.def Info: img/particles.png  used on input line 1748.
 (pdftex.def)             Requested size: 370.74237pt x 185.37227pt.
 
 
 [57 <./img/particles.png>]
-<img/ad.png, id=1379, 599.1183pt x 325.9377pt>
+<img/ad.png, id=1380, 599.1183pt x 325.9377pt>
 File: img/ad.png Graphic file (type png)
 <use img/ad.png>
-Package pdftex.def Info: img/ad.png  used on input line 1791.
+Package pdftex.def Info: img/ad.png  used on input line 1794.
 (pdftex.def)             Requested size: 308.95407pt x 168.08607pt.
 
 
 [58 <./img/ad.png>]
-<img/ode_learning.png, id=1392, 599.1183pt x 325.9377pt>
+<img/ode_learning.png, id=1393, 599.1183pt x 325.9377pt>
 File: img/ode_learning.png Graphic file (type png)
 <use img/ode_learning.png>
-Package pdftex.def Info: img/ode_learning.png  used on input line 1831.
+Package pdftex.def Info: img/ode_learning.png  used on input line 1834.
 (pdftex.def)             Requested size: 308.95407pt x 168.08607pt.
 
 
 [59 <./img/ode_learning.png>]
-<img/gan.png, id=1412, 395.3169pt x 298.4751pt>
+<img/gan.png, id=1413, 395.3169pt x 298.4751pt>
 File: img/gan.png Graphic file (type png)
 <use img/gan.png>
-Package pdftex.def Info: img/gan.png  used on input line 1845.
+Package pdftex.def Info: img/gan.png  used on input line 1848.
 (pdftex.def)             Requested size: 205.96938pt x 155.51308pt.
-<img/reconstruction.png, id=1414, 1133.9163pt x 230.5413pt>
+<img/reconstruction.png, id=1415, 1133.9163pt x 230.5413pt>
 File: img/reconstruction.png Graphic file (type png)
 <use img/reconstruction.png>
-Package pdftex.def Info: img/reconstruction.png  used on input line 1857.
+Package pdftex.def Info: img/reconstruction.png  used on input line 1860.
 (pdftex.def)             Requested size: 308.95407pt x 62.81334pt.
 
 
@@ -874,15 +874,15 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 [60 <./img/gan.png>]
-<img/ic_gen.png, id=1427, 423.5022pt x 338.9463pt>
+<img/ic_gen.png, id=1428, 423.5022pt x 338.9463pt>
 File: img/ic_gen.png Graphic file (type png)
 <use img/ic_gen.png>
-Package pdftex.def Info: img/ic_gen.png  used on input line 1873.
+Package pdftex.def Info: img/ic_gen.png  used on input line 1876.
 (pdftex.def)             Requested size: 205.96938pt x 164.84389pt.
-<img/cond_ic.png, id=1429, 423.5022pt x 338.9463pt>
+<img/cond_ic.png, id=1430, 423.5022pt x 338.9463pt>
 File: img/cond_ic.png Graphic file (type png)
 <use img/cond_ic.png>
-Package pdftex.def Info: img/cond_ic.png  used on input line 1882.
+Package pdftex.def Info: img/cond_ic.png  used on input line 1885.
 (pdftex.def)             Requested size: 205.96938pt x 164.84389pt.
 
 
@@ -891,15 +891,15 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 [61 <./img/reconstruction.png> <./img/ic_gen.png>]
-<img/cond_ic_2.png, id=1439, 423.5022pt x 338.9463pt>
+<img/cond_ic_2.png, id=1440, 423.5022pt x 338.9463pt>
 File: img/cond_ic_2.png Graphic file (type png)
 <use img/cond_ic_2.png>
-Package pdftex.def Info: img/cond_ic_2.png  used on input line 1894.
+Package pdftex.def Info: img/cond_ic_2.png  used on input line 1897.
 (pdftex.def)             Requested size: 205.96938pt x 164.84389pt.
-<img/noise.png, id=1442, 395.3169pt x 298.4751pt>
+<img/noise.png, id=1443, 395.3169pt x 298.4751pt>
 File: img/noise.png Graphic file (type png)
 <use img/noise.png>
-Package pdftex.def Info: img/noise.png  used on input line 1903.
+Package pdftex.def Info: img/noise.png  used on input line 1906.
 (pdftex.def)             Requested size: 205.96938pt x 155.51308pt.
 
 
@@ -912,18 +912,18 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 [63 <./img/noise.png>]
 
 [64]
-<img/fit.png, id=1527, 281.1303pt x 281.1303pt>
+<img/fit.png, id=1528, 281.1303pt x 281.1303pt>
 File: img/fit.png Graphic file (type png)
 <use img/fit.png>
-Package pdftex.def Info: img/fit.png  used on input line 2031.
+Package pdftex.def Info: img/fit.png  used on input line 2034.
 (pdftex.def)             Requested size: 205.96938pt x 205.96982pt.
 
 
 [65 <./img/fit.png>]
-<img/cmp.jpg, id=1560, 462.528pt x 346.896pt>
+<img/cmp.jpg, id=1561, 462.528pt x 346.896pt>
 File: img/cmp.jpg Graphic file (type jpg)
 <use img/cmp.jpg>
-Package pdftex.def Info: img/cmp.jpg  used on input line 2072.
+Package pdftex.def Info: img/cmp.jpg  used on input line 2075.
 (pdftex.def)             Requested size: 205.96938pt x 154.47673pt.
 
 
@@ -964,20 +964,20 @@ Package rerunfilecheck Info: File `main.out' has not changed.
  )
 (\end occurred inside a group at level 1)
 
-### simple group (level 1) entered at line 1535 ({)
+### simple group (level 1) entered at line 1538 ({)
 ### bottom level 
 Here is how much of TeX's memory you used:
  17023 strings out of 473530
  264037 string characters out of 5714795
- 1225459 words of memory out of 5000000
+ 1225514 words of memory out of 5000000
  39386 multiletter control sequences out of 15000+600000
  581086 words of font info for 88 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,12n,79p,3248b,2279s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1000.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx2074.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx0900.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0900.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt0800.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi375\ecss0800.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss0800.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsi1000.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcss1000.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi525\ecss0800.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1000.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1440.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss1000.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecss1200.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx2488.pk> <C:\Users\andri\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecsx1200.pk><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Users/andri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
-Output written on main.pdf (73 pages, 10701309 bytes).
+Output written on main.pdf (73 pages, 10701497 bytes).
 PDF statistics:
- 2481 PDF objects out of 2487 (max. 8388607)
+ 2482 PDF objects out of 2487 (max. 8388607)
  655 named destinations out of 1000 (max. 500000)
  768 words of extra memory for PDF output out of 10000 (max. 10000000)
 
