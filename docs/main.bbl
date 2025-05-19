@@ -1,4 +1,4 @@
-\begin{thebibliography}{73}
+\begin{thebibliography}{68}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -120,13 +120,6 @@ Jim Demmel.
 Josip Djolonga, Andreas Krause, and Volkan Cevher.
 \newblock High-dimensional gaussian process bandits.
 \newblock \emph{Advances in neural information processing systems}, 26, 2013.
-
-\bibitem[Escamilla-Rivera et~al.(2020)Escamilla-Rivera, Quintero, and
-  Capozziello]{escamilla2020deep}
-Celia Escamilla-Rivera, Maryi A~Carvajal Quintero, and Salvatore Capozziello.
-\newblock A deep learning approach to cosmological dark energy models.
-\newblock \emph{Journal of Cosmology and Astroparticle Physics}, 2020\penalty0
-  (03):\penalty0 008, 2020.
 
 \bibitem[Forrester et~al.(2008)Forrester, Sobester, and
   Keane]{forrester2008engineering}
@@ -334,15 +327,6 @@ Yolanda Mack, Tushar Goel, Wei Shyy, and Raphael Haftka.
 \newblock \emph{Evolutionary computation in dynamic and uncertain
   environments}, pages 323--342, 2007.
 
-\bibitem[Mathuriya et~al.(2018)Mathuriya, Bard, Mendygral, Meadows, Arnemann,
-  Shao, He, K{\"a}rn{\"a}, Moise, Pennycook, et~al.]{mathuriya2018cosmoflow}
-Amrita Mathuriya, Deborah Bard, Peter Mendygral, Lawrence Meadows, James
-  Arnemann, Lei Shao, Siyu He, Tuomas K{\"a}rn{\"a}, Diana Moise, Simon~J
-  Pennycook, et~al.
-\newblock Cosmoflow: Using deep learning to learn the universe at scale.
-\newblock In \emph{SC18: International Conference for High Performance
-  Computing, Networking, Storage and Analysis}, pages 819--829. IEEE, 2018.
-
 \bibitem[McCormick(1987)]{mccormick1987multigrid}
 Stephen~F McCormick.
 \newblock \emph{Multigrid methods}.
@@ -410,14 +394,6 @@ Adi Nusser and Avishai Dekel.
 \newblock \emph{Astrophysical Journal, Part 1 (ISSN 0004-637X), vol. 391, no.
   2, June 1, 1992, p. 443-452. Research supported by USIBSF.}, 391:\penalty0
   443--452, 1992.
-
-\bibitem[Orabi et~al.(2018)Orabi, Buddhitha, Orabi, and Inkpen]{orabi2018deep}
-Ahmed~Husseini Orabi, Prasadith Buddhitha, Mahmoud~Husseini Orabi, and Diana
-  Inkpen.
-\newblock Deep learning for depression detection of twitter users.
-\newblock In \emph{Proceedings of the fifth workshop on computational
-  linguistics and clinical psychology: from keyboard to clinic}, pages 88--97,
-  2018.
 
 \bibitem[Pathak et~al.(2022)Pathak, Subramanian, Harrington, Raja,
   Chattopadhyay, Mardani, Kurth, Hall, Li, Azizzadenesheli,
@@ -494,12 +470,6 @@ Nils Thuerey, Philipp Holl, Maximilian Mueller, Patrick Schnell, Felix Trost,
 \newblock Physics-based deep learning.
 \newblock \emph{arXiv preprint arXiv:2109.05237}, 2021.
 
-\bibitem[Wang et~al.(2019)Wang, Casalino, and Khullar]{wang2019deep}
-Fei Wang, Lawrence~Peter Casalino, and Dhruv Khullar.
-\newblock Deep learning in medicine—promise, progress, and challenges.
-\newblock \emph{JAMA internal medicine}, 179\penalty0 (3):\penalty0 293--294,
-  2019.
-
 \bibitem[Wang et~al.(2014)Wang, Mo, Yang, Jing, and Lin]{wang2014elucid}
 Huiyuan Wang, HJ~Mo, Xiaohu Yang, YP~Jing, and WP~Lin.
 \newblock Elucid—exploring the local universe with the reconstructed initial
@@ -514,14 +484,6 @@ Qiqi Wang, Parviz Moin, and Gianluca Iaccarino.
   adjoint calculation.
 \newblock \emph{SIAM Journal on Scientific Computing}, 31\penalty0
   (4):\penalty0 2549--2567, 2009.
-
-\bibitem[Wu et~al.(2020)Wu, Pan, Chen, Long, Zhang, and
-  Philip]{wu2020comprehensive}
-Zonghan Wu, Shirui Pan, Fengwen Chen, Guodong Long, Chengqi Zhang, and S~Yu
-  Philip.
-\newblock A comprehensive survey on graph neural networks.
-\newblock \emph{IEEE transactions on neural networks and learning systems},
-  32\penalty0 (1):\penalty0 4--24, 2020.
 
 \bibitem[Zhang et~al.(2019)Zhang, He, Sra, and Jadbabaie]{zhang2019gradient}
 Jingzhao Zhang, Tianxing He, Suvrit Sra, and Ali Jadbabaie.

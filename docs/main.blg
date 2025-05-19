@@ -14,45 +14,45 @@ Warning--entry type for "deepmind2020jax" isn't style-file defined
 Warning--entry type for "flax2020github" isn't style-file defined
 --line 67 of file reference.bib
 Warning--empty year in machinelearningsimulation
-You've used 73 entries,
+You've used 68 entries,
             2773 wiz_defined-function locations,
-            991 strings with 20576 characters,
-and the built_in function-call counts, 39592 in all, are:
-= -- 3300
-> -- 3146
-< -- 41
-+ -- 1058
-- -- 984
-* -- 3450
-:= -- 6287
-add.period$ -- 233
-call.type$ -- 73
-change.case$ -- 533
-chr.to.int$ -- 72
-cite$ -- 147
-duplicate$ -- 1550
-empty$ -- 2709
-format.name$ -- 1087
-if$ -- 8105
+            963 strings with 19286 characters,
+and the built_in function-call counts, 36340 in all, are:
+= -- 3022
+> -- 2889
+< -- 39
++ -- 972
+- -- 903
+* -- 3153
+:= -- 5790
+add.period$ -- 217
+call.type$ -- 68
+change.case$ -- 492
+chr.to.int$ -- 67
+cite$ -- 137
+duplicate$ -- 1423
+empty$ -- 2488
+format.name$ -- 1001
+if$ -- 7426
 int.to.chr$ -- 2
 int.to.str$ -- 1
-missing$ -- 72
-newline$ -- 379
-num.names$ -- 298
-pop$ -- 1078
+missing$ -- 67
+newline$ -- 354
+num.names$ -- 278
+pop$ -- 996
 preamble$ -- 1
-purify$ -- 466
+purify$ -- 430
 quote$ -- 0
-skip$ -- 1334
+skip$ -- 1226
 stack$ -- 0
-substring$ -- 993
-swap$ -- 164
-text.length$ -- 12
+substring$ -- 877
+swap$ -- 141
+text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 773
+type$ -- 718
 warning$ -- 1
-while$ -- 294
+while$ -- 268
 width$ -- 0
-write$ -- 949
+write$ -- 883
 (There were 5 warnings)
