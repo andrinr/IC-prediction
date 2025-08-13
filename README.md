@@ -1,38 +1,28 @@
 # Master Thesis
 
-We want to find the initial conditions (IC's), that is the mass density distribution, for small scale dark matter simulations. That is, given simulation $f$ which given  $x_0$ computes $f(x_0) = x_t$. We are interested in finding $f^{-1}$, however as the function $f$ is highly nonlinear, it is only possible to approximate $f^{-1} \approx f^{\prime}$. 
+![eval](docs/img/eval_stats.jpg)
 
-The goal is to apply this technique to observed density distributions and see if we can actually find the correct IC's. Naturally this would be interesting as the evolution of structures could be analyzed.
-
-In nature $x_0$ is given by the spatial distribution of mass and to some extent their velocity. The velocity on the axis tangential to the viewer cannot be determined. The primary inspiration for the approximate inverse simulation model $f^{\prime}$ comes from conditional generative models for image generation / analysis. Therefore we perform a 3D mass assignment of the given objects, where discrete convolution, pooling and similar operations can be learned on.
-
-There are certain properties, which are assumed to hold for correct IC's. Generally we assume the mass distribution is a Gaussian Noise with a specific power spectrum, which is known from the cosmic background radiation. For simulations, the $x_0$ is constructed by sampling random white noise on a grid with fixed distances. Then a convolution is used to imprint the specific power spectrum into the noise. This is a trivial element wise matrix operation, when done in furier space.
-
-A specific example on how to generate random intial conditions can be found in src/experiments/IC.ipynb.
+Understanding the evolution of known structures in the universe is challenging. Although we can
+theoretically reverse gravitational N-body simulations, inverse simulations are not feasible because
+we cannot recover the complete velocity vectors of observed structures. Another approach is to
+predict an approximation of the initial conditions of a forward simulation given the nal state.
+This problem is typically solved using an iterative optimization method that relies on the forward
+simulation in its objective function. However, this method is computationally expensive. In this
+thesis, we explore a data-driven operator learning approach capable of predicting initial conditions
+directly from a nal density distribution. To accomplish this, we generate large quantities of time-
+aggregated simulation data using PKDGRAV3 [Potter et al., 2017]. The operator is based on an
+adaptation of the Fourier neural operator (FNO) [Li et al., 2020], which inherently exploits periodic
+boundary conditions because it operates in Fourier space. Our model accurately predicts large-scale
+dark matter structures and can recover small-scale structures beyond the nonlinear threshold k = 1.
+Additionally, we demonstrate that increasing the number of intermediate prediction steps improves
+reconstruction accuracy, showcasing the potential of operator learning as a surrogate for full-eld
+gravitational N-body simulations.
 
 ## Structure of the code
 
 The main code is organized in the ``src`` folder we ``train.py`` serves as the entry point for training the model. There are two models implemented, a 3D UNET and a 3D FNO (Furier Neural Operator). The models can be found in ``src/nn/``. The code also includes different methods mass assignment and grid interpolations, which are implemented in JAX and therefore fully differentiable. The differentiable property is leveraged in ``src/field/fit_field.py``, which can be used to fit the particle positions to a 3D density field. 
 
-## Intermediate Learning Projects
-
-To learn some techniques I have made some smaller projects:
-
-- https://github.com/andrinr/jax-gan - GAN for 2D distribution generation
-- https://github.com/andrinr/jax-image-autoencoder - Image autoencoder for compression / image generation
-- https://github.com/andrinr/jax-neural-ode - Neural ODE implementation in JAX including adjoint method for backpropagation
-- https://github.com/andrinr/motion-derivative - Inverse simulation for small N-Body gravitation simulations
-
-## Vocabulary
-
-- **Zoom-In Simulations** a certain section of the simulation domain is simulated at a higher resolution.
-- **Dark Matter Simulation** dark matter makes up 85% of the universe. While it is invisible, meaning it does not interact with electromagnetic radiation, the gravitational effects on visible matter are visible. Since such a large percentage of the universe is made of dark matter, and conviniently its much simpler to simulate, precisely because it does not interact with electromagnetic, nuclear and hydrodynamic effects. 
-- **Baryonic Simulations** these simulations are a lot more complex and include all the forces which can be simulated and are often done using SPH. 
-- **Gigaparsec** A gigaparsec (Gpc) is a unit of length used in astronomy and cosmology. It's equal to one billion parsecs or approximately 3.26 billion light-years.  The size of the observable universe is about 28.5 gigaparsec. 
-- **Observable Universe** The part of the universe we can observe, we don't know how large the Universe outside this section is.
-- **Halos** refer to the regions of space where matter (both normal matter and dark matter) has collapsed under gravity to form structures, such as galaxies or clusters of galaxies.   
-
-## Data Analsysis on slurm machine
+## Data Analsysis on slurm machines
 
 ### Installation
 
@@ -123,8 +113,8 @@ This steps have to be repeated every day to get a new key.
 2. if not running start it with ```Get-Service ssh-agent | Set-Service -StartupType Automatic``` and ```Start-Service ssh-agent```
 3. Activate the python env ```.\venv\Scripts\activate```
 4. execute the ssh-gen script ```python .\sshservice-cli\cscs-keygen.py``` and enter credentials. No password needed. 
-5. add key ```
-```
+5. add key
+
 6. connect with ```ssh cscs``` or use vs code remote ssh extension
 
 ### Run data generation on SLURM system
@@ -137,24 +127,3 @@ This steps have to be repeated every day to get a new key.
 ## Testing
 
 Make sure pytest is installed and run ```python -m pytest``` from the root directory. 
-
-## Sources
-
-### IC Generation
-
-- *Initial Conditions for large Comological Simulations* https://arxiv.org/pdf/0804.3536
-- *Transients from Initial Conditions: A Perturbative Analysis* https://arxiv.org/pdf/astro-ph/9711187
-- https://ui.adsabs.harvard.edu/abs/2011ascl.soft06008B/abstract
-
-### Methodology
-
-- FNO + RNN https://arxiv.org/pdf/2303.02243
-
-### Cosmology
-
-- Pretty much everything important here: https://ned.ipac.caltech.edu/level5/Sept02/Kinney/Kinney_contents.html
-- How to get velocities from density fields: https://arxiv.org/pdf/astro-ph/9506070
-- zeldovhich: https://iopscience.iop.org/article/10.1086/498496/pdf
-
-
-local transfer:  scp -r eiger:/capstor/scratch/cscs/arehmann/pairs/* C:\Users\andri\Documents
