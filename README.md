@@ -5,17 +5,17 @@
 Understanding the evolution of known structures in the universe is challenging. Although we can
 theoretically reverse gravitational N-body simulations, inverse simulations are not feasible because
 we cannot recover the complete velocity vectors of observed structures. Another approach is to
-predict an approximation of the initial conditions of a forward simulation given the nal state.
+predict an approximation of the initial conditions of a forward simulation given the final state.
 This problem is typically solved using an iterative optimization method that relies on the forward
 simulation in its objective function. However, this method is computationally expensive. In this
 thesis, we explore a data-driven operator learning approach capable of predicting initial conditions
-directly from a nal density distribution. To accomplish this, we generate large quantities of time-
+directly from a final density distribution. To accomplish this, we generate large quantities of time-
 aggregated simulation data using PKDGRAV3 [Potter et al., 2017]. The operator is based on an
 adaptation of the Fourier neural operator (FNO) [Li et al., 2020], which inherently exploits periodic
 boundary conditions because it operates in Fourier space. Our model accurately predicts large-scale
 dark matter structures and can recover small-scale structures beyond the nonlinear threshold k = 1.
 Additionally, we demonstrate that increasing the number of intermediate prediction steps improves
-reconstruction accuracy, showcasing the potential of operator learning as a surrogate for full-eld
+reconstruction accuracy, showcasing the potential of operator learning as a surrogate for full-field
 gravitational N-body simulations.
 
 ## Structure of the code
